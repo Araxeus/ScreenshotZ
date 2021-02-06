@@ -18,12 +18,11 @@ public class SimpleProperties
     private String propertiesFilePath;
     private Properties properties;
 
-    public SimpleProperties() throws IOException{
+    public SimpleProperties() {
         this(DEFAULT_PATH);
     }
 
-    public SimpleProperties(String path) throws IOException
-    {
+    public SimpleProperties(String path) {
         propertiesFilePath = path;
         properties = new Properties();
         if(checkPath())
@@ -33,36 +32,38 @@ public class SimpleProperties
             } catch (InvalidPropertiesFormatException e) {
                 System.err.println("Format error on config.xml -> writing default config");
                 setDefault();
-                store();
+            } catch (IOException e) {
+                System.err.println("RARE Error Opening FileInputStream");
             }
          else
-             throw new IOException("Error creating new config.xml");      
+            System.err.println("oh no.. config wasn't loaded");      
     }
 
-    public void setProperty(String key, String value) throws IOException
-    {
+    public void setProperty(String key, String value){
+        if(!properties.getProperty(key).equals(value)) {
         properties.setProperty(key, value);
-
         store();
+        } else
+             System.err.println("Setting property to the same value");
     }
 
-    public String getProperty(String key)
-    {
+    public String getProperty(String key) {
         return properties.getProperty(key);
     }
 
-    private void store() throws IOException
-    {
+    private void store() {
         try(FileOutputStream outStream = new FileOutputStream(propertiesFilePath)) {
         properties.storeToXML(outStream , "ScreenshotZ Program parameters");
+        System.err.println("Stored properties :"+properties.toString()); //?
         } catch (IOException e) {
             System.err.println("IOException");
 			e.printStackTrace();
         }
     }
 
-    private void setDefault() {
-        properties.setProperty("Screenshot Dir", new File(propertiesFilePath).getParent() + "Screenshots" + File.separator);
+    protected void setDefault() {
+        properties.setProperty("Screenshot Dir", new File(propertiesFilePath).getParent() + File.separator + "Screenshots" + File.separator);
+        store();
     }
 
     private boolean checkPath() {
