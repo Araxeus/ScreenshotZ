@@ -18,9 +18,12 @@ add option to 'Remap' button ?
 
 ? Fix memory leak ?
 
-.
-.
-.
+
+... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ...
+... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... 
+... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... ... 
+
+
 - Startup Rule Instructions:
 *	Put bat in same dir as ScreenshotZ.exe (rule is for this exact name - can be changed in .bat)
 *	And then run the addStartupRule.bat as admin
