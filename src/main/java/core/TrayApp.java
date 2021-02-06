@@ -372,9 +372,7 @@ public final class TrayApp {
 		  uniqueServerSocket = new ServerSocket(9999,0,InetAddress.getByAddress(new byte[] {127,0,0,1}));
 		  //throws BindException if already connected
 		} catch (BindException e) {
-		  System.err.println("Server Already running.");
-		  
-		  
+		  System.err.println("Server Already running."); 
 		  System.exit(2);
 		} catch (IOException e) {
 			System.err.println("Unexpected IO error.");
