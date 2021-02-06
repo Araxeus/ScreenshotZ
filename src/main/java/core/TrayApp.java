@@ -38,14 +38,15 @@ import lc.kra.system.keyboard.event.GlobalKeyEvent;
 // using global hook and Robot().createScreenCapture create entirely new screenshot without clipboard
 //using clipboard listener
 public final class TrayApp {
-	static long lastEvent = 0; //used for timer calculations
+	private static final String ICON_PATH = "resources/TrayIcon.png";
+	private static long lastEvent = 0; //used for timer calculations
 	private static ServerSocket uniqueServerSocket;
-	static final Clipboard SYSTEM_CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
+	private static final Clipboard SYSTEM_CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
 
 
 	public static void main(String[] args) throws InterruptedException {
 		// quit if trayApp isn't supported / App already running
-		checkIfRunning();
+		checkIfRunning(args);
 		if (isImage(getClipboard()))
 			setClipboard(new StringSelection("Check123"));
 		// try to load icon
@@ -135,7 +136,7 @@ public final class TrayApp {
 						if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_SNAPSHOT) { // if PrtScn
 							try {
 								// print to screenshot directory
-								if(System.currentTimeMillis()-lastEvent>2000) {
+								if(System.currentTimeMillis()-lastEvent>1000) {
 									lastEvent = System.currentTimeMillis();
 									System.out.println("Keyboard Listener Activated");									
 									robotTo(getDir());	
@@ -149,15 +150,15 @@ public final class TrayApp {
 							}
 						}
 					}
-				});
+				});				
 
 		//Clipboard Style Listener
 				SYSTEM_CLIPBOARD.addFlavorListener(listener -> {
+					System.out.println("Clipboard Listener got event");
 					try {
-						System.out.println("Clipboard start sleep at " + System.currentTimeMillis());	
-						Thread.sleep(1000);
-						System.out.println("Clipboard stop sleep at " + System.currentTimeMillis());			
-						if(System.currentTimeMillis()-lastEvent>2000) {
+						//Sleep so that Keyboard Listener gets first event
+						Thread.sleep(50);		
+						if(System.currentTimeMillis()-lastEvent>1000) {
 							System.out.println("Clipboard Listener Activated");
 							clipboardTo(getDir());
 						}
@@ -171,12 +172,13 @@ public final class TrayApp {
 				});
 	}
 
+	//load icon from ICON_PATH
 	private static Image getIcon(Image icon) {
 		try {
-			File iconFile = new File("resources/TrayIcon.png");
+			File iconFile = new File(ICON_PATH);
 			if (iconFile.exists()) {
 				// load into Image file
-				icon = Toolkit.getDefaultToolkit().getImage(iconFile.getPath());
+				icon = Toolkit.getDefaultToolkit().getImage(ICON_PATH);
 				// wait for image to load
 				while (icon.getWidth(null) == -1)
 					Thread.sleep(50);
@@ -309,6 +311,7 @@ public final class TrayApp {
 		return (System.getProperty("user.home") + File.separator + ".ScreenshotZ" + File.separator);
 	}
 
+	//return Transferable content from Clipboard
 	private static Transferable getClipboard() {		
 		Transferable content = null;
 		try {
@@ -321,6 +324,7 @@ public final class TrayApp {
 		
 	}
 	
+	//set Local Clipboard content to this.arg
 	private static void setClipboard(Transferable content) {
 		try {
 			SYSTEM_CLIPBOARD.setContents(content, null);
@@ -330,6 +334,7 @@ public final class TrayApp {
 		}
 	}
 	
+	//check if transferable from clipboard is an image
 	private static boolean isImage (Transferable content) {
 		//check that content exist
 		if (content == null) {
@@ -344,22 +349,41 @@ public final class TrayApp {
 		return true;
 	}
 
-	private static void checkIfRunning() {
-		
+	//capture screen if args[0]=="-capture" and quit or quit if already running
+	private static void checkIfRunning(String[] args) {
+		//check that tray is supported
 		if (!SystemTray.isSupported()){
 			System.err.println("System Tray isn't supported");
 			System.exit(1);
 		}
+		//check if trayApp was started with args
+		else if(args!=null && args.length > 0 && args[0].equals("-capture")) {
+			try {
+				robotTo(getDir());
+			} catch (Exception a) {
+				System.err.println("Couldn't print before loading main method..");
+				a.printStackTrace();
+			} finally {
+				System.exit(0);
+			}
+		}
 		try {
 		  //Bind to localhost adapter with a zero connection queue [PORT 9999]
 		  uniqueServerSocket = new ServerSocket(9999,0,InetAddress.getByAddress(new byte[] {127,0,0,1}));
+		  //throws BindException if already connected
 		} catch (BindException e) {
-		  System.err.println("Already running.");
+		  System.err.println("Server Already running.");
+		  
+		  
 		  System.exit(2);
 		} catch (IOException e) {
-		  System.err.println("Unexpected error.");
-		  e.printStackTrace();
-		  System.exit(3);
+			System.err.println("Unexpected IO error.");
+			e.printStackTrace();
+			System.exit(3);
+		} catch (Exception e) {
+			System.err.println("Unexpected error.");
+			e.printStackTrace();
+			System.exit(3);
 		}
 	  }
 }
