@@ -22,6 +22,10 @@
 
 - Make/Add .REG file "ScreenshotZ" (Add to explorer context menu - launch with @param -capture) [almost done]
 
+- Make installScript (use also contextMenu.REG and onStartup.bat)
+
+- launch4j wrapper escalate privilege to Admin
+
 - Expand Readme
 
 
