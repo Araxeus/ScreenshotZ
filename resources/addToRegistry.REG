@@ -1,0 +1,8 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\Run Batch script]
+@="&Open DEV"
+"Icon"="%PROGRAMFILES(x86)%\\WinDirStat\\windirstat.exe"
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\Run Batch script\command]
+@="C:\\Users\\Araxeus\\Desktop\\DEV\\WinDirStatHere.bat \"%V\""

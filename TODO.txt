@@ -1,0 +1,35 @@
+
+#add SaveString (on key - save string in clipboard and return it to clipboard after a few seconds)
+- ######### REGISTRY INSTEAD OF TXT SETTINGS? #########
+- Create method that checks settings.txt validity
+- settings.txt to appFolder
+- Method that read settings.txt -> getSettings(Int type)
+- Method that write array to settings.txt
+# on launch -> if config.txt is empty -> open choose Directory (Pending Aproval)
+make constant String[] Settings.txt
+read at launch / write default
+on OptionChange -> change array and send to settings.txt
+ option to launch 'crop jpanel' #http://mrbool.com/how-to-crop-an-image-using-java/25272
+
+ 'add' option to 'Remap' button'?'
+ 'Fix memory leak' (Reference Object?)
+ 
+
+
+* build
+'launch4j' manifest demand 'admin rights' - #https://stackoverflow.com/questions/19037339/run-java-file-as-administrator-with-full-privileges
+compile installer using 'NSIS Quick Setup Script Generator' - # C:\Users\Araxeus\Desktop\DEV\NSIS\Quick Setup Script Generator.exe
+add onStartup rule bat
+make/add .REG file (Add to explorer context menu - screenshot now)
+
+- settings
+1. Screenshot Directory
+2. Key selection
+3. Listener selection (Clipboard/ keybind new req)
+4. Choose cropToJpanel after screenshot
+
+String[] Settings;
+'0' = Screenshot location = #PATH
+'1' = Listen mode selection = #Key/Clipboard
+'2' = key selection = #Key
+'4' = open crop or not #True/False

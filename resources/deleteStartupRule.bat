@@ -1,0 +1,2 @@
+SCHTASKS /DELETE /TN Startup\ScreenshotZ
+PAUSE
