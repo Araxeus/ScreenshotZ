@@ -20,6 +20,8 @@
 
 - ? Fix memory leak ?
 
+- Make/Add .REG file "ScreenshotZ" (Add to explorer context menu - launch with @param -capture) [almost done]
+
 - Expand Readme
 
 
