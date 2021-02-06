@@ -34,9 +34,6 @@
 
 .
 
-.
-
-
 # Startup Rule Instructions: (Adds startup rule to windows task scheduler)
 
 *	First put bat in same dir as ScreenshotZ.exe (rule is for this exact name - can be changed in .bat)
