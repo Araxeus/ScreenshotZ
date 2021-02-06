@@ -139,7 +139,7 @@ public final class TrayApp {
 								if(System.currentTimeMillis()-lastEvent>1000) {
 									lastEvent = System.currentTimeMillis();
 									System.out.println("Keyboard Listener Activated");									
-									robotTo(getDir());	
+									robotTo(getDir());
 								}
 								// ImageIO.write(new Robot().createScreenCapture(new
 								// Rectangle(Toolkit.getDefaultToolkit().getScreenSize())), "png", new
@@ -317,7 +317,7 @@ public final class TrayApp {
 		try {
 			content = SYSTEM_CLIPBOARD.getContents(content);
 		} catch(Exception e) {
-			System.out.println("Error grabbing clipboard");
+			System.err.println("Error grabbing clipboard");
 			e.printStackTrace();
 		}
 		return content;
@@ -329,7 +329,7 @@ public final class TrayApp {
 		try {
 			SYSTEM_CLIPBOARD.setContents(content, null);
 		} catch (Exception e) {
-			System.out.println("Error setting clipboard");
+			System.err.println("Error setting clipboard");
 			e.printStackTrace();
 		}
 	}
