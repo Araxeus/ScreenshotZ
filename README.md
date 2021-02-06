@@ -7,6 +7,7 @@
 
 
 ->      use global hook, Robot().createScreenCapture create entirely new screenshot without clipboard, if it doesnt launch for some reason (keyboard event not detected)
+
 ->      use clipboard listener (listen to type change so have to reset clipboard at start and after each screenshot) and grab image from clipboard
 
 * TODO -> need to expand readme
@@ -17,8 +18,9 @@ add option to 'Remap' button ?
 
 ? Fix memory leak ?
 
-
-
+.
+.
+.
 - Startup Rule Instructions:
 *	Put bat in same dir as ScreenshotZ.exe (rule is for this exact name - can be changed in .bat)
 *	And then run the addStartupRule.bat as admin
