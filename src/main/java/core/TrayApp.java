@@ -10,12 +10,19 @@ import java.awt.Robot;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.BindException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -28,16 +35,19 @@ import lc.kra.system.keyboard.event.GlobalKeyAdapter;
 import lc.kra.system.keyboard.event.GlobalKeyEvent;
 
 @SuppressWarnings("java:S106")
-// using global hook and Robot().createScreenCapture create entirely new
-// screenshot without clipboard
+// using global hook and Robot().createScreenCapture create entirely new screenshot without clipboard
+//using clipboard listener
 public final class TrayApp {
-	static long lastEvent = 0;
+	static long lastEvent = 0; //used for timer calculations
+	private static ServerSocket uniqueServerSocket;
+	static final Clipboard SYSTEM_CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
+
 
 	public static void main(String[] args) throws InterruptedException {
-		// quit if trayApp isn't supported
-		if (!SystemTray.isSupported())
-			System.exit(0);
-
+		// quit if trayApp isn't supported / App already running
+		checkIfRunning();
+		if (isImage(getClipboard()))
+			setClipboard(new StringSelection("Check123"));
 		// try to load icon
 		Image icon = null;
 		icon = getIcon(icon);
@@ -124,12 +134,11 @@ public final class TrayApp {
 					public void keyPressed(GlobalKeyEvent event) {
 						if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_SNAPSHOT) { // if PrtScn
 							try {
-								System.out.println("got print event");
 								// print to screenshot directory
-								if(System.currentTimeMillis()-lastEvent>1000) {
-									System.out.println("time since last screenshot > 1 second");
-									robotTo(getDir());
+								if(System.currentTimeMillis()-lastEvent>2000) {
 									lastEvent = System.currentTimeMillis();
+									System.out.println("Keyboard Listener Activated");									
+									robotTo(getDir());	
 								}
 								// ImageIO.write(new Robot().createScreenCapture(new
 								// Rectangle(Toolkit.getDefaultToolkit().getScreenSize())), "png", new
@@ -139,6 +148,25 @@ public final class TrayApp {
 								e.printStackTrace();
 							}
 						}
+					}
+				});
+
+		//Clipboard Style Listener
+				SYSTEM_CLIPBOARD.addFlavorListener(listener -> {
+					try {
+						System.out.println("Clipboard start sleep at " + System.currentTimeMillis());	
+						Thread.sleep(1000);
+						System.out.println("Clipboard stop sleep at " + System.currentTimeMillis());			
+						if(System.currentTimeMillis()-lastEvent>2000) {
+							System.out.println("Clipboard Listener Activated");
+							clipboardTo(getDir());
+						}
+					} catch(InterruptedException e) {
+						System.err.println("Literally impossible - Thread sleep Error");
+						Thread.currentThread().interrupt();
+					}
+					catch(Exception e) {
+						System.err.println("Error during clipboardTo event");
 					}
 				});
 	}
@@ -153,7 +181,7 @@ public final class TrayApp {
 				while (icon.getWidth(null) == -1)
 					Thread.sleep(50);
 			} else {
-				System.err.println("file path doesn't exist"); 
+				System.err.println("ERROR: TrayIcon not found, Exiting Program"); 
 				System.exit(0);
 			}
 		} catch (Exception e) {
@@ -173,10 +201,32 @@ public final class TrayApp {
 		File outfile = new File(getName(directory));
 		// write image to file
 		ImageIO.write(img, "png", outfile);
-		System.out.println("image copied to: " + outfile.getAbsolutePath());
+		System.out.println("image made from robot to: " + outfile.getAbsolutePath());
 		// flush buffered image
 		img.flush();
 		// Call garbage collector (temporary fix to memory leak from this method)
+		Runtime.getRuntime().gc();
+	}
+
+	//print image from clipboard to 'directory'
+	private static void clipboardTo (String directory) throws Exception {
+		//grab clipboard
+		Transferable content = getClipboard();
+		//check thats its an image
+		if(!isImage(content))
+			return;
+		//reset clipboard content - so that listener can notice new screenshot
+		setClipboard(new StringSelection("check123"));
+		//create buffered image from content
+		BufferedImage img = (BufferedImage) content.getTransferData(DataFlavor.imageFlavor);
+		//create file using getName (returns new image path)
+		File outfile = new File(getName(directory));
+		//write image to file
+		ImageIO.write(img, "png", outfile);
+		System.out.println("image copied from clipboard to: " + outfile.getAbsolutePath());
+		//flush buffered image
+		img.flush();
+		//Call garbage collector (temporary fix to memory leak from this method)
 		Runtime.getRuntime().gc();
 	}
 
@@ -258,4 +308,58 @@ public final class TrayApp {
 	protected static String settingsDir() {
 		return (System.getProperty("user.home") + File.separator + ".ScreenshotZ" + File.separator);
 	}
+
+	private static Transferable getClipboard() {		
+		Transferable content = null;
+		try {
+			content = SYSTEM_CLIPBOARD.getContents(content);
+		} catch(Exception e) {
+			System.out.println("Error grabbing clipboard");
+			e.printStackTrace();
+		}
+		return content;
+		
+	}
+	
+	private static void setClipboard(Transferable content) {
+		try {
+			SYSTEM_CLIPBOARD.setContents(content, null);
+		} catch (Exception e) {
+			System.out.println("Error setting clipboard");
+			e.printStackTrace();
+		}
+	}
+	
+	private static boolean isImage (Transferable content) {
+		//check that content exist
+		if (content == null) {
+			System.err.println("nothing found in clipboard");
+			return false;
+		}
+		//check that content is an image
+		if (!content.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+			System.err.println("no image found in clipboard");
+			return false;
+		}
+		return true;
+	}
+
+	private static void checkIfRunning() {
+		
+		if (!SystemTray.isSupported()){
+			System.err.println("System Tray isn't supported");
+			System.exit(1);
+		}
+		try {
+		  //Bind to localhost adapter with a zero connection queue [PORT 9999]
+		  uniqueServerSocket = new ServerSocket(9999,0,InetAddress.getByAddress(new byte[] {127,0,0,1}));
+		} catch (BindException e) {
+		  System.err.println("Already running.");
+		  System.exit(2);
+		} catch (IOException e) {
+		  System.err.println("Unexpected error.");
+		  e.printStackTrace();
+		  System.exit(3);
+		}
+	  }
 }
