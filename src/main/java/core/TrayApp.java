@@ -10,7 +10,6 @@ import java.awt.Robot;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -28,9 +27,11 @@ import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
 import lc.kra.system.keyboard.event.GlobalKeyEvent;
 
-//using global hook and Robot().createScreenCapture create entirely new screenshot without clipboard
+@SuppressWarnings("java:S106")
+// using global hook and Robot().createScreenCapture create entirely new
+// screenshot without clipboard
 public final class TrayApp {
-static long lastEvent = 0;
+	static long lastEvent = 0;
 
 	public static void main(String[] args) throws InterruptedException {
 		// quit if trayApp isn't supported
@@ -49,45 +50,41 @@ static long lastEvent = 0;
 		// get global keyboard hook
 		GlobalKeyboardHook keyboardHook = new GlobalKeyboardHook(true);
 
-			// --Quit Button--
-		
+		// --Quit Button--
+
 		// create menu item
-			MenuItem quit = new MenuItem("Quit");
-			
+		MenuItem quit = new MenuItem("Quit");
+
 		// create listener
 		ActionListener quitListener = exit -> {
 			keyboardHook.shutdownHook();
 			System.exit(0);
 		};
-		
+
 		// add listener
 		quit.addActionListener(quitListener);
 
-		
-			// --Choose Output Dir Button--
-		
+		// --Choose Output Dir Button--
+
 		// create menu item
-			MenuItem dir = new MenuItem("Choose output dir");
-			
+		MenuItem dir = new MenuItem("Choose output dir");
+
 		// create listener
-			ActionListener dirListener = new ActionListener() {
-				public void actionPerformed(ActionEvent dir) {
-					//create new JFileChooser
-					JFileChooser chooser = new JFileChooser(); 
-					//opens on screenshot directory
-					chooser.setCurrentDirectory(new java.io.File(getDir())); 
-					chooser.setDialogTitle("Select Output Directory");
-					chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-					// disable the "All files" option.
-					chooser.setAcceptAllFileFilterUsed(false);  
-					if (chooser.showOpenDialog(chooser) == JFileChooser.APPROVE_OPTION) { //approve button (open)
-						//set screenshot directory at Path+\
-						setDir(chooser.getSelectedFile().toString()+File.separator);  
-					}
-					else //cancel button
-						System.out.println("No Selection ");
-				}
-			};
+		ActionListener dirListener = dir1 -> {
+			// create new JFileChooser
+			JFileChooser chooser = new JFileChooser();
+			// opens on screenshot directory
+			chooser.setCurrentDirectory(new java.io.File(getDir()));
+			chooser.setDialogTitle("Select Output Directory");
+			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			// disable the "All files" option.
+			chooser.setAcceptAllFileFilterUsed(false);
+			if (chooser.showOpenDialog(chooser) == JFileChooser.APPROVE_OPTION) { // approve button (open)
+				// set screenshot directory at Path+\
+				setDir(chooser.getSelectedFile().toString() + File.separator);
+			} else // cancel button
+				System.out.println("No Selection ");
+		};
 		
 		// add listener
 				dir.addActionListener(dirListener);
