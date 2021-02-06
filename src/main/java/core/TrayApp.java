@@ -17,17 +17,12 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import lc.kra.system.keyboard.GlobalKeyboardHook;
@@ -43,6 +38,7 @@ public final class TrayApp {
 	private static long lastEvent = 0; //used for timer calculations
 	private static ServerSocket uniqueServerSocket;
 	private static final Clipboard SYSTEM_CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
+	private static SimpleProperties config = new SimpleProperties();
 
 
 	public static void main(String[] args) throws InterruptedException {
@@ -85,14 +81,14 @@ public final class TrayApp {
 		// create new JFileChooser
 			JFileChooser chooser = new JFileChooser();
 		// opens on screenshot directory
-			chooser.setCurrentDirectory(new java.io.File(getDir()));
+			chooser.setCurrentDirectory(new java.io.File(config.getProperty(SimpleProperties.FIELD01)));
 			chooser.setDialogTitle("Select Output Directory");
 			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		// disable the "All files" option.
 			chooser.setAcceptAllFileFilterUsed(false);
 			if (chooser.showOpenDialog(chooser) == JFileChooser.APPROVE_OPTION) { // approve button (open)
 				// set screenshot directory at Path+\
-				setDir(chooser.getSelectedFile().toString() + File.separator);
+				config.setProperty(SimpleProperties.FIELD01 , chooser.getSelectedFile().toString() + File.separator);
 			} else // cancel button
 				System.out.println("No Selection ");
 		};
@@ -104,7 +100,7 @@ public final class TrayApp {
 		ActionListener clickListener = click -> {
 			try {
 				// opens screenshot directory
-				Desktop.getDesktop().open(new File(getDir()));
+				Desktop.getDesktop().open(new File(config.getProperty(SimpleProperties.FIELD01)));
 			} catch (IOException e) {
 				System.err.println("IO Error when opening Screenshot Directory");
 			}
@@ -139,7 +135,7 @@ public final class TrayApp {
 								if(System.currentTimeMillis()-lastEvent>1000) {
 									lastEvent = System.currentTimeMillis();
 									System.out.println("Keyboard Listener Activated");									
-									robotTo(getDir());
+									robotTo(config.getProperty(SimpleProperties.FIELD01));
 								}
 							} catch (Exception e) {
 								System.err.println("Exception at print to dir");
@@ -157,7 +153,7 @@ public final class TrayApp {
 						Thread.sleep(50);		
 						if(System.currentTimeMillis()-lastEvent>1000) {
 							System.out.println("Clipboard Listener Activated");
-							clipboardTo(getDir());
+							clipboardTo(config.getProperty(SimpleProperties.FIELD01));
 						}
 					} catch(InterruptedException e) {
 						System.err.println("Literally impossible - Thread sleep Error");
@@ -168,6 +164,8 @@ public final class TrayApp {
 					}
 				});
 	}
+
+	/* -----------------------Helper Methods------------------------------ */
 
 		//load icon from ICON_PATH
 	private static Image getIcon(Image icon) {
@@ -248,63 +246,6 @@ public final class TrayApp {
 		return tmpDir.getAbsolutePath(); // returns new path
 	}
 
-		// create default settings.txt if it doesn't exist , and return dir from
-		// settings.txt (program prone to malfunction if settings.txt is tempered with)
-	private static String getDir() {
-		String dir = null;
-	// get settings from default settings directory
-		File settings = new File(settingsDir() + "settings.txt");
-	// file doesn't exist -> create file
-		if (!settings.exists()) { 
-			System.out.println("newDir");
-		// create default dir
-			dir = settingsDir() + "Screenshots" + File.separator;
-		// write default dir to file
-			setDir(dir);
-		} else {
-			try { // create scanner and get text from settings.txt
-				Scanner sc = new Scanner(settings);
-				dir = sc.next();
-				sc.close();
-			} catch (FileNotFoundException e) {
-				System.err.println("FileNotFound Exception");
-			}
-		}
-		return dir;
-	}
-
-		// change/create directory inside settings.txt to 'dir'
-	private static void setDir(String dir) {
-			// get settings.txt
-		File settings = new File(settingsDir() + "settings.txt");
-		try {	// create path to settings if it doesn't exist (create directories)
-			if (Files.notExists(Paths.get(dir)))
-				Files.createDirectories(Paths.get(dir));
-		// create settings.txt if it doesn't exist
-			if (!settings.exists()) {
-				Files.createDirectories(Paths.get(settingsDir())); // check again for path, might be useless
-			// create settings.txt
-				if (!settings.createNewFile())
-					System.err.println("Error creating file");
-			}
-		} catch (IOException e) {
-			System.err.println("IO Exception");
-		}
-	// create PrintWriter on settings.txt (arg inside try -> resource close automatically after block)
-		try (PrintWriter out = new PrintWriter(settings.getAbsolutePath())) {
-				// rewrite contents of settings.txt to be 'dir'
-			out.println(dir);
-			out.flush();
-		} catch (java.io.FileNotFoundException e) {
-			System.err.println("FileNotFound Exception");
-		}
-	}
-
-		// returns app settings path as string
-	private static String settingsDir() {
-		return (System.getProperty("user.home") + File.separator + ".ScreenshotZ" + File.separator);
-	}
-
 		//return Transferable content from Clipboard
 	private static Transferable getClipboard() {		
 		Transferable content = null;
@@ -351,7 +292,7 @@ public final class TrayApp {
 		} //check if trayApp was started with args
 		else if(args!=null && args.length > 0 && args[0].equals("-capture")) {
 			try {
-				robotTo(getDir());
+				robotTo(config.getProperty(SimpleProperties.FIELD01));
 			} catch (Exception a) {
 				System.err.println("Couldn't print before loading main method..");
 				a.printStackTrace();

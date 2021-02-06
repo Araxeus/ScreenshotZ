@@ -9,12 +9,15 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
 
-@SuppressWarnings("java:S106")
+@SuppressWarnings({"java:S106","java:S1659"})
 
 public class SimpleProperties
 {   // default path
-    private static final String DEFAULT_PATH = System.getProperty("user.home") + File.separator + ".ScreenshotZ" + File.separator + "config.xml";
-    
+    public static final String 
+    DEFAULT_PATH = System.getProperty("user.home") + File.separator + ".ScreenshotZ" + File.separator + "config.xml" ,
+    FIELD01 = "Screenshot Dir" ,
+    FIELD01_DEFAULT_VALUE = new File(DEFAULT_PATH).getParent() + File.separator + "Screenshots" + File.separator;
+
     private String propertiesFilePath;
     private Properties properties;
 
@@ -29,6 +32,8 @@ public class SimpleProperties
             try (FileInputStream in = new FileInputStream(propertiesFilePath))
             {
                 properties.loadFromXML(in);
+                if(!isValidProperties())
+                    throw new InvalidPropertiesFormatException("Missing Keys in Config");
             } catch (InvalidPropertiesFormatException e) {
                 System.err.println("Format error on config.xml -> writing default config");
                 setDefault();
@@ -39,12 +44,16 @@ public class SimpleProperties
             System.err.println("oh no.. config wasn't loaded");      
     }
 
+    private boolean isValidProperties() {
+        return properties.containsKey(FIELD01);
+    }
+
     public void setProperty(String key, String value){
         if(!properties.getProperty(key).equals(value)) {
         properties.setProperty(key, value);
         store();
         } else
-             System.err.println("Setting property to the same value");
+             System.err.println("Trying to set property '"+key+"' to the same value ("+value+")");
     }
 
     public String getProperty(String key) {
@@ -62,7 +71,7 @@ public class SimpleProperties
     }
 
     protected void setDefault() {
-        properties.setProperty("Screenshot Dir", new File(propertiesFilePath).getParent() + File.separator + "Screenshots" + File.separator);
+        properties.setProperty(FIELD01, FIELD01_DEFAULT_VALUE);
         store();
     }
 
