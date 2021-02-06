@@ -1,4 +1,5 @@
 # :sparkles: ScreenshotZ :sparkles:
+- App can directly capture to default directory when launched with @param -capture
 - App Version Differences:
 *	V1 use global hook, grab image from clipboard
 *	V2 using clipboard listener (listen to type change so have to reset clipboard at start and after each screenshot) #probably the lightest && fastest and most reliable
