@@ -28,16 +28,21 @@
 
 - Expand Readme
 
+.
 
--
+.
 
--
+.
+
+.
 
 
-- Startup Rule Instructions:
-*	Put bat in same dir as ScreenshotZ.exe (rule is for this exact name - can be changed in .bat)
-*	And then run the addStartupRule.bat as admin
-*	(Adds startup rule to windows task scheduler)
+# Startup Rule Instructions: (Adds startup rule to windows task scheduler)
+
+*	First put bat in same dir as ScreenshotZ.exe (rule is for this exact name - can be changed in .bat)
+
+*	Then run the addStartupRule.bat as admin
+	
 *	to uninstall run deleteStartupRule.bat as admin and press Y
 
 
