@@ -1,1 +1,1 @@
-start windirstat.exe "%~dp0"
+start windirstat.exe "%~dp0"	
