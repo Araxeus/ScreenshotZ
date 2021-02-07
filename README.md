@@ -21,7 +21,7 @@
      - Default screenshot directory is MyUser/.ScreenshotZ/Screenshots (Default 2nd keybind is null)
 
 
-    - To show some debugging - openWithDebug.bat from same directory as jar OR start program from CMD
+    - To show some debugging: run openWithDebug.bat from same directory as jar OR start program from CMD
 
 
      - App can directly capture to saved/default directory when launched with @arg -capture (doesnt open the whole program)
@@ -42,7 +42,7 @@
 
 - ? Fix memory leak ?
 
-- Make/Add .REG file "ScreenshotZ" (Add to explorer context menu - launch with @param -capture) [almost done]
+- Make/Add .REG file "ScreenshotZ" (Add to explorer context menu - launch with @arg -capture) [almost done]
 
 - Make installScript (use also contextMenu.REG and onStartup.bat)
 
