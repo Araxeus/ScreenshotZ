@@ -34,11 +34,16 @@ import lc.kra.system.keyboard.event.GlobalKeyEvent;
 //using clipboard listener
 
 public final class TrayApp {
+
 	private static final String ICON_PATH = "resources/TrayIcon.png";
+
 	private static long lastEvent = 0; //used for timer calculations
+
 	private static ServerSocket uniqueServerSocket;
+
 	private static final Clipboard SYSTEM_CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
-	private static SimpleProperties config = new SimpleProperties();
+	
+	static SimpleProperties config = new SimpleProperties();
 
 
 	public static void main(String[] args) throws InterruptedException {
@@ -95,6 +100,16 @@ public final class TrayApp {
 		
 		// add listener
 			dir.addActionListener(dirListener);
+
+	// create menu item
+	MenuItem keybindMenu = new MenuItem("Choose Additional Keybind");
+
+	// create listener
+		ActionListener keybindMenuListener = keybindListen -> 
+		GetKeybind.openWindow(keyboardHook);
+		
+	// add listener
+		keybindMenu.addActionListener(keybindMenuListener);
 		
 	// Left click / interact with trayIcon
 		ActionListener clickListener = click -> {
@@ -110,6 +125,7 @@ public final class TrayApp {
 		PopupMenu popup = new PopupMenu();
 
 	// add menu items to popup menu
+		popup.add(keybindMenu);
 		popup.add(dir);
 		popup.add(quit);
 	// construct a TrayIcon
@@ -129,7 +145,8 @@ public final class TrayApp {
 				keyboardHook.addKeyListener(new GlobalKeyAdapter() {
 					@Override
 					public void keyPressed(GlobalKeyEvent event) {
-						if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_SNAPSHOT) { // if PrtScn
+						if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_SNAPSHOT || 
+						keyboardHook.areKeysHeldDown(config.keybind)) {
 							try {
 									// print to screenshot directory
 								if(System.currentTimeMillis()-lastEvent>1000) {
@@ -143,7 +160,7 @@ public final class TrayApp {
 							}
 						}
 					}
-				});				
+				});	
 
 		//Clipboard Style Listener
 				SYSTEM_CLIPBOARD.addFlavorListener(listener -> {

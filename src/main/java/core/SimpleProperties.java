@@ -16,7 +16,11 @@ public class SimpleProperties
     public static final String 
     DEFAULT_PATH = System.getProperty("user.home") + File.separator + ".ScreenshotZ" + File.separator + "config.xml" ,
     FIELD01 = "Screenshot Dir" ,
-    FIELD01_DEFAULT_VALUE = new File(DEFAULT_PATH).getParent() + File.separator + "Screenshots" + File.separator;
+    FIELD01_DEFAULT_VALUE = new File(DEFAULT_PATH).getParent() + File.separator + "Screenshots" + File.separator ,
+    FIELD02 = "Keybind" ,
+    FIELD02_DEFAULT_VALUE = "*-";
+
+    int[] keybind;
 
     private String propertiesFilePath;
     private Properties properties;
@@ -32,8 +36,8 @@ public class SimpleProperties
             try (FileInputStream in = new FileInputStream(propertiesFilePath))
             {
                 properties.loadFromXML(in);
-                if(!isValidProperties())
-                    throw new InvalidPropertiesFormatException("Missing Keys in Config");
+                if(updateProperties())
+                    store();
             } catch (InvalidPropertiesFormatException e) {
                 System.err.println("Format error on config.xml -> writing default config");
                 setDefault();
@@ -44,14 +48,16 @@ public class SimpleProperties
             System.err.println("oh no.. config wasn't loaded");      
     }
 
-    private boolean isValidProperties() {
-        return properties.containsKey(FIELD01);
-    }
+
 
     public void setProperty(String key, String value){
         if(!properties.getProperty(key).equals(value)) {
         properties.setProperty(key, value);
         store();
+        //update keybind array if settings was updated
+            if(key.equals(FIELD02)){
+                keybind=getKeybind();
+            }
         } else
              System.err.println("Trying to set property '"+key+"' to the same value ("+value+")");
     }
@@ -60,18 +66,45 @@ public class SimpleProperties
         return properties.getProperty(key);
     }
 
+    private int[] getKeybind() {
+        String[] temp = properties.getProperty(FIELD02).split(",");
+        int[] output = new int[temp.length];
+        for (int i=0; i<temp.length; i++)
+            output[i]=Integer.parseInt(temp[i]);
+        return output;
+    }
+
     private void store() {
         try(FileOutputStream outStream = new FileOutputStream(propertiesFilePath)) {
         properties.storeToXML(outStream , "ScreenshotZ Program parameters");
-        System.err.println("Stored properties :"+properties.toString()); //?
+        System.out.println("Stored properties :"+properties.toString()); //?
         } catch (IOException e) {
             System.err.println("IOException");
 			e.printStackTrace();
         }
     }
 
-    protected void setDefault() {
+    private boolean updateProperties() {
+        boolean changed = false;   
+        if(!properties.containsKey(FIELD01)) {
+            properties.setProperty(FIELD01, FIELD01_DEFAULT_VALUE);
+            changed = true;
+            System.err.println("Properties didn't contain "+FIELD01);
+        }
+        if(!properties.containsKey(FIELD02)) {
+            properties.setProperty(FIELD02, FIELD02_DEFAULT_VALUE);
+            changed = true;
+            System.err.println("Properties didn't contain "+FIELD02);
+        }
+        //initialize keybind
+        if(keybind == null)
+            keybind = getKeybind();
+        return changed;
+    }
+
+    private void setDefault() {
         properties.setProperty(FIELD01, FIELD01_DEFAULT_VALUE);
+        properties.setProperty(FIELD02, FIELD02_DEFAULT_VALUE);
         store();
     }
 
