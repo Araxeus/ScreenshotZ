@@ -18,7 +18,7 @@ public class SimpleProperties
     FIELD01 = "Screenshot Dir" ,
     FIELD01_DEFAULT_VALUE = new File(DEFAULT_PATH).getParent() + File.separator + "Screenshots" + File.separator ,
     FIELD02 = "Keybind" ,
-    FIELD02_DEFAULT_VALUE = "*-";
+    FIELD02_DEFAULT_VALUE = "0";
 
     int[] keybind;
 
@@ -91,7 +91,7 @@ public class SimpleProperties
             changed = true;
             System.err.println("Properties didn't contain "+FIELD01);
         }
-        if(!properties.containsKey(FIELD02)) {
+        if(!properties.containsKey(FIELD02) || properties.getProperty(FIELD02).equals("")) {
             properties.setProperty(FIELD02, FIELD02_DEFAULT_VALUE);
             changed = true;
             System.err.println("Properties didn't contain "+FIELD02);

@@ -30,8 +30,9 @@ public class GetKeybind {
 	private GlobalKeyboardHook keyboardHook;
 	
 	private ArrayList<Integer> keyChain;
-	
+
 	private boolean capturing;
+
 	
 	private GetKeybind(GlobalKeyboardHook keyboardHook) {
 		this.keyboardHook = keyboardHook;
@@ -92,6 +93,7 @@ public class GetKeybind {
 		keyLabel.setBackground(SWTResourceManager.getColor(81, 86, 88));
 		keyLabel.setFont(SWTResourceManager.getFont("Sitka Display", 26, SWT.BOLD | SWT.ITALIC));
 		keyLabel.setBounds(10, 10, 424, 94);
+        addOrigin();
 		
 	//Save Button
 		Button saveButton = new Button(shell, SWT.NONE);
@@ -101,7 +103,7 @@ public class GetKeybind {
 			public void widgetSelected(SelectionEvent e) {
 				System.out.println(keyChain.toString());
 				TrayApp.config.setProperty(SimpleProperties.FIELD02 , keyChainToString());
-				shell.close();
+                shell.close();
 			}
 		});
 		saveButton.setForeground(SWTResourceManager.getColor(SWT.COLOR_TITLE_FOREGROUND));
@@ -110,14 +112,10 @@ public class GetKeybind {
 		saveButton.setBounds(166, 110, 120, 50);
 		saveButton.setText("Save");
 		
-	//On exit (dispose listener	)
-		shell.addDisposeListener( disposed ->  
-            //keyboardHook.shutdownHook(); //if testing from main 
-			System.out.print("Exited Program (dont forget to delete hook shutdown on main release)")
-			);
-		
 	//key listener
-		keyboardHook.addKeyListener(new GlobalKeyAdapter() {
+   // GlobalKeyAdapter keybindListen = new GlobalKeyAdapter())
+		//
+            GlobalKeyAdapter keybindListen = new GlobalKeyAdapter() {
 			@Override
 			public void keyPressed(GlobalKeyEvent event) {
 			//sync threads to avoid 'Invalid Thread Access' error	
@@ -138,8 +136,18 @@ public class GetKeybind {
                 });
 			}
 			
-		});			
+		};
+        //add Listener
+        keyboardHook.addKeyListener(keybindListen);
+
+        	//On exit (dispose listener	)
+		shell.addDisposeListener( disposed ->  {
+            keyboardHook.removeKeyListener(keybindListen);
+			System.out.print("Exited Program (and closed 2nd listener)");
+        });
 	}
+
+    
 	
     //load Image from resources
 			public Image getImage(String name) {
@@ -171,8 +179,17 @@ public class GetKeybind {
 	    }
 	}
 
+    private void addOrigin() {
+        if(TrayApp.config.keybind.length==1 && TrayApp.config.keybind[0]==0)
+            return;
+        for(int key : TrayApp.config.keybind)
+            addKey(key);
+    }
+
     private String keyChainToString() {
-        StringBuilder output = new StringBuilder();
+        if (keyChain.isEmpty())
+            return "0";
+        StringBuilder output = new StringBuilder(); 
         for(int i=0; i<keyChain.size(); i++) {
             output.append(keyChain.get(i));
             if(i!=keyChain.size()-1)
@@ -183,7 +200,6 @@ public class GetKeybind {
 	
 	private static String keyToString(int vKC ) { //vKC = Virtual Key Code
 		switch(vKC) {
-			case 0: return "?HOW?";
 			case 3: return  "Break";
 			case 8: return  "Backspace/delete";
 			case 9: return  "Tab";
