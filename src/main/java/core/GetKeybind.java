@@ -111,6 +111,20 @@ public class GetKeybind {
 		saveButton.setFont(SWTResourceManager.getFont("Microsoft YaHei", 18, SWT.NORMAL));
 		saveButton.setBounds(166, 110, 120, 50);
 		saveButton.setText("Save");
+
+    //Clear Button
+        Button clearButton =  new Button(shell, SWT.FLAT);
+            clearButton.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    keyChain.clear();
+                    keyLabel.setText("");
+                }
+            });
+            clearButton.setFont(SWTResourceManager.getFont("Microsoft YaHei", 11, SWT.NORMAL));
+            clearButton.setBounds(390, 147, 44, 25);
+            clearButton.setText("clear");
+            clearButton.setBackground(SWTResourceManager.getColor(128, 128, 128));
 		
 	//key listener
    // GlobalKeyAdapter keybindListen = new GlobalKeyAdapter())
@@ -142,8 +156,8 @@ public class GetKeybind {
 
         	//On exit (dispose listener	)
 		shell.addDisposeListener( disposed ->  {
-            keyboardHook.removeKeyListener(keybindListen);
-			System.out.print("Exited Program (and closed 2nd listener)");
+            keyboardHook.removeKeyListener(keybindListen); //important
+			System.out.print("Exited Keybind UI (and closed 2nd listener)");
         });
 	}
 
