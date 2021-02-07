@@ -175,8 +175,11 @@ public class GetKeybind {
         shell.addDisposeListener(disposed -> {
             // remove keybind listener from imported keyboard_hook
             keyboardHook.removeKeyListener(keybindListen);
-            System.out.print("Exited Keybind UI (and closed 2nd listener)");
+            System.out.println("Exited Keybind UI (and closed 2nd listener)");
         });
+
+        //focus on new window
+        shell.forceActive();
     }
 
     // Load Image from resources inputStream SWT STYLE
