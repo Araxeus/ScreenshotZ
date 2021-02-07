@@ -1,7 +1,5 @@
 #            :sparkles: ScreenshotZ :sparkles:
 
-############# REGISTRY INSTEAD OF TXT SETTINGS? #############
-
 
      App can directly capture to default directory when launched with @param -capture (doesnt open the whole program)
 
@@ -12,11 +10,8 @@
 
 # TODO
 
-- Find way to load icon from jar
-
 - Add option to launch 'crop jpanel' (on screenshot, launch window with crop ui)
 
-- Add option to 'remap' button ?
 
 - ? Fix memory leak ?
 
