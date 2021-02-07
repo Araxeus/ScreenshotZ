@@ -1,10 +1,13 @@
 package core;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -68,7 +71,11 @@ public class GetKeybind {
 	private void createContents() {
 	//Shell
 		shell = new Shell(SWT.CLOSE | SWT.TITLE);
-		shell.setImage(SWTResourceManager.getImage(GetKeybind.class, "/resources/BaseIcon.ico"));
+        Image icon = getImage("BaseIcon.ico");
+        if(icon!=null)
+		        shell.setImage(icon);
+        else
+                shell.setImage(SWTResourceManager.getImage("Resources/BaseIcon.ico"));
 		shell.setBackground(SWTResourceManager.getColor(81, 86, 88));
 		shell.setTouchEnabled(true);
 		shell.setSize(450, 211);
@@ -134,6 +141,18 @@ public class GetKeybind {
 		});			
 	}
 	
+    //load Image from resources
+			public Image getImage(String name) {
+				Image img = null;
+				try (InputStream inputStream = TrayApp.class.getClassLoader().getResourceAsStream(name)){
+					img = new Image(display,inputStream);
+				} catch (IOException e) {
+					System.err.println("Error loading icon");
+					e.getMessage();
+				}
+				return img;
+			}
+
     private void addKey(int vKC) { //vKC = Virtual Key Code
 	    if(keyChain.size()<3 && !keyChain.contains(vKC)) {
 	    	String keyCode = keyToString(vKC);

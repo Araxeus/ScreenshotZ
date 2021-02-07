@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -52,8 +53,7 @@ public final class TrayApp {
 		if (isImage(getClipboard()))
 			setClipboard(new StringSelection("Check123"));
 	// try to load icon
-		Image icon = null;
-		icon = getIcon(icon);
+		Image icon = getImage("TrayIcon.png");
 
 		TrayIcon trayIcon = null; // created later
 
@@ -123,7 +123,6 @@ public final class TrayApp {
 
 	// create a popup menu
 		PopupMenu popup = new PopupMenu();
-
 	// add menu items to popup menu
 		popup.add(keybindMenu);
 		popup.add(dir);
@@ -184,26 +183,20 @@ public final class TrayApp {
 
 	/* -----------------------Helper Methods------------------------------ */
 
-		//load icon from ICON_PATH
-	private static Image getIcon(Image icon) {
-		try {
-			File iconFile = new File(ICON_PATH);
-			if (iconFile.exists()) {
-					// load into Image file
-				icon = Toolkit.getDefaultToolkit().getImage(ICON_PATH);
-					// wait for image to load
-				while (icon.getWidth(null) == -1)
-					Thread.sleep(50);
-			} else {
-				System.err.println("ERROR: TrayIcon not found, Exiting Program"); 
-				System.exit(0);
+			//load Image from resources
+			public static BufferedImage getImage(String name) {
+				BufferedImage img = null;
+				try (InputStream inputStream = TrayApp.class.getClassLoader().getResourceAsStream(name)){
+					img = ImageIO.read(inputStream);
+					while (img.getWidth(null) == -1)
+						Thread.sleep(50);
+				} catch (Exception e) {
+					System.err.println("Error loading TrayIcon");
+					e.getMessage();
+					System.exit(1);
+				}
+				return img;
 			}
-		} catch (Exception e) {
-			System.err.println("Error loading image");
-			e.getMessage();
-		}
-		return icon;
-	}
 
 		// print screenshot to 'directory'
 	private static void robotTo(String directory) throws Exception {
