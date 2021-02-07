@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
@@ -40,7 +41,8 @@ public class SimpleProperties
                     store();
             } catch (InvalidPropertiesFormatException e) {
                 System.err.println("Format error on config.xml -> writing default config");
-                setDefault();
+                if(updateProperties())
+                    store();
             } catch (IOException e) {
                 System.err.println("RARE Error Opening FileInputStream");
             }
@@ -89,6 +91,14 @@ public class SimpleProperties
         if(!properties.containsKey(FIELD01)) {
             properties.setProperty(FIELD01, FIELD01_DEFAULT_VALUE);
             changed = true;
+        //initialize default screenshot directory 
+            try{
+                if(Files.notExists(Paths.get(FIELD01_DEFAULT_VALUE))){
+                    Files.createDirectories(Paths.get(FIELD01_DEFAULT_VALUE));
+                }
+            } catch (IOException e) {
+                System.err.println("couldn't create default screenshot dir");
+            }
             System.err.println("Properties didn't contain "+FIELD01);
         }
         if(!properties.containsKey(FIELD02) || properties.getProperty(FIELD02).equals("")) {
@@ -100,12 +110,6 @@ public class SimpleProperties
         if(keybind == null)
             keybind = getKeybind();
         return changed;
-    }
-
-    private void setDefault() {
-        properties.setProperty(FIELD01, FIELD01_DEFAULT_VALUE);
-        properties.setProperty(FIELD02, FIELD02_DEFAULT_VALUE);
-        store();
     }
 
     private boolean checkPath() {
