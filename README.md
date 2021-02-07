@@ -1,11 +1,39 @@
-#            :sparkles: ScreenshotZ :sparkles:
-########### Known issue: Cant save directly to desktop unless started program as administrator
+###### Known issue: Cant save directly to desktop unless started program as administrator ######
+
+#  :sparkles: ScreenshotZ App Features: :sparkles:
+
+
+     App launch directly to system tray
+
+
+
+     Option to change default screenshot directory
+
+
+
+     When PrintScreen is pressed - it will always save to screenshot directory
+
+
+
+     Option to add 2nd Keybind (Launch UI and save a combination of 1-3 keys)
+
+
+
+     App save settings to MyUser/.ScreenshotZ/config.XML
+
+
+
+     Default screenshot directory is MyUser/.ScreenshotZ/Screenshots (Default 2nd keybind is null)
+
+
 
      App can directly capture to default directory when launched with @param -capture (doesnt open the whole program)
+     
+     
 
--> - -    Use Global Hook, Robot().createScreenCapture create entirely new screenshot without clipboard, if it doesnt launch for some reason (keyboard event not detected)
+-> - -    Use Global Hook, Robot().createScreenCapture create entirely new screenshot without clipboard
 
--> - -    Or if keyboard event not detected us Clipboard Listener (listen to type change so have to reset clipboard at program start[if content type was image] and after each screenshot) and grab image from clipboard
+-> - -    Or if keyboard event is not detected > use Clipboard Listener (listen to type change so have to reset clipboard at program start[if content type was image] and after each screenshot) and grab image from clipboard
 
 # TODO
 
