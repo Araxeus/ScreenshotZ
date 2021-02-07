@@ -13,7 +13,7 @@ import java.util.Properties;
 @SuppressWarnings({"java:S106","java:S1659"})
 
 public class SimpleProperties
-{   // default path
+{
     public static final String 
     DEFAULT_PATH = System.getProperty("user.home") + File.separator + ".ScreenshotZ" + File.separator + "config.xml" ,
     FIELD01 = "Screenshot Dir" ,
@@ -21,42 +21,50 @@ public class SimpleProperties
     FIELD02 = "Keybind" ,
     FIELD02_DEFAULT_VALUE = "0";
 
+//config always has updated keybind array
+
     int[] keybind;
 
     private String propertiesFilePath;
+
     private Properties properties;
 
+//PUBLIC CONSTRUCTOR create config at default path
     public SimpleProperties() {
         this(DEFAULT_PATH);
     }
 
+//PUBLIC CONSTRUCTOR create config
     public SimpleProperties(String path) {
         propertiesFilePath = path;
         properties = new Properties();
+    //checkPath create/check propertiesFilePath - return false if failed
         if(checkPath())
             try (FileInputStream in = new FileInputStream(propertiesFilePath))
             {
+            //load properties from xml
                 properties.loadFromXML(in);
-                if(updateProperties())
-                    store();
             } catch (InvalidPropertiesFormatException e) {
                 System.err.println("Format error on config.xml -> writing default config");
-                if(updateProperties())
-                    store();
             } catch (IOException e) {
                 System.err.println("RARE Error Opening FileInputStream");
+            } finally {
+            //create missing properties and set to default - returns false if nothing changed
+                if(updateProperties())
+                    store();
             }
          else
             System.err.println("oh no.. config wasn't loaded");      
     }
 
 
-
+//PUBLIC set property
     public void setProperty(String key, String value){
+    //check that new value is different from old value
         if(!properties.getProperty(key).equals(value)) {
         properties.setProperty(key, value);
         store();
-        //update keybind array if settings was updated
+        //update keybind array if FIELD02 was updated
             if(key.equals(FIELD02)){
                 keybind=getKeybind();
             }
@@ -64,54 +72,63 @@ public class SimpleProperties
              System.err.println("Trying to set property '"+key+"' to the same value ("+value+")");
     }
 
+//PUBLIC get property
     public String getProperty(String key) {
         return properties.getProperty(key);
     }
 
+//int[] keybind updater
     private int[] getKeybind() {
+        // new String array from splitting property around ','
         String[] temp = properties.getProperty(FIELD02).split(",");
+        // convert String array to int array
         int[] output = new int[temp.length];
         for (int i=0; i<temp.length; i++)
             output[i]=Integer.parseInt(temp[i]);
         return output;
     }
 
+//store data to config file
     private void store() {
         try(FileOutputStream outStream = new FileOutputStream(propertiesFilePath)) {
         properties.storeToXML(outStream , "ScreenshotZ Program parameters");
-        System.out.println("Stored properties :"+properties.toString()); //?
+        System.out.println("Stored properties :"+properties.toString());
         } catch (IOException e) {
             System.err.println("IOException");
 			e.printStackTrace();
         }
     }
 
+//create missing properties and set to default - returns false if nothing changed
     private boolean updateProperties() {
-        boolean changed = false;   
+        boolean changed = false;
+    //SCREENSHOT DIRECTORY
         if(!properties.containsKey(FIELD01)) {
             properties.setProperty(FIELD01, FIELD01_DEFAULT_VALUE);
             changed = true;
-        //initialize default screenshot directory 
+            System.err.println("Properties didn't contain "+FIELD01);
+        //initialize default screenshot directory if it doesn't exist
             try{
                 if(Files.notExists(Paths.get(FIELD01_DEFAULT_VALUE))){
                     Files.createDirectories(Paths.get(FIELD01_DEFAULT_VALUE));
                 }
             } catch (IOException e) {
                 System.err.println("couldn't create default screenshot dir");
-            }
-            System.err.println("Properties didn't contain "+FIELD01);
+            }  
         }
+    //KEYBIND SEQUENCE
         if(!properties.containsKey(FIELD02) || properties.getProperty(FIELD02).equals("")) {
             properties.setProperty(FIELD02, FIELD02_DEFAULT_VALUE);
             changed = true;
             System.err.println("Properties didn't contain "+FIELD02);
         }
-        //initialize keybind
+    //initialize keybind[]
         if(keybind == null)
             keybind = getKeybind();
         return changed;
     }
 
+//check path to config.xml
     private boolean checkPath() {
         File config = new File(propertiesFilePath);
 		try {	

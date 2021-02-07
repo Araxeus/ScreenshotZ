@@ -26,24 +26,33 @@ public class GetKeybind {
 	private Shell shell;
 	private Display display;
 	private Label keyLabel;
-	
+
 	private GlobalKeyboardHook keyboardHook;
 	
+//current pressed keys
 	private ArrayList<Integer> keyChain;
 
+//is firstKey pressed?
 	private boolean capturing;
 
-	
+//PRIVATE constructor	
 	private GetKeybind(GlobalKeyboardHook keyboardHook) {
+            //get keyboard hook
 		this.keyboardHook = keyboardHook;
+            //initialize keyChain
 		keyChain = new ArrayList<>();
+            //initialize display
 		display = Display.getDefault();
+            //onStart - not capturing
 		capturing=false;
 	}
 	
+//PUBLIC window initializer
 	public static void openWindow(GlobalKeyboardHook keyboardHook) {
 		try {
+                //create new GetKeybind window
 			GetKeybind window = new GetKeybind(keyboardHook);
+                //and then open that window
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -54,8 +63,9 @@ public class GetKeybind {
 	 * Open the window.
 	 */
 	private void open() {
-		
+		    //populate shell
 		createContents();
+            //open shell
 		shell.open();
 		shell.layout();
 		
@@ -75,15 +85,15 @@ public class GetKeybind {
         Image icon = getImage("BaseIcon.ico");
         if(icon!=null)
 		        shell.setImage(icon);
-        else
+        else //this will execute only if jar was badly packaged
                 shell.setImage(SWTResourceManager.getImage("Resources/BaseIcon.ico"));
 		shell.setBackground(SWTResourceManager.getColor(81, 86, 88));
 		shell.setTouchEnabled(true);
 		shell.setSize(450, 211);
 		shell.setText("Choose Keybind");
-		//Create rectangle from display
+	//Create rectangle from display
 		Rectangle screenSize = display.getPrimaryMonitor().getBounds();
-		//Set to middle of the screen
+	//Set shell location to middle of the screen
 		shell.setLocation((screenSize.width - shell.getBounds().width) / 2, (screenSize.height - shell.getBounds().height) / 2);
 		shell.setLayout(null);
 		
@@ -98,11 +108,13 @@ public class GetKeybind {
 	//Save Button
 		Button saveButton = new Button(shell, SWT.NONE);
 		saveButton.addSelectionListener(new SelectionAdapter() {
-		//save and close
+		//save and close on click
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				System.out.println(keyChain.toString());
+                //update main app config
 				TrayApp.config.setProperty(SimpleProperties.FIELD02 , keyChainToString());
+                //close shell
                 shell.close();
 			}
 		});
@@ -126,18 +138,19 @@ public class GetKeybind {
             clearButton.setText("clear");
             clearButton.setBackground(SWTResourceManager.getColor(128, 128, 128));
 		
-	//key listener
-   // GlobalKeyAdapter keybindListen = new GlobalKeyAdapter())
-		//
+	//create keybind listener
             GlobalKeyAdapter keybindListen = new GlobalKeyAdapter() {
 			@Override
 			public void keyPressed(GlobalKeyEvent event) {
 			//sync threads to avoid 'Invalid Thread Access' error	
 				display.asyncExec(() -> {
+                //if not capturing -> this is the first key pressed
                     if (!capturing) {
+                            //set mode to capturing
                         capturing = true;
+                            //clear keychain
                         keyChain.clear();
-                    }
+                    } //anyway try to add current key
                     addKey(event.getVirtualKeyCode());
                 });
 			}
@@ -145,25 +158,28 @@ public class GetKeybind {
 			@Override 
 			public void keyReleased(GlobalKeyEvent event) {
 				display.asyncExec(() -> {
+                    //if the released key is the first key that was pressed (added to keychain)
                     if (!keyChain.isEmpty() && event.getVirtualKeyCode() == keyChain.get(0))
+                            //not capturing anymore
                         capturing = false;
                 });
 			}
 			
 		};
-        //add Listener
+    //add Listener to imported keyboard_hook
         keyboardHook.addKeyListener(keybindListen);
 
-        	//On exit (dispose listener	)
+    //On exit (dispose listener	)
 		shell.addDisposeListener( disposed ->  {
-            keyboardHook.removeKeyListener(keybindListen); //important
+            //remove keybind listener from imported keyboard_hook
+            keyboardHook.removeKeyListener(keybindListen);
 			System.out.print("Exited Keybind UI (and closed 2nd listener)");
         });
 	}
 
     
 	
-    //load Image from resources
+    //Load Image from resources inputStream SWT STYLE
 			public Image getImage(String name) {
 				Image img = null;
 				try (InputStream inputStream = TrayApp.class.getClassLoader().getResourceAsStream(name)){
@@ -176,15 +192,20 @@ public class GetKeybind {
 			}
 
     private void addKey(int vKC) { //vKC = Virtual Key Code
+    //check that key isnt already in keyChain && keyChain isn't full
 	    if(keyChain.size()<3 && !keyChain.contains(vKC)) {
+            //get Virtual Key Code to String
 	    	String keyCode = keyToString(vKC);
+            //ignore some keys
 	    	if(!keyCode.equals("??")) {
 				switch(keyChain.size()) {
-					case 0: 
+					case 0:
+                    //replace label
 						keyLabel.setText(keyCode);
 						keyChain.add(vKC);
 						break;
 					case 1: case 2:
+                    //add to label
 						keyLabel.setText(keyLabel.getText()+" + "+keyCode);
 						keyChain.add(vKC);
 						break;
@@ -193,25 +214,33 @@ public class GetKeybind {
 	    }
 	}
 
+//on launch - get current keybind
     private void addOrigin() {
+        //0 value means no keybind
         if(TrayApp.config.keybind.length==1 && TrayApp.config.keybind[0]==0)
             return;
+        //add keybind from config
         for(int key : TrayApp.config.keybind)
             addKey(key);
     }
 
+//Code keyChain[] to String for config
     private String keyChainToString() {
+        //empty keychain = value 0
         if (keyChain.isEmpty())
             return "0";
+        //build string
         StringBuilder output = new StringBuilder(); 
         for(int i=0; i<keyChain.size(); i++) {
             output.append(keyChain.get(i));
+            //add ',' delimiter between values
             if(i!=keyChain.size()-1)
                 output.append(',');
         }
         return output.toString();
     }
 	
+//Convert Virtual Key Code into String
 	private static String keyToString(int vKC ) { //vKC = Virtual Key Code
 		switch(vKC) {
 			case 3: return  "Break";

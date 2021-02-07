@@ -40,7 +40,7 @@ public final class TrayApp {
 
 	private static long lastEvent = 0; //used for timer calculations
 
-	private static ServerSocket uniqueServerSocket;
+	private static ServerSocket uniqueServerSocket; //used to allow only one instance
 
 	private static final Clipboard SYSTEM_CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
 	
@@ -183,7 +183,7 @@ public final class TrayApp {
 
 	/* -----------------------Helper Methods------------------------------ */
 
-			//load Image from resources
+			//load BufferedImage from resources inputStream
 			public static BufferedImage getImage(String name) {
 				BufferedImage img = null;
 				try (InputStream inputStream = TrayApp.class.getClassLoader().getResourceAsStream(name)){
