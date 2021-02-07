@@ -62,7 +62,7 @@
 	
 *	to uninstall run deleteStartupRule.bat as admin and press Y
 
-
+.
 
 # SCHTASKS Batch Syntax:
 * HEAD:
