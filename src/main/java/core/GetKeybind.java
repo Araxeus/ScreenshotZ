@@ -23,225 +23,226 @@ import org.eclipse.swt.events.SelectionEvent;
 @SuppressWarnings("java:S106")
 public class GetKeybind {
 
-	private Shell shell;
-	private Display display;
-	private Label keyLabel;
+    private Shell shell;
+    private Display display;
+    private Label keyLabel;
 
-	private GlobalKeyboardHook keyboardHook;
-	
-//current pressed keys
-	private ArrayList<Integer> keyChain;
+    private GlobalKeyboardHook keyboardHook;
 
-//is firstKey pressed?
-	private boolean capturing;
+    // current pressed keys
+    private ArrayList<Integer> keyChain;
 
-//PRIVATE constructor	
-	private GetKeybind(GlobalKeyboardHook keyboardHook) {
-            //get keyboard hook
-		this.keyboardHook = keyboardHook;
-            //initialize keyChain
-		keyChain = new ArrayList<>();
-            //initialize display
-		display = Display.getDefault();
-            //onStart - not capturing
-		capturing=false;
-	}
-	
-//PUBLIC window initializer
-	public static void openWindow(GlobalKeyboardHook keyboardHook) {
-		try {
-                //create new GetKeybind window
-			GetKeybind window = new GetKeybind(keyboardHook);
-                //and then open that window
-			window.open();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Open the window.
-	 */
-	private void open() {
-		    //populate shell
-		createContents();
-            //open shell
-		shell.open();
-		shell.layout();
-		
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-	}
+    // is firstKey pressed?
+    private boolean capturing;
 
-	/**
-	 * Create contents of the window.
-	 */
-	private void createContents() {
-	//Shell
-		shell = new Shell(SWT.CLOSE | SWT.TITLE);
+    // PRIVATE constructor
+    private GetKeybind(GlobalKeyboardHook keyboardHook) {
+        // get keyboard hook
+        this.keyboardHook = keyboardHook;
+        // initialize keyChain
+        keyChain = new ArrayList<>();
+        // initialize display
+        display = Display.getDefault();
+        // onStart - not capturing
+        capturing = false;
+    }
+
+    // PUBLIC window initializer
+    public static void openWindow(GlobalKeyboardHook keyboardHook) {
+        try {
+            // create new GetKeybind window
+            GetKeybind window = new GetKeybind(keyboardHook);
+            // and then open that window
+            window.open();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Open the window.
+     */
+    private void open() {
+        // populate shell
+        createContents();
+        // open shell
+        shell.open();
+        shell.layout();
+
+        while (!shell.isDisposed()) {
+            if (!display.readAndDispatch()) {
+                display.sleep();
+            }
+        }
+    }
+
+    /**
+     * Create contents of the window.
+     */
+    private void createContents() {
+        // Shell
+        shell = new Shell(SWT.CLOSE | SWT.TITLE);
+        // Get Icon
         Image icon = getImage("BaseIcon.ico");
-        if(icon!=null)
-		        shell.setImage(icon);
-        else //this will execute only if jar was badly packaged
-                shell.setImage(SWTResourceManager.getImage("Resources/BaseIcon.ico"));
-		shell.setBackground(SWTResourceManager.getColor(81, 86, 88));
-		shell.setTouchEnabled(true);
-		shell.setSize(450, 211);
-		shell.setText("Choose Keybind");
-	//Create rectangle from display
-		Rectangle screenSize = display.getPrimaryMonitor().getBounds();
-	//Set shell location to middle of the screen
-		shell.setLocation((screenSize.width - shell.getBounds().width) / 2, (screenSize.height - shell.getBounds().height) / 2);
-		shell.setLayout(null);
-		
-	//KeyLabel
-		keyLabel = new Label(shell, SWT.VERTICAL | SWT.CENTER);
-		keyLabel.setForeground(SWTResourceManager.getColor(240, 255, 255));
-		keyLabel.setBackground(SWTResourceManager.getColor(81, 86, 88));
-		keyLabel.setFont(SWTResourceManager.getFont("Sitka Display", 26, SWT.BOLD | SWT.ITALIC));
-		keyLabel.setBounds(10, 10, 424, 94);
-        addOrigin();
-		
-	//Save Button
-		Button saveButton = new Button(shell, SWT.NONE);
-		saveButton.addSelectionListener(new SelectionAdapter() {
-		//save and close on click
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				System.out.println(keyChain.toString());
-                //update main app config
-				TrayApp.config.setProperty(SimpleProperties.FIELD02 , keyChainToString());
-                //close shell
-                shell.close();
-			}
-		});
-		saveButton.setForeground(SWTResourceManager.getColor(SWT.COLOR_TITLE_FOREGROUND));
-		saveButton.setBackground(SWTResourceManager.getColor(112, 128, 144));
-		saveButton.setFont(SWTResourceManager.getFont("Microsoft YaHei", 18, SWT.NORMAL));
-		saveButton.setBounds(166, 110, 120, 50);
-		saveButton.setText("Save");
+        if (icon != null)
+            shell.setImage(icon);
+        else // this will execute only if jar was badly packaged
+            shell.setImage(SWTResourceManager.getImage("Resources/BaseIcon.ico"));
+        shell.setBackground(SWTResourceManager.getColor(81, 86, 88));
+        shell.setTouchEnabled(true);
+        shell.setSize(450, 211);
+        shell.setText("Choose Keybind");
+        // Create rectangle from display
+        Rectangle screenSize = display.getPrimaryMonitor().getBounds();
+        // Set shell location to middle of the screen
+        shell.setLocation((screenSize.width - shell.getBounds().width) / 2,
+                (screenSize.height - shell.getBounds().height) / 2);
+        shell.setLayout(null);
 
-    //Clear Button
-        Button clearButton =  new Button(shell, SWT.FLAT);
-            clearButton.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    keyChain.clear();
-                    keyLabel.setText("");
-                }
-            });
-            clearButton.setFont(SWTResourceManager.getFont("Microsoft YaHei", 11, SWT.NORMAL));
-            clearButton.setBounds(390, 147, 44, 25);
-            clearButton.setText("clear");
-            clearButton.setBackground(SWTResourceManager.getColor(128, 128, 128));
-		
-	//create keybind listener
-            GlobalKeyAdapter keybindListen = new GlobalKeyAdapter() {
-			@Override
-			public void keyPressed(GlobalKeyEvent event) {
-			//sync threads to avoid 'Invalid Thread Access' error	
-				display.asyncExec(() -> {
-                //if not capturing -> this is the first key pressed
+        // KeyLabel
+        keyLabel = new Label(shell, SWT.VERTICAL | SWT.CENTER);
+        keyLabel.setForeground(SWTResourceManager.getColor(240, 255, 255));
+        keyLabel.setBackground(SWTResourceManager.getColor(81, 86, 88));
+        keyLabel.setFont(SWTResourceManager.getFont("Sitka Display", 26, SWT.BOLD | SWT.ITALIC));
+        keyLabel.setBounds(10, 10, 424, 94);
+        addOrigin();
+
+        // Save Button
+        Button saveButton = new Button(shell, SWT.NONE);
+        saveButton.addSelectionListener(new SelectionAdapter() {
+            // save and close on click
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                System.out.println(keyChain.toString());
+                // update main app config
+                TrayApp.config.setProperty(SimpleProperties.FIELD02, keyChainToString());
+                // close shell
+                shell.close();
+            }
+        });
+        saveButton.setForeground(SWTResourceManager.getColor(SWT.COLOR_TITLE_FOREGROUND));
+        saveButton.setBackground(SWTResourceManager.getColor(112, 128, 144));
+        saveButton.setFont(SWTResourceManager.getFont("Microsoft YaHei", 18, SWT.NORMAL));
+        saveButton.setBounds(166, 110, 120, 50);
+        saveButton.setText("Save");
+
+        // Clear Button
+        Button clearButton = new Button(shell, SWT.FLAT);
+        clearButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                keyChain.clear();
+                keyLabel.setText("");
+            }
+        });
+        clearButton.setFont(SWTResourceManager.getFont("Microsoft YaHei", 11, SWT.NORMAL));
+        clearButton.setBounds(390, 147, 44, 25);
+        clearButton.setText("clear");
+        clearButton.setBackground(SWTResourceManager.getColor(128, 128, 128));
+
+        // create keybind listener
+        GlobalKeyAdapter keybindListen = new GlobalKeyAdapter() {
+            @Override
+            public void keyPressed(GlobalKeyEvent event) {
+                // sync threads to avoid 'Invalid Thread Access' error
+                display.asyncExec(() -> {
+                    // if not capturing -> this is the first key pressed
                     if (!capturing) {
-                            //set mode to capturing
+                        // set mode to capturing
                         capturing = true;
-                            //clear keychain
+                        // clear keychain
                         keyChain.clear();
-                    } //anyway try to add current key
+                    } // anyway try to add current key
                     addKey(event.getVirtualKeyCode());
                 });
-			}
-			
-			@Override 
-			public void keyReleased(GlobalKeyEvent event) {
-				display.asyncExec(() -> {
-                    //if the released key is the first key that was pressed (added to keychain)
+            }
+
+            @Override
+            public void keyReleased(GlobalKeyEvent event) {
+                display.asyncExec(() -> {
+                    // if the released key is the first key that was pressed (added to keychain)
                     if (!keyChain.isEmpty() && event.getVirtualKeyCode() == keyChain.get(0))
-                            //not capturing anymore
+                        // not capturing anymore
                         capturing = false;
                 });
-			}
-			
-		};
-    //add Listener to imported keyboard_hook
+            }
+
+        };
+        // add Listener to imported keyboard_hook
         keyboardHook.addKeyListener(keybindListen);
 
-    //On exit (dispose listener	)
-		shell.addDisposeListener( disposed ->  {
-            //remove keybind listener from imported keyboard_hook
+        // On exit (dispose listener )
+        shell.addDisposeListener(disposed -> {
+            // remove keybind listener from imported keyboard_hook
             keyboardHook.removeKeyListener(keybindListen);
-			System.out.print("Exited Keybind UI (and closed 2nd listener)");
+            System.out.print("Exited Keybind UI (and closed 2nd listener)");
         });
-	}
+    }
 
-    
-	
-    //Load Image from resources inputStream SWT STYLE
-			public Image getImage(String name) {
-				Image img = null;
-				try (InputStream inputStream = TrayApp.class.getClassLoader().getResourceAsStream(name)){
-					img = new Image(display,inputStream);
-				} catch (IOException e) {
-					System.err.println("Error loading icon");
-					e.getMessage();
-				}
-				return img;
-			}
+    // Load Image from resources inputStream SWT STYLE
+    public Image getImage(String name) {
+        Image img = null;
+        try (InputStream inputStream = TrayApp.class.getClassLoader().getResourceAsStream(name)) {
+            img = new Image(display, inputStream);
+        } catch (IOException e) {
+            System.err.println("Error loading icon");
+            e.getMessage();
+        }
+        return img;
+    }
 
-    private void addKey(int vKC) { //vKC = Virtual Key Code
-    //check that key isnt already in keyChain && keyChain isn't full
-	    if(keyChain.size()<3 && !keyChain.contains(vKC)) {
-            //get Virtual Key Code to String
-	    	String keyCode = keyToString(vKC);
-            //ignore some keys
-	    	if(!keyCode.equals("??")) {
-				switch(keyChain.size()) {
-					case 0:
-                    //replace label
-						keyLabel.setText(keyCode);
-						keyChain.add(vKC);
-						break;
-					case 1: case 2:
-                    //add to label
-						keyLabel.setText(keyLabel.getText()+" + "+keyCode);
-						keyChain.add(vKC);
-						break;
-				}	
-            }	
-	    }
-	}
+    private void addKey(int vKC) { // vKC = Virtual Key Code
+        // check that key isn't already in keyChain && keyChain isn't full
+        if (keyChain.size() < 3 && !keyChain.contains(vKC)) {
+            // get Virtual Key Code to String
+            String keyCode = keyToString(vKC);
+            // ignore some keys
+            if (!keyCode.equals("??")) {
+                switch (keyChain.size()) {
+                    case 0:
+                        // replace label
+                        keyLabel.setText(keyCode);
+                        keyChain.add(vKC);
+                        break;
+                    case 1:
+                    case 2:
+                        // add to label
+                        keyLabel.setText(keyLabel.getText() + " + " + keyCode);
+                        keyChain.add(vKC);
+                        break;
+                }
+            }
+        }
+    }
 
-//on launch - get current keybind
+    // on launch - get current keybind
     private void addOrigin() {
-        //0 value means no keybind
-        if(TrayApp.config.keybind.length==1 && TrayApp.config.keybind[0]==0)
+        // 0 value means no keybind
+        if (TrayApp.config.keybind.length == 1 && TrayApp.config.keybind[0] == 0)
             return;
-        //add keybind from config
-        for(int key : TrayApp.config.keybind)
+        // add keybind from config
+        for (int key : TrayApp.config.keybind)
             addKey(key);
     }
 
-//Code keyChain[] to String for config
+    // Code keyChain[] to String for config
     private String keyChainToString() {
-        //empty keychain = value 0
+        // empty keychain = value 0
         if (keyChain.isEmpty())
             return "0";
-        //build string
-        StringBuilder output = new StringBuilder(); 
-        for(int i=0; i<keyChain.size(); i++) {
+        // build string
+        StringBuilder output = new StringBuilder();
+        for (int i = 0; i < keyChain.size(); i++) {
             output.append(keyChain.get(i));
-            //add ',' delimiter between values
-            if(i!=keyChain.size()-1)
+            // add ',' delimiter between values
+            if (i != keyChain.size() - 1)
                 output.append(',');
         }
         return output.toString();
     }
-	
-//Convert Virtual Key Code into String
-	private static String keyToString(int vKC ) { //vKC = Virtual Key Code
+
+    // Convert Virtual Key Code into String
+    private static String keyToString(int vKC) { // vKC = Virtual Key Code
 		switch(vKC) {
 			case 3: return  "Break";
 			case 8: return  "Backspace/delete";
@@ -408,6 +409,5 @@ public class GetKeybind {
 			case 251: return  "Unlock trackpad";
 			default: return "??";
 		}
-	}
-	
+	}	
 }
