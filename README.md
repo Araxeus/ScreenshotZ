@@ -3,31 +3,31 @@
 #  :sparkles: ScreenshotZ App Features: :sparkles:
 
 
-     App launch directly to system tray
+     - App launch directly to system tray
 
 
-
-     Option to change default screenshot directory
-
+     - Option to change default screenshot directory
 
 
-     When PrintScreen is pressed - it will always save to screenshot directory
+     - When PrintScreen is pressed - it will always save to screenshot directory
 
 
-
-     Option to add 2nd Keybind (Launch UI and save a combination of 1-3 keys)
-
+     - Option to add 2nd Keybind (Launch UI and save a combination of 1-3 keys)
 
 
-     App save settings to MyUser/.ScreenshotZ/config.XML
+     - App save settings to MyUser/.ScreenshotZ/config.XML
 
 
-
-     Default screenshot directory is MyUser/.ScreenshotZ/Screenshots (Default 2nd keybind is null)
-
+     - Default screenshot directory is MyUser/.ScreenshotZ/Screenshots (Default 2nd keybind is null)
 
 
-     App can directly capture to default directory when launched with @param -capture (doesnt open the whole program)
+    - To show some debugging - openWithDebug.bat from same directory as jar OR start program from CMD
+
+
+     - App can directly capture to saved/default directory when launched with @arg -capture (doesnt open the whole program)
+     for example in cmd: "java -jar ScreenshotZ-v1-jar-with-dependencies.jar -capture"
+     
+     
      
      
 
