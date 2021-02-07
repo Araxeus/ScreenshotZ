@@ -1,8 +1,7 @@
 #            :sparkles: ScreenshotZ :sparkles:
-
+########### Known issue: Cant save directly to desktop unless started program as administrator
 
      App can directly capture to default directory when launched with @param -capture (doesnt open the whole program)
-
 
 -> - -    Use Global Hook, Robot().createScreenCapture create entirely new screenshot without clipboard, if it doesnt launch for some reason (keyboard event not detected)
 
