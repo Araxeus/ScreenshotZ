@@ -1,4 +1,4 @@
-###### Known issue: Cant save directly to desktop unless started program as administrator ######
+###### Running Jar/Exe as Administrator perform better ######
 
 #  :sparkles: ScreenshotZ App Features: :sparkles:
 
@@ -12,7 +12,10 @@
      - When PrintScreen is pressed - it will always save to screenshot directory
 
 
-     - Option to add 2nd Keybind (Launch UI and save a combination of 1-3 keys)
+     - Option to add a Custom Keybind (Save a combination of 1-3 keys) [Does not replace PrtScn button]
+     
+     
+     - Option to launch Crop UI on Custom Keybind and/or PrtScn
 
 
      - App save settings to MyUser/.ScreenshotZ/config.XML
@@ -26,7 +29,7 @@
 
      - App can directly capture to saved/default directory when launched with @arg[-capture] (doesnt open the whole program)
      
-     Adding @arg[-crop] ontop of it will also launch the crop UI
+     Adding @arg[-crop] ontop of it will also launch the crop UI [-crop is bugged in v1.1 and wont launch]
      
      for example in cmd: "java -jar ScreenshotZ-v1-jar-with-dependencies.jar -capture -crop"
      
