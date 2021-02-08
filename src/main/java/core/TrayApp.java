@@ -11,6 +11,7 @@ import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.FlavorListener;
 
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.StringSelection;
@@ -23,7 +24,6 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 
 import javax.swing.JFileChooser;
-
 
 import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
@@ -79,7 +79,7 @@ public final class TrayApp {
 		keybindMenu.addActionListener(keybindListener -> GetKeybind.openWindow());
 
 		// *--Crop Settings Check Box--*
-		//create , add listener , and setState according to config
+		// create , add listener , and setState according to config
 		CheckboxMenuItem checkBoxCrop03 = new CheckboxMenuItem("Crop on PrintScreen");
 		checkBoxCrop03.setState(config.getBooleanProperty(SimpleProperties.FIELD03));
 		checkBoxCrop03.addItemListener(crop03Listener);
@@ -88,11 +88,10 @@ public final class TrayApp {
 		checkBoxCrop04.setState(config.getBooleanProperty(SimpleProperties.FIELD04));
 		checkBoxCrop04.addItemListener(crop04Listener);
 
-
 		// create a popup menu
 		PopupMenu popup = new PopupMenu();
 		// add menu items to popup menu
-		
+
 		popup.add(keybindMenu);
 		popup.add(dir);
 		popup.addSeparator();
@@ -100,7 +99,7 @@ public final class TrayApp {
 		popup.add(checkBoxCrop04);
 		popup.addSeparator();
 		popup.add(quit);
-			
+
 		// construct a TrayIcon
 		TrayIcon trayIcon = new TrayIcon(icon, "ScreenshotZ", popup);
 		// set the TrayIcon properties
@@ -114,51 +113,11 @@ public final class TrayApp {
 			System.err.println("Error loading icon");
 		}
 
-		// Global Keyboard Listener
-		keyboardHook.addKeyListener(new GlobalKeyAdapter() {
-			@Override
-			public void keyPressed(GlobalKeyEvent event) {
-				// get input type
-				byte mode;
-				if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_SNAPSHOT)
-					mode = 1;
-				else if (keyboardHook.areKeysHeldDown(config.keybind))
-					mode = 2;
-				else
-					mode = 0;
-				// [mode =1 -> prntscrn] , [mode =2 -> keybind] , [mode =3 -> alwaysCrop]
-				if (mode == 1 || mode == 2) {
-					try {
-						if (System.currentTimeMillis() - lastEvent > 1000) {
-							lastEvent = System.currentTimeMillis();
-							System.out.println("Keyboard Listener Activated");
-							Utils.robotTo(config.getProperty(SimpleProperties.FIELD01), mode);
-						}
-					} catch (Exception e) {
-						System.err.println("Exception at print to dir");
-						e.printStackTrace();
-					}
-				}
-			}
-		});
+		// add Global Keyboard Listener
+		keyboardHook.addKeyListener(keyboardAdapter);
 
-		// Clipboard Style Listener
-		SYSTEM_CLIPBOARD.addFlavorListener(listener -> {
-			try {
-				// Sleep so that Keyboard Listener gets first event
-				Thread.sleep(50);
-				if (System.currentTimeMillis() - lastEvent > 1000) {
-					System.out.println("Clipboard Listener Activated [Keyboard's wasn't]");
-					Utils.clipboardTo(config.getProperty(SimpleProperties.FIELD01)); // TODO Switch to robotTo
-				}
-			} catch (InterruptedException e) {
-				System.err.println("Literally impossible - Thread sleep Error");
-				Thread.currentThread().interrupt();
-			} catch (Exception e) {
-				System.err.println("Error during clipboardTo event");
-			}
-		});
-		// CropImage.openWindow("C:\\Users\\Araxeus\\.ScreenshotZ\\Screenshots\\toCrop.png");
+		// add Clipboard Style Listener
+		SYSTEM_CLIPBOARD.addFlavorListener(clipboardListener);
 	}
 
 	/* -----------------------Helper Methods------------------------------ */
@@ -175,6 +134,10 @@ public final class TrayApp {
 		return keyboardHook;
 	}
 
+	private static void setLastEvent(long newValue) {
+		lastEvent = newValue;
+	}
+
 	// return Transferable content from Clipboard
 	public static Transferable getClipboard() {
 		Transferable content = null;
@@ -188,7 +151,7 @@ public final class TrayApp {
 	}
 
 	// set Local Clipboard content to this.arg
-	private static void setClipboard(Transferable content) {
+	public static void setClipboard(Transferable content) {
 		try {
 			SYSTEM_CLIPBOARD.setContents(content, null);
 		} catch (Exception e) {
@@ -230,20 +193,66 @@ public final class TrayApp {
 		}
 	};
 
-	//crop on PrintScreen listener
+	// crop on PrintScreen listener
 	private static ItemListener crop03Listener = crop03 -> {
-		//state 2 = no && state 1 = yes
+		// state 2 = no && state 1 = yes
 		if (crop03.getStateChange() == 1)
 			config.setProperty(SimpleProperties.FIELD03, "true");
-		else config.setProperty(SimpleProperties.FIELD03, "false");
+		else
+			config.setProperty(SimpleProperties.FIELD03, "false");
 	};
 
-		//crop on PrintScreen listener
+	// crop on PrintScreen listener
 	private static ItemListener crop04Listener = crop04 -> {
-		//state 2 = no && state 1 = yes
+		// state 2 = no && state 1 = yes
 		if (crop04.getStateChange() == 1)
 			config.setProperty(SimpleProperties.FIELD04, "true");
-		else config.setProperty(SimpleProperties.FIELD04, "false");
+		else
+			config.setProperty(SimpleProperties.FIELD04, "false");
+	};
+
+	// Clipboard Style Listener
+	private static FlavorListener clipboardListener = listener -> {
+		try {
+			// Sleep so that Keyboard Listener gets first event
+			Thread.sleep(50);
+			if (System.currentTimeMillis() - lastEvent > 1000) {
+				System.out.println("Clipboard Listener Activated [Keyboard's wasn't]");
+				Utils.clipboardTo(config.getProperty(SimpleProperties.FIELD01)); // TODO Switch to robotTo?
+			}
+		} catch (InterruptedException b) {
+			System.err.println("Literally impossible - Thread sleep Error");
+			Thread.currentThread().interrupt();
+		} catch (Exception s) {
+			System.err.println("Error during clipboardTo event");
+		}
+	};
+
+	private static GlobalKeyAdapter keyboardAdapter = new GlobalKeyAdapter() {
+		@Override
+		public void keyPressed(GlobalKeyEvent event) {
+			// get input type
+			byte mode;
+			if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_SNAPSHOT)
+				mode = 1;
+			else if (keyboardHook.areKeysHeldDown(config.keybind))
+				mode = 2;
+			else
+				mode = 0;
+			// [mode =1 -> printScreen] , [mode =2 -> keybind] , [mode =3 -> alwaysCrop]
+			if (mode == 1 || mode == 2) {
+				try {
+					if (System.currentTimeMillis() - lastEvent > 1000) {
+						setLastEvent(System.currentTimeMillis());
+						System.out.println("Keyboard Listener Activated");
+						Utils.robotTo(config.getProperty(SimpleProperties.FIELD01), mode);
+					}
+				} catch (Exception e) {
+					System.err.println("Exception at print to dir");
+					e.printStackTrace();
+				}
+			}
+		}
 	};
 
 	// capture screen if args[0]=="-capture" and quit or quit if already running
