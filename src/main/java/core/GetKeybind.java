@@ -84,7 +84,7 @@ public class GetKeybind {
         // Shell
         shell = new Shell(SWT.CLOSE | SWT.TITLE);
         // Get Icon
-        Image icon = getImage("BaseIcon.ico");
+        Image icon = getImageSWT("BaseIcon.ico");
         if (icon != null)
             shell.setImage(icon);
         else // this will execute only if jar was badly packaged
@@ -181,7 +181,7 @@ public class GetKeybind {
     }
 
     // Load Image from resources inputStream SWT STYLE
-    public Image getImage(String name) {
+   public Image getImageSWT(String name) {
         Image img = null;
         try (InputStream inputStream = TrayApp.class.getClassLoader().getResourceAsStream(name)) {
             img = new Image(display, inputStream);
@@ -190,7 +190,7 @@ public class GetKeybind {
             e.getMessage();
         }
         return img;
-    }
+    } 
 
     private void addKey(int vKC) { // vKC = Virtual Key Code
         // check that key isn't already in keyChain && keyChain isn't full
