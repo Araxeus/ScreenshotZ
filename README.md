@@ -30,11 +30,13 @@
     - To show some debugging: run openWithDebug.bat from same directory as jar OR start program from CMD
 
 
-     - App can directly capture to saved/default directory when launched with @arg[-capture] (doesnt open the whole program)
+     - App can directly capture to saved/default directory when launched with @arg[-capture]
      
      Adding @arg[-crop] ontop of it will also launch the crop UI (-crop is bugged in v1.1)
      
      for example in cmd: "java -jar ScreenshotZ-v1-jar-with-dependencies.jar -capture -crop"
+     
+     (App will just take screenshot without launching main thread)
          
 ###### Known Issues: ######
 
