@@ -1,34 +1,14 @@
 - make SimpleProperties.store() only on program exit?
 
-- add menu that opens into 2 CheckboxMenuItem: enable_Crop_On_PrintScreen[03] , enable_Crop_On_Aditional_Keybind[04]
-
-- configure settings03 and settings 04
-
-* robotTo() rules:
-# isCropping -> no crop
-# [mode =1 -> prntscrn] , [mode =2 -> keybind] , [mode =3 -> alwaysCrop] 
-
-if(!isCropping && (mode==3 || (mode==1 && Settings[03]==true) || (mode==2 && Settings[04]==true) ))
-    CropImage.openWindow(outfile.getAbsolutePath());
-
-- refractor atleast 1 more [keyboard listener]
-- Methods to extract:
-# getClipboard() CHECK
-# isImage(Transferable content) CHECK
-# getName(String directory) CHECK
-# clipboardTo() [Is this method even necessary if robotTo is a thing?] CHECK
-# robotTo()  CHECK
-# getImage() CHECK
+- focus on crop
 
 - switch JFileChooser for native windows chooser?
 
- option to launch 'crop jpanel' #http://mrbool.com/how-to-crop-an-image-using-java/25272
-
- 'Fix memory leak' (Reference Object?)
+- 'Fix memory leak' (Reference Object?)
 
 
 * build
-'launch4j' manifest demand 'admin rights' - #https://stackoverflow.com/questions/19037339/run-java-file-as-administrator-with-full-privileges
+
 compile installer using 'NSIS Quick Setup Script Generator' - # C:\Users\Araxeus\Desktop\DEV\NSIS\Quick Setup Script Generator.exe
 add onStartup rule bat
 make/add .REG file (Add to explorer context menu - screenshot now)
