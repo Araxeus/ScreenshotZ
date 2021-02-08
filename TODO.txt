@@ -4,6 +4,8 @@
 
 - focus on crop
 
+- change crop to save on same filename? [need external feedback]
+
 - switch JFileChooser for native windows chooser?
 
 - 'Fix memory leak' (Reference Object?)
