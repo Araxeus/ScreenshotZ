@@ -50,6 +50,8 @@
 
 -> - -    Or if keyboard event is not detected > use Clipboard Listener (listen to type change so have to reset clipboard at program start[if content type was image] and after each screenshot) and grab image from clipboard
 
+.
+
 # TODO
 
 - ? Fix memory leak ?
