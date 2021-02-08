@@ -178,7 +178,9 @@ public final class TrayApp {
 				Thread.sleep(50);
 				if (System.currentTimeMillis() - lastEvent > 1000) {
 					System.out.println("Clipboard Listener Activated [Keyboard's wasn't]");
-					clipboardTo(config.getProperty(SimpleProperties.FIELD01));
+					clipboardTo(config.getProperty(SimpleProperties.FIELD01)); //TODO Switch to robotTo
+							// reset clipboard content - so that listener can notice new screenshot
+							setClipboard(new StringSelection(""));
 				}
 			} catch (InterruptedException e) {
 				System.err.println("Literally impossible - Thread sleep Error");
@@ -229,8 +231,7 @@ public final class TrayApp {
 		// check thats its an image
 		if (!isImage(content))
 			return;
-		// reset clipboard content - so that listener can notice new screenshot
-		setClipboard(new StringSelection(""));
+
 		// create buffered image from content
 		BufferedImage img = (BufferedImage) content.getTransferData(DataFlavor.imageFlavor);
 		// create file using getName (returns new image path)

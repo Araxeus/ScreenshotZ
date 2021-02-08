@@ -10,6 +10,15 @@
 if(!isCropping && (mode==3 || (mode==1 && Settings[03]==true) || (mode==2 && Settings[04]==true) ))
     CropImage.openWindow(outfile.getAbsolutePath());
 
+- refractor main method [extract listeners]
+- Methods to extract:
+# getClipboard()
+# isImage(Transferable content)
+# getName(String directory)
+# clipboardTo() [Is this method even necessary if robotTo is a thing?]
+# robotTo() 
+# getImage()
+
  option to launch 'crop jpanel' #http://mrbool.com/how-to-crop-an-image-using-java/25272
 
  'Fix memory leak' (Reference Object?)
