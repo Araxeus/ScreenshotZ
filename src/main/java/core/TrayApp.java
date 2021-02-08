@@ -257,7 +257,7 @@ public final class TrayApp {
 		String name = directory + dtf.format(now);
 		File tmpDir = new File(name + ".png");
 		// create (num) suffix in case file already exist
-		int num = 0;
+		byte num = 0;
 		while (tmpDir.exists()) {
 			num++;
 			tmpDir = new File(name + " (" + num + ").png");
