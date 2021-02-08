@@ -37,6 +37,7 @@ import lc.kra.system.keyboard.event.GlobalKeyEvent;
 
 public final class TrayApp {
 
+	private static boolean isCropping=false;
 	private static long lastEvent = 0; // used for timer calculations
 
 	@SuppressWarnings("unused")
@@ -198,7 +199,7 @@ public final class TrayApp {
 	}
 
 	// print screenshot to 'directory'
-	private static void robotTo(String directory) throws Exception {
+	private static void robotTo(String directory) throws IOException, AWTException {
 		// create buffered image from new rectangle containing all screen
 		BufferedImage img = new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
 		// create file using getName (returns new image path)
@@ -322,5 +323,9 @@ public final class TrayApp {
 			e.printStackTrace();
 			System.exit(3);
 		}
+	}
+
+	public static void setIsCropping(boolean getStatus) {
+		isCropping = getStatus;
 	}
 }

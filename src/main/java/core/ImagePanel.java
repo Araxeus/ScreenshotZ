@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 	@SuppressWarnings("java:S1948")
 	class ImagePanel extends JPanel {
         private static final long serialVersionUID = 6969L;
-        
+
         private Image img;
 
 		  public ImagePanel(String img) {

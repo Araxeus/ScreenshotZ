@@ -39,6 +39,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 	}
 	
 	public static void openWindow(GlobalKeyboardHook keyboardHook, String imagePath) {
+        TrayApp.setIsCropping(true);
 		CropImage window = new CropImage(keyboardHook,imagePath);
 		window.open();
 	}
@@ -48,7 +49,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		GlobalKeyAdapter exitListener = new GlobalKeyAdapter () {
 			@Override
 			public void keyPressed(GlobalKeyEvent event) {
-				if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_RETURN || event.getVirtualKeyCode() == GlobalKeyEvent.VK_ESCAPE) { //Enter/Escape
+				if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_RETURN || event.getVirtualKeyCode() == GlobalKeyEvent.VK_ESCAPE) { //Enter / Escape
 					try {
 						dispose();
 					} catch (Exception e) {
@@ -64,7 +65,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		add(im);
 		setSize(im.getWidth(), im.getHeight());
 		setVisible(true);
-		setTitle("Crop Tool");
+		setTitle("Crop Tool - [Press Enter / Escape To Quit]");
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -72,8 +73,9 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		@Override
 		public void windowClosed(WindowEvent e) {
 			keyboardHook.removeKeyListener(exitListener);
+            TrayApp.setIsCropping(false);
 			keyboardHook.shutdownHook(); //TODO Delete
-			System.out.print("Exited Program (dont forget to delete hook shutdown on main release)");
+			System.out.print("Closed Crop Frame (dont forget to delete hook shutdown on main release)");
 			}
 		});
 	}
