@@ -65,9 +65,10 @@ public class GetKeybind {
     private void open() {
         // populate shell
         createContents();
-        // open shell
+        // open shell and focus on it
         shell.open();
         shell.layout();
+       shell.forceActive();
 
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch()) {
@@ -177,9 +178,6 @@ public class GetKeybind {
             keyboardHook.removeKeyListener(keybindListen);
             System.out.println("Exited Keybind UI (and closed 2nd listener)");
         });
-
-        //focus on new window
-        shell.forceActive();
     }
 
     // Load Image from resources inputStream SWT STYLE

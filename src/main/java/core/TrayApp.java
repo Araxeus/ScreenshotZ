@@ -39,6 +39,7 @@ public final class TrayApp {
 
 	private static long lastEvent = 0; // used for timer calculations
 
+	@SuppressWarnings("unused")
 	private static ServerSocket uniqueServerSocket; // used to allow only one instance
 
 	private static final Clipboard SYSTEM_CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
