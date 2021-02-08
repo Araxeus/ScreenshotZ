@@ -1,4 +1,15 @@
 
+- add menu that opens into 2 CheckboxMenuItem: enable_Crop_On_PrintScreen , enable_Crop_On_Aditional_Keybind
+
+- configure settings03 and settings 04
+
+* robotTo() rules:
+# isCropping -> no crop
+# [mode =1 -> prntscrn] , [mode =2 -> keybind] , [mode =3 -> alwaysCrop]
+
+if(mode==3 || (mode==1 && prntscreenSettings==true) || (mode==2 && prntscreenSettings==true) ))
+    CropImage.openWindow(outfile.getAbsolutePath());
+
  option to launch 'crop jpanel' #http://mrbool.com/how-to-crop-an-image-using-java/25272
 
  'Fix memory leak' (Reference Object?)

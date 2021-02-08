@@ -36,9 +36,9 @@ public class GetKeybind {
     private boolean capturing;
 
     // PRIVATE constructor
-    private GetKeybind(GlobalKeyboardHook keyboardHook) {
+    private GetKeybind() {
         // get keyboard hook
-        this.keyboardHook = keyboardHook;
+        this.keyboardHook = TrayApp.getKeyboardHook();
         // initialize keyChain
         keyChain = new ArrayList<>();
         // initialize display
@@ -48,10 +48,10 @@ public class GetKeybind {
     }
 
     // PUBLIC window initializer
-    public static void openWindow(GlobalKeyboardHook keyboardHook) {
+    public static void openWindow() {
         try {
             // create new GetKeybind window
-            GetKeybind window = new GetKeybind(keyboardHook);
+            GetKeybind window = new GetKeybind();
             // and then open that window
             window.open();
         } catch (Exception e) {

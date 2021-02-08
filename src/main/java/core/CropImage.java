@@ -1,5 +1,6 @@
 package core;
 
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -30,17 +31,17 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 	private String imagePath;
 	
 	public static void main(String[] args) {
-		openWindow(new GlobalKeyboardHook() , "C:\\Users\\Araxeus\\.ScreenshotZ\\Screenshots\\toCrop.png");
+		//openWindow("C:\\Users\\Araxeus\\.ScreenshotZ\\Screenshots\\toCrop.png"); //dont run without shutting down keyboardHook at @windowClosed
 	}
 	
-	private CropImage(GlobalKeyboardHook keyboardHook, String imagePath){
-		this.keyboardHook=keyboardHook;
+	private CropImage(String imagePath){
+		this.keyboardHook=TrayApp.getKeyboardHook();
 		this.imagePath=imagePath;
 	}
 	
-	public static void openWindow(GlobalKeyboardHook keyboardHook, String imagePath) {
+	public static void openWindow(String imagePath) {
         TrayApp.setIsCropping(true);
-		CropImage window = new CropImage(keyboardHook,imagePath);
+		CropImage window = new CropImage(imagePath);
 		window.open();
 	}
 
@@ -64,17 +65,18 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		ImagePanel im = new ImagePanel(imagePath);
 		add(im);
 		setSize(im.getWidth(), im.getHeight());
-		setVisible(true);
 		setTitle("Crop Tool - [Press Enter / Escape To Quit]");
+        setIconImage(TrayApp.getImage("TrayIcon.png"));
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setVisible(true);
 		addWindowListener(new WindowAdapter() {
 		@Override
 		public void windowClosed(WindowEvent e) {
 			keyboardHook.removeKeyListener(exitListener);
             TrayApp.setIsCropping(false);
-			keyboardHook.shutdownHook(); //TODO Delete
+			//keyboardHook.shutdownHook(); //TODO Delete
 			System.out.print("Closed Crop Frame (dont forget to delete hook shutdown on main release)");
 			}
 		});

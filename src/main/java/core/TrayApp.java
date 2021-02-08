@@ -47,6 +47,8 @@ public final class TrayApp {
 
 	static SimpleProperties config = new SimpleProperties();
 
+	private static GlobalKeyboardHook keyboardHook;
+
 	public static void main(String[] args) throws InterruptedException {
 		// quit if trayApp isn't supported / App already running
 		checkIfRunning(args);
@@ -60,8 +62,8 @@ public final class TrayApp {
 		// get the SystemTray instance
 		SystemTray tray = SystemTray.getSystemTray();
 
-		// get global keyboard hook
-		GlobalKeyboardHook keyboardHook = new GlobalKeyboardHook(true);
+		// initialize global keyboard hook
+		keyboardHook = new GlobalKeyboardHook(true);
 
 		// *--Quit Button--*
 
@@ -107,7 +109,7 @@ public final class TrayApp {
 		MenuItem keybindMenu = new MenuItem("Choose Additional Keybind");
 
 		// create listener
-		ActionListener keybindMenuListener = keybindListen -> GetKeybind.openWindow(keyboardHook);
+		ActionListener keybindMenuListener = keybindListen -> GetKeybind.openWindow();
 
 		// add listener
 		keybindMenu.addActionListener(keybindMenuListener);
@@ -144,15 +146,22 @@ public final class TrayApp {
 		// Global Keyboard Listener
 		keyboardHook.addKeyListener(new GlobalKeyAdapter() {
 			@Override
-			public void keyPressed(GlobalKeyEvent event) {
-				if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_SNAPSHOT
-						|| keyboardHook.areKeysHeldDown(config.keybind)) {
+			public void keyPressed(GlobalKeyEvent event) {				
+				//get input type
+				byte mode;
+				if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_SNAPSHOT)
+				 	mode = 1;
+				else if (keyboardHook.areKeysHeldDown(config.keybind))
+					mode = 2;
+				else 
+					mode = 0;
+					// [mode =1 -> prntscrn] , [mode =2 -> keybind] , [mode =3 -> alwaysCrop] 
+				if (mode==1 || mode ==2) {
 					try {
-						// print to screenshot directory
 						if (System.currentTimeMillis() - lastEvent > 1000) {
 							lastEvent = System.currentTimeMillis();
 							System.out.println("Keyboard Listener Activated");
-							robotTo(config.getProperty(SimpleProperties.FIELD01));
+							robotTo(config.getProperty(SimpleProperties.FIELD01), mode);
 						}
 					} catch (Exception e) {
 						System.err.println("Exception at print to dir");
@@ -164,12 +173,11 @@ public final class TrayApp {
 
 		// Clipboard Style Listener
 		SYSTEM_CLIPBOARD.addFlavorListener(listener -> {
-			System.out.println("Clipboard Listener got event");
 			try {
 				// Sleep so that Keyboard Listener gets first event
 				Thread.sleep(50);
 				if (System.currentTimeMillis() - lastEvent > 1000) {
-					System.out.println("Clipboard Listener Activated");
+					System.out.println("Clipboard Listener Activated [Keyboard's wasn't]");
 					clipboardTo(config.getProperty(SimpleProperties.FIELD01));
 				}
 			} catch (InterruptedException e) {
@@ -179,6 +187,7 @@ public final class TrayApp {
 				System.err.println("Error during clipboardTo event");
 			}
 		});
+		//CropImage.openWindow(keyboardHook, "C:\\Users\\Araxeus\\.ScreenshotZ\\Screenshots\\toCrop.png");
 	}
 
 	/* -----------------------Helper Methods------------------------------ */
@@ -199,7 +208,7 @@ public final class TrayApp {
 	}
 
 	// print screenshot to 'directory'
-	private static void robotTo(String directory) throws IOException, AWTException {
+	private static void robotTo(String directory, byte mode) throws IOException, AWTException {
 		// create buffered image from new rectangle containing all screen
 		BufferedImage img = new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
 		// create file using getName (returns new image path)
@@ -221,7 +230,7 @@ public final class TrayApp {
 		if (!isImage(content))
 			return;
 		// reset clipboard content - so that listener can notice new screenshot
-		setClipboard(new StringSelection("check123"));
+		setClipboard(new StringSelection(""));
 		// create buffered image from content
 		BufferedImage img = (BufferedImage) content.getTransferData(DataFlavor.imageFlavor);
 		// create file using getName (returns new image path)
@@ -241,6 +250,7 @@ public final class TrayApp {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm.ss");
 		// get current date
 		LocalDateTime now = LocalDateTime.now();
+
 		System.out.println(directory + "  " + dtf.format(now));
 		// try new name
 		String name = directory + dtf.format(now);
@@ -293,14 +303,14 @@ public final class TrayApp {
 
 	// capture screen if args[0]=="-capture" and quit or quit if already running
 	private static void checkIfRunning(String[] args) {
-		// check that tray is supported
-		if (!SystemTray.isSupported()) {
-			System.err.println("System Tray isn't supported");
-			System.exit(1);
-		} // check if trayApp was started with args
-		else if (args != null && args.length > 0 && args[0].equals("-capture")) {
+		// check if trayApp was started with args
+		if (args != null && args.length > 0 && args[0].equals("-capture")) {
+			byte mode = 0;
+			if(args.length > 1 && args[1].equals("-crop"))
+				mode = 3;
 			try {
-				robotTo(config.getProperty(SimpleProperties.FIELD01));
+				isCropping = true; //TODO check this
+				robotTo(config.getProperty(SimpleProperties.FIELD01), mode);
 			} catch (Exception a) {
 				System.err.println("Couldn't print before loading main method..");
 				a.printStackTrace();
@@ -308,7 +318,14 @@ public final class TrayApp {
 				System.exit(0);
 			}
 		}
-		try { // Bind to localhost adapter with a zero connection queue [PORT 9999]
+
+		// check that tray is supported
+		if (!SystemTray.isSupported()) {
+			System.err.println("System Tray isn't supported");
+			System.exit(1);
+		}
+		// Bind to localhost adapter with a zero connection queue [PORT 9999]
+		try { 
 			uniqueServerSocket = new ServerSocket(9999, 0, InetAddress.getByAddress(new byte[] { 127, 0, 0, 1 }));
 			// throws BindException if already connected
 		} catch (BindException e) {
@@ -324,8 +341,13 @@ public final class TrayApp {
 			System.exit(3);
 		}
 	}
+	
 
 	public static void setIsCropping(boolean getStatus) {
 		isCropping = getStatus;
+	}
+
+	public static GlobalKeyboardHook getKeyboardHook() {
+		return keyboardHook;
 	}
 }
