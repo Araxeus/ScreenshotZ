@@ -1,5 +1,6 @@
 ###### Running Jar/Exe as Administrator perform better ######
 
+
 #  :sparkles: ScreenshotZ App Features: :sparkles:
 
 
@@ -32,9 +33,12 @@
      Adding @arg[-crop] ontop of it will also launch the crop UI (-crop is bugged in v1.1 but will be fixed in the next version)
      
      for example in cmd: "java -jar ScreenshotZ-v1-jar-with-dependencies.jar -capture -crop"
-     
-     
-     
+         
+###### Known Issues: ######
+
+###### - Crop tool will often not automatically gain focus ######
+
+###### - @arg [-crop] cant launch crop tool if program isn't running ######
      
 
 -> - -    Use Global Hook, Robot().createScreenCapture create entirely new screenshot without clipboard
@@ -43,18 +47,17 @@
 
 # TODO
 
-- Add option to launch 'crop jpanel' (on screenshot, launch window with crop ui) [Almost done]
-
-
 - ? Fix memory leak ?
 
 - Make/Add .REG file "ScreenshotZ" (Add to explorer context menu - launch with @arg -capture) [almost done]
 
 - Make installScript (use also contextMenu.REG and onStartup.bat)
 
-- launch4j wrapper escalate privilege to Admin
+- fix @arg -crop (change getKeyboardHook() to create new hook if null)
 
-- Expand Readme
+- fix focus on crop
+
+- change crop to save on same filename? [need external feedback]
 
 .
 
