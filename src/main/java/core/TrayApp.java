@@ -304,12 +304,14 @@ public final class TrayApp {
 	// capture screen if args[0]=="-capture" and quit or quit if already running
 	private static void checkIfRunning(String[] args) {
 		// check if trayApp was started with args
+		// TODO explain mode logic
 		if (args != null && args.length > 0 && args[0].equals("-capture")) {
 			byte mode = 0;
 			if(args.length > 1 && args[1].equals("-crop"))
 				mode = 3;
+			else
+			  isCropping = true;
 			try {
-				isCropping = true; //TODO check this
 				robotTo(config.getProperty(SimpleProperties.FIELD01), mode);
 			} catch (Exception a) {
 				System.err.println("Couldn't print before loading main method..");
