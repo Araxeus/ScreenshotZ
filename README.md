@@ -4,6 +4,8 @@
 #  :sparkles: ScreenshotZ App Features: :sparkles:
 
 
+     .
+     
      - App launch directly to system tray
 
 
@@ -30,7 +32,7 @@
 
      - App can directly capture to saved/default directory when launched with @arg[-capture] (doesnt open the whole program)
      
-     Adding @arg[-crop] ontop of it will also launch the crop UI (-crop is bugged in v1.1 but will be fixed in the next version)
+     Adding @arg[-crop] ontop of it will also launch the crop UI (-crop is bugged in v1.1)
      
      for example in cmd: "java -jar ScreenshotZ-v1-jar-with-dependencies.jar -capture -crop"
          
@@ -39,7 +41,10 @@
 ###### - Crop tool will often not automatically gain focus ######
 
 ###### - @arg [-crop] cant launch crop tool if program isn't running ######
-     
+    
+.
+
+- Inner App Functionality:
 
 -> - -    Use Global Hook, Robot().createScreenCapture create entirely new screenshot without clipboard
 
