@@ -25,14 +25,14 @@ import lc.kra.system.keyboard.event.GlobalKeyEvent;
 @SuppressWarnings({"java:S1161","java:S110", "java:S1186" , "java:S106" , "java:S1948" , "java:S1659"})
 public class CropImage extends JFrame implements MouseListener, MouseMotionListener {
 	private static final long serialVersionUID = 6969L;
+
     private boolean isDragged = false;
+
 	private int x1, y1, x2, y2;
+
 	private GlobalKeyboardHook keyboardHook;
+    
 	private String imagePath;
-	
-	public static void main(String[] args) {
-		//openWindow("C:\\Users\\Araxeus\\.ScreenshotZ\\Screenshots\\toCrop.png"); //dont run without shutting down keyboardHook at @windowClosed
-	}
 	
 	private CropImage(String imagePath){
 		this.keyboardHook=TrayApp.getKeyboardHook();

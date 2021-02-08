@@ -17,7 +17,11 @@ public class SimpleProperties {
         FIELD01 = "Screenshot Dir",
         FIELD01_DEFAULT_VALUE = new File(DEFAULT_PATH).getParent() + File.separator + "Screenshots" + File.separator,
         FIELD02 = "Keybind", 
-        FIELD02_DEFAULT_VALUE = "0";
+        FIELD02_DEFAULT_VALUE = "0" ,
+        FIELD03 = "Crop on PrintScreen" ,
+        FIELD03_DEFAULT_VALUE = "false" ,
+        FIELD04 = "Crop on Alternate Keybind" ,
+        FIELD04_DEFAULT_VALUE = "true";
 
     // config always has updated keybind array
 
@@ -46,8 +50,7 @@ public class SimpleProperties {
             } catch (IOException e) {
                 System.err.println("RARE Error Opening FileInputStream");
             } finally {
-                // create missing properties and set to default - returns false if nothing
-                // changed
+                // create missing properties and set to default - returns false if nothing changed
                 if (updateProperties())
                     store();
             }
@@ -74,6 +77,10 @@ public class SimpleProperties {
         return properties.getProperty(key);
     }
 
+    public boolean getBooleanProperty(String key) {
+        return properties.getProperty(key).equalsIgnoreCase("true");
+    }
+
     // int[] keybind updater
     private int[] getKeybind() {
         // new String array from splitting property around ','
@@ -96,8 +103,7 @@ public class SimpleProperties {
         }
     }
 
-    // create missing properties and set to default - returns false if nothing
-    // changed
+    // create missing properties and set to default - returns false if nothing changed
     private boolean updateProperties() {
         boolean changed = false;
         // SCREENSHOT DIRECTORY
@@ -123,6 +129,18 @@ public class SimpleProperties {
         // initialize keybind[]
         if (keybind == null)
             keybind = getKeybind();
+        // Crop on Screenshot
+        if (!properties.containsKey(FIELD03)) {
+            properties.setProperty(FIELD03, FIELD03_DEFAULT_VALUE);
+            changed = true;
+            System.err.println("Properties didn't contain " + FIELD03);
+        }
+        // Crop on Additional Keybind
+        if (!properties.containsKey(FIELD04)) {
+            properties.setProperty(FIELD04, FIELD04_DEFAULT_VALUE);
+            changed = true;
+            System.err.println("Properties didn't contain " + FIELD04);
+        }
         return changed;
     }
 

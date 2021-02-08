@@ -5,6 +5,7 @@ import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
+import java.awt.CheckboxMenuItem;
 
 import java.awt.SystemTray;
 import java.awt.Toolkit;
@@ -14,6 +15,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.BindException;
@@ -21,6 +23,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 
 import javax.swing.JFileChooser;
+
+
 import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
 import lc.kra.system.keyboard.event.GlobalKeyEvent;
@@ -74,12 +78,29 @@ public final class TrayApp {
 		// Create + Add listener
 		keybindMenu.addActionListener(keybindListener -> GetKeybind.openWindow());
 
+		// *--Crop Settings Check Box--*
+		//create , add listener , and setState according to config
+		CheckboxMenuItem checkBoxCrop03 = new CheckboxMenuItem("Crop on PrintScreen");
+		checkBoxCrop03.setState(config.getBooleanProperty(SimpleProperties.FIELD03));
+		checkBoxCrop03.addItemListener(crop03Listener);
+
+		CheckboxMenuItem checkBoxCrop04 = new CheckboxMenuItem("Crop on Custom Keybind");
+		checkBoxCrop04.setState(config.getBooleanProperty(SimpleProperties.FIELD04));
+		checkBoxCrop04.addItemListener(crop04Listener);
+
+
 		// create a popup menu
 		PopupMenu popup = new PopupMenu();
 		// add menu items to popup menu
+		
 		popup.add(keybindMenu);
 		popup.add(dir);
+		popup.addSeparator();
+		popup.add(checkBoxCrop03);
+		popup.add(checkBoxCrop04);
+		popup.addSeparator();
 		popup.add(quit);
+			
 		// construct a TrayIcon
 		TrayIcon trayIcon = new TrayIcon(icon, "ScreenshotZ", popup);
 		// set the TrayIcon properties
@@ -139,8 +160,7 @@ public final class TrayApp {
 				System.err.println("Error during clipboardTo event");
 			}
 		});
-		// CropImage.openWindow(keyboardHook,
-		// "C:\\Users\\Araxeus\\.ScreenshotZ\\Screenshots\\toCrop.png");
+		// CropImage.openWindow("C:\\Users\\Araxeus\\.ScreenshotZ\\Screenshots\\toCrop.png");
 	}
 
 	/* -----------------------Helper Methods------------------------------ */
@@ -180,7 +200,7 @@ public final class TrayApp {
 	}
 
 	// Choose output directory button listener
-	static ActionListener dirListener = directoryChooser -> {
+	private static ActionListener dirListener = directoryChooser -> {
 		// create new JFileChooser
 		JFileChooser chooser = new JFileChooser();
 		// opens on screenshot directory
@@ -197,19 +217,35 @@ public final class TrayApp {
 	};
 
 	// Quit button listener
-	static ActionListener quitListener = exit -> {
+	private static ActionListener quitListener = exit -> {
 		keyboardHook.shutdownHook();
 		System.exit(0);
 	};
 
 	// Left click / interact with trayIcon listener
-	static ActionListener clickListener = click -> {
+	private static ActionListener clickListener = click -> {
 		try {
 			// opens screenshot directory
 			Desktop.getDesktop().open(new File(config.getProperty(SimpleProperties.FIELD01)));
 		} catch (IOException e) {
 			System.err.println("IO Error when opening Screenshot Directory");
 		}
+	};
+
+	//crop on PrintScreen listener
+	private static ItemListener crop03Listener = crop03 -> {
+		//state 2 = no && state 1 = yes
+		if (crop03.getStateChange() == 1)
+			config.setProperty(SimpleProperties.FIELD03, "true");
+		else config.setProperty(SimpleProperties.FIELD03, "false");
+	};
+
+		//crop on PrintScreen listener
+	private static ItemListener crop04Listener = crop04 -> {
+		//state 2 = no && state 1 = yes
+		if (crop04.getStateChange() == 1)
+			config.setProperty(SimpleProperties.FIELD04, "true");
+		else config.setProperty(SimpleProperties.FIELD04, "false");
 	};
 
 	// capture screen if args[0]=="-capture" and quit or quit if already running

@@ -20,9 +20,10 @@ public class Utils {
     // hide constructor
     private Utils() {
     }
+
     /*
-    *  print screenshot to 'directory'
-    */
+     * print screenshot to 'directory'
+     */
     public static void robotTo(String directory, byte mode) throws IOException, AWTException {
         // create buffered image from new rectangle containing all screen
         BufferedImage img = new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
@@ -35,11 +36,17 @@ public class Utils {
         img.flush();
         // Call garbage collector (temporary fix to memory leak from this method)
         Runtime.getRuntime().gc();
+        //run crop if not cropping and [mode3 / mode1+config03 / mode2+config04]
+        if (!TrayApp.isCropping()
+                && (mode == 3 
+                        || (mode == 1 && TrayApp.config.getBooleanProperty(SimpleProperties.FIELD03))
+                        || (mode == 2 && TrayApp.config.getBooleanProperty(SimpleProperties.FIELD04)) ) )
+            CropImage.openWindow(outfile.getAbsolutePath());
     }
 
-   /*
-    *  print image from clipboard to 'directory'
-    */ 
+    /*
+     * print image from clipboard to 'directory'
+     */
     public static void clipboardTo(String directory) throws Exception {
         // grab clipboard
         Transferable content = TrayApp.getClipboard();
@@ -58,11 +65,14 @@ public class Utils {
         img.flush();
         // Call garbage collector (temporary fix to memory leak from this method)
         Runtime.getRuntime().gc();
+        //run crop if not cropping + config04
+        if (!TrayApp.isCropping() && TrayApp.config.getBooleanProperty(SimpleProperties.FIELD03))
+            CropImage.openWindow(outfile.getAbsolutePath());
     }
 
     /*
-    *  return new file path string using 'directory'
-    */ 
+     * return new file path string using 'directory'
+     */
     public static String getName(String directory) {
         // create date format
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm.ss");
@@ -83,8 +93,8 @@ public class Utils {
     }
 
     /*
-    *  check if transferable from clipboard is an image
-    */ 
+     * check if transferable from clipboard is an image
+     */
     public static boolean isImage(Transferable content) {
         // check that content exist
         if (content == null) {
@@ -99,8 +109,8 @@ public class Utils {
     }
 
     /*
-    * load BufferedImage from resources inputStream
-    */ 
+     * load BufferedImage from resources inputStream
+     */
     public static BufferedImage getImage(String name) {
         BufferedImage img = null;
         try (InputStream inputStream = TrayApp.class.getClassLoader().getResourceAsStream(name)) {
