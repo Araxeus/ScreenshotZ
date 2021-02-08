@@ -12,11 +12,12 @@ import java.util.Properties;
 @SuppressWarnings({ "java:S106", "java:S1659" })
 
 public class SimpleProperties {
-    public static final String DEFAULT_PATH = System.getProperty("user.home") + File.separator + ".ScreenshotZ"
-            + File.separator + "config.xml", FIELD01 = "Screenshot Dir",
-            FIELD01_DEFAULT_VALUE = new File(DEFAULT_PATH).getParent() + File.separator + "Screenshots"
-                    + File.separator,
-            FIELD02 = "Keybind", FIELD02_DEFAULT_VALUE = "0";
+    public static final String 
+        DEFAULT_PATH = System.getProperty("user.home") + File.separator + ".ScreenshotZ" + File.separator + "config.xml", 
+        FIELD01 = "Screenshot Dir",
+        FIELD01_DEFAULT_VALUE = new File(DEFAULT_PATH).getParent() + File.separator + "Screenshots" + File.separator,
+        FIELD02 = "Keybind", 
+        FIELD02_DEFAULT_VALUE = "0";
 
     // config always has updated keybind array
 

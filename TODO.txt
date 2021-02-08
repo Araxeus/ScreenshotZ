@@ -1,3 +1,4 @@
+- make SimpleProperties.store() only on program exit?
 
 - add menu that opens into 2 CheckboxMenuItem: enable_Crop_On_PrintScreen[03] , enable_Crop_On_Aditional_Keybind[04]
 
@@ -12,12 +13,12 @@ if(!isCropping && (mode==3 || (mode==1 && Settings[03]==true) || (mode==2 && Set
 
 - refractor main method [extract listeners]
 - Methods to extract:
-# getClipboard()
-# isImage(Transferable content)
-# getName(String directory)
-# clipboardTo() [Is this method even necessary if robotTo is a thing?]
-# robotTo() 
-# getImage()
+# getClipboard() CHECK
+# isImage(Transferable content) CHECK
+# getName(String directory) CHECK
+# clipboardTo() [Is this method even necessary if robotTo is a thing?] CHECK
+# robotTo()  CHECK
+# getImage() CHECK
 
  option to launch 'crop jpanel' #http://mrbool.com/how-to-crop-an-image-using-java/25272
 
