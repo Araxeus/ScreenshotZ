@@ -1,22 +1,26 @@
 package core;
 
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.Point;
 import java.awt.Robot;
+import java.awt.AWTException;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+
 import java.io.File;
 import java.io.IOException;
-import java.awt.AWTException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 
 import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
@@ -26,17 +30,20 @@ import lc.kra.system.keyboard.event.GlobalKeyEvent;
 public class CropImage extends JFrame implements MouseListener, MouseMotionListener {
 	private static final long serialVersionUID = 6969L;
 
-    private boolean isDragged = false;
+    private boolean isDragged;
 
 	private int x1, y1, x2, y2;
 
 	private GlobalKeyboardHook keyboardHook;
+
+    ImagePanel im;
     
 	private String imagePath;
 	
 	private CropImage(String imagePath){
 		this.keyboardHook=TrayApp.getKeyboardHook();
 		this.imagePath=imagePath;
+        isDragged = false;
 	}
 	
 	public static void openWindow(String imagePath) {
@@ -61,23 +68,23 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 			}
 		}; //add listener to keyboard hook
 		keyboardHook.addKeyListener(exitListener);
-		
-		ImagePanel im = new ImagePanel(imagePath);
+		setForeground(Color.RED);
+		im = new ImagePanel(imagePath);
 		add(im);
 		setSize(im.getWidth(), im.getHeight());
 		setTitle("Crop Tool - [Press Enter / Escape To Quit]");
         setIconImage(Utils.getImage("TrayIcon.png"));
 		addMouseListener(this);
 		addMouseMotionListener(this);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setVisible(true);
 		addWindowListener(new WindowAdapter() {
 		@Override
 		public void windowClosed(WindowEvent e) {
 			keyboardHook.removeKeyListener(exitListener);
+            im.flush();
             TrayApp.setIsCropping(false);
-			//keyboardHook.shutdownHook(); //TODO Delete
-			System.out.print("Closed Crop Frame (dont forget to delete hook shutdown on main release)");
+			System.out.print("Closed Crop Frame");
 			}
 		});
 	}
@@ -85,16 +92,21 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 	private void draggedScreen() throws IOException, AWTException {
 		int width = Math.abs(x2 - x1);
 		int height = Math.abs(y2 - y1);
-		int x = x1<x2 ? x1: x2 ,
+		int x = x1<x2 ? x1 : x2 ,
 			y = y1<y2 ? y1 : y2 ;
-		Robot robot = new Robot();
-		BufferedImage img = robot.createScreenCapture(new Rectangle(x, y, width, height));
+
+        Point outPoint = new  Point(x,y);
+
+        SwingUtilities.convertPointToScreen(outPoint , this.getFocusOwner());
+
+		BufferedImage img = new Robot().createScreenCapture(new Rectangle((int)outPoint.getX() , (int)outPoint.getY(), width, height)).getSubimage(1, 1, width-1, height-1);
+
 		StringBuilder cropPath = new StringBuilder(imagePath)
 		.insert(imagePath.indexOf(".png"), "(Cropped)");
 		File savePath = new File(cropPath.toString());
-		ImageIO.write(img, "JPG", savePath);
+		ImageIO.write(img, "png", savePath);
 		System.out.println("Cropped image saved successfully.");
-	}
+    }
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
@@ -113,6 +125,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		repaint();
 		x1 = arg0.getX();
 		y1 = arg0.getY();
+        arg0.getXOnScreen();
 	}
 
 	@Override
@@ -140,17 +153,22 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
-
 	}
 
 
 	public void paint(Graphics g) {
 		super.paint(g);
+
 		int width = Math.abs(x2 - x1);
 		int height = Math.abs(y2 - y1);
 		int x = x1<x2 ? x1: x2 ,
 			y = y1<y2 ? y1 : y2 ;
-        g.setColor(Color.RED);
+
 		g.drawRect(x, y, width, height);
+ 
 	}
+
+    public void clearRect() {
+        
+    }
 }

@@ -11,7 +11,7 @@
 if(!isCropping && (mode==3 || (mode==1 && Settings[03]==true) || (mode==2 && Settings[04]==true) ))
     CropImage.openWindow(outfile.getAbsolutePath());
 
-- refractor main method [extract listeners]
+- refractor atleast 1 more [keyboard listener]
 - Methods to extract:
 # getClipboard() CHECK
 # isImage(Transferable content) CHECK

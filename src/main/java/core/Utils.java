@@ -53,7 +53,8 @@ public class Utils {
         // check thats its an image
         if (!isImage(content))
             return;
-
+		// reset clipboard content - so that listener can notice new screenshot
+		setClipboard(new StringSelection(""));
         // create buffered image from content
         BufferedImage img = (BufferedImage) content.getTransferData(DataFlavor.imageFlavor);
         // create file using getName (returns new image path)

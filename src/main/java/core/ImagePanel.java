@@ -3,9 +3,11 @@ package core;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+
+
+
 
 
 	@SuppressWarnings("java:S1948")
@@ -14,8 +16,8 @@ import javax.swing.JPanel;
 
         private Image img;
 
-		  public ImagePanel(String img) {
-		    this(new ImageIcon(img).getImage());
+		  public ImagePanel(String path) {
+		    this(new ImageIcon(path).getImage());
 		  }
 
 		  public ImagePanel(Image img) {
@@ -26,11 +28,16 @@ import javax.swing.JPanel;
 		    setMaximumSize(size);
 		    setSize(size);
 		    setLayout(null);
+            getHeight();
 		  }
 
           @Override
 		  public void paintComponent(Graphics g) {
 		    g.drawImage(img, 0, 0, null);
 		  }
+
+          public void flush() {
+              img.flush();
+          }
 
 		}

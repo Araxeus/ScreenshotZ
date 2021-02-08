@@ -150,8 +150,6 @@ public final class TrayApp {
 				if (System.currentTimeMillis() - lastEvent > 1000) {
 					System.out.println("Clipboard Listener Activated [Keyboard's wasn't]");
 					Utils.clipboardTo(config.getProperty(SimpleProperties.FIELD01)); // TODO Switch to robotTo
-					// reset clipboard content - so that listener can notice new screenshot
-					setClipboard(new StringSelection(""));
 				}
 			} catch (InterruptedException e) {
 				System.err.println("Literally impossible - Thread sleep Error");
