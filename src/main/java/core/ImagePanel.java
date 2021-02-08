@@ -7,10 +7,12 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-	@SuppressWarnings("serial")
+
+	@SuppressWarnings("java:S1948")
 	class ImagePanel extends JPanel {
-		
-		private Image img;
+        private static final long serialVersionUID = 6969L;
+        
+        private Image img;
 
 		  public ImagePanel(String img) {
 		    this(new ImageIcon(img).getImage());

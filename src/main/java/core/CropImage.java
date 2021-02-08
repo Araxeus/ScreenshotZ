@@ -11,6 +11,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.awt.AWTException;
+
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
@@ -18,15 +21,15 @@ import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
 import lc.kra.system.keyboard.event.GlobalKeyEvent;
 
-@SuppressWarnings({"serial", "java:S1186" , "java:S106"})
+@SuppressWarnings({"java:S1161","java:S110", "java:S1186" , "java:S106" , "java:S1948" , "java:S1659"})
 public class CropImage extends JFrame implements MouseListener, MouseMotionListener {
-	
-	private int dragStatus = 0, x1, y1, x2, y2;
-	@SuppressWarnings("unused")
+	private static final long serialVersionUID = 6969L;
+    private boolean isDragged = false;
+	private int x1, y1, x2, y2;
 	private GlobalKeyboardHook keyboardHook;
 	private String imagePath;
 	
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		openWindow(new GlobalKeyboardHook() , "C:\\Users\\Araxeus\\.ScreenshotZ\\Screenshots\\toCrop.png");
 	}
 	
@@ -75,7 +78,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		});
 	}
 
-	private void draggedScreen() throws Exception {
+	private void draggedScreen() throws IOException, AWTException {
 		int width = Math.abs(x2 - x1);
 		int height = Math.abs(y2 - y1);
 		int x = x1<x2 ? x1: x2 ,
@@ -110,13 +113,13 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {		
-		if (dragStatus == 1) {
+		if (isDragged) {
 			repaint();
 			x2 = arg0.getX();
 			y2 = arg0.getY();
 			try {
 				draggedScreen();
-				dragStatus=0;
+				isDragged=false;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -126,7 +129,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
 		repaint();
-		dragStatus = 1;
+		isDragged = true;
 		x2 = arg0.getX();
 		y2 = arg0.getY();
 	}
@@ -135,6 +138,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 	public void mouseMoved(MouseEvent arg0) {
 
 	}
+
 
 	public void paint(Graphics g) {
 		super.paint(g);
