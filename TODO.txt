@@ -4,6 +4,8 @@
 
 - focus on crop
 
+- add settings [Quit On Crop] , [On Crop - Save Original Too]
+
 - change crop to save on same filename? [need external feedback]
 
 - switch JFileChooser for native windows chooser?
