@@ -1,5 +1,7 @@
 - make SimpleProperties.store() only on program exit?
 
+- fix @arg -crop [change getKeyboardHook() to create new hook if null]
+
 - focus on crop
 
 - switch JFileChooser for native windows chooser?
