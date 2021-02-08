@@ -37,6 +37,7 @@
      for example in cmd: "java -jar ScreenshotZ-v1-jar-with-dependencies.jar -capture -crop"
      
      (App will just take screenshot without launching main thread)
+     
          
 ###### Known Issues: ######
 
@@ -56,17 +57,19 @@
 
 # TODO
 
-- ? Fix memory leak ?
-
-- Make/Add .REG file "ScreenshotZ" (Add to explorer context menu - launch with @arg -capture) [almost done]
-
-- Make installScript (use also contextMenu.REG and onStartup.bat)
-
 - fix @arg -crop (change getKeyboardHook() to create new hook if null)
 
 - fix focus on crop
 
 - change crop to save on same filename? [need external feedback]
+
+- add settings [Quit On Crop] , [On Crop - Save Original Too]
+
+- ? Fix memory leak ?
+
+- Make/Add .REG file "ScreenshotZ" (Add to explorer context menu - launch with @arg -capture) [almost done]
+
+- Make installScript (use also contextMenu.REG and onStartup.bat)
 
 .
 
