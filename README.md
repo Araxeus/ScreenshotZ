@@ -20,6 +20,7 @@
      
      - v1.1 added Option to launch Crop UI on Custom Keybind and/or PrtScn
      
+     
      - v1.2 added more Crop Options (Save Original , Exit UI onCrop)
 
 
