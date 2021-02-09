@@ -18,7 +18,9 @@
      - Option to add a Custom Keybind (Save a combination of 1-3 keys) [Does not replace PrtScn button]
      
      
-     - Option to launch Crop UI on Custom Keybind and/or PrtScn
+     - v1.1 added Option to launch Crop UI on Custom Keybind and/or PrtScn
+     
+     - v1.2 added more Crop Options (Save Original , Exit UI onCrop)
 
 
      - App save settings to MyUser/.ScreenshotZ/config.XML
