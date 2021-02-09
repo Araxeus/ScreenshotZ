@@ -1,4 +1,5 @@
-###### Running Jar/Exe as Administrator perform better ######
+###### Running .jar as Administrator perform better ######
+###### To launch from .exe you *MUST* run as administrator ######
 
 
 #  :sparkles: ScreenshotZ App Features: :sparkles:
