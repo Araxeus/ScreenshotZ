@@ -11,33 +11,68 @@ import java.util.Properties;
 
 @SuppressWarnings({ "java:S106", "java:S1659" })
 
-public class SimpleProperties {
-    public static final String 
-        DEFAULT_PATH = System.getProperty("user.home") + File.separator + ".ScreenshotZ" + File.separator + "config.xml", 
-        FIELD01 = "Screenshot Dir",
-        FIELD01_DEFAULT_VALUE = new File(DEFAULT_PATH).getParent() + File.separator + "Screenshots" + File.separator,
-        FIELD02 = "Keybind", 
-        FIELD02_DEFAULT_VALUE = "0" ,
-        FIELD03 = "Crop on PrintScreen" ,
-        FIELD03_DEFAULT_VALUE = "false" ,
-        FIELD04 = "Crop on Alternate Keybind" ,
-        FIELD04_DEFAULT_VALUE = "true";
+enum Fields 
+        { 
+            FIELD01 ("Screenshot Dir", new File(SimpleProperties.DEFAULT_PATH).getParent() + File.separator + "Screenshots" + File.separator) , 
+            FIELD02 ("Keybind", "0") ,
+            FIELD03 ("Crop on PrintScreen", "false") ,
+            FIELD04 ("Crop on Alternate Keybind", "true");
+        
+            final String DEFAULT_VALUE ,   
+                         KEY;
+            // enum constructor called separately for each 
+            // constant 
+            private Fields (String key, String val) 
+            { 
+                this.KEY = key;
+                this.DEFAULT_VALUE = val;
+            } 
+        
+            public void setValue (String newValue) 
+            { 
+                SimpleProperties.getInstance().setProperty(this, newValue); 
+            }
 
+            public String getString () 
+            { 
+                return SimpleProperties.getInstance().getProperty(this); 
+            }
+
+            public boolean getBoolean () {
+                return SimpleProperties.getInstance().getBooleanProperty(this);
+            }
+
+            public static int[] getKeybinds () {
+                return SimpleProperties.getInstance().getKeybinds();
+            }
+
+
+        } 
+
+public class SimpleProperties {
+
+    public static final String DEFAULT_PATH = System.getProperty("user.home") + File.separator + ".ScreenshotZ" + File.separator + "config.xml";   
+
+    private static SimpleProperties instance;
     // config always has updated keybind array
 
-    int[] keybind;
+    private int[] keybind;
 
     private String propertiesFilePath;
 
     private Properties properties;
 
-    // PUBLIC CONSTRUCTOR create config at default path
-    public SimpleProperties() {
-        this(DEFAULT_PATH);
+    // PUBLIC singleton instance getter
+    public static SimpleProperties getInstance() {
+        if(instance == null) {
+            instance = new SimpleProperties(DEFAULT_PATH);
+            System.out.println("created new properties instance");
+        }
+        return instance;
     }
 
-    // PUBLIC CONSTRUCTOR create config
-    public SimpleProperties(String path) {
+    // PRIVATE CONSTRUCTOR create config
+    private SimpleProperties(String path) {
         propertiesFilePath = path;
         properties = new Properties();
         // checkPath create/check propertiesFilePath - return false if failed
@@ -65,11 +100,15 @@ public class SimpleProperties {
             properties.setProperty(key, value);
             store();
             // update keybind array if FIELD02 was updated
-            if (key.equals(FIELD02)) {
+            if (key.equals(Fields.FIELD02.KEY)) {
                 keybind = getKeybind();
             }
         } else
             System.err.println("Trying to set property '" + key + "' to the same value (" + value + ")");
+    }
+
+    public void setProperty(Fields field, String value) {
+        setProperty(field.KEY , value);
     }
 
     // PUBLIC get property
@@ -77,14 +116,26 @@ public class SimpleProperties {
         return properties.getProperty(key);
     }
 
+    public String getProperty(Fields field) {
+        return getProperty(field.KEY);
+    }
+
     public boolean getBooleanProperty(String key) {
         return properties.getProperty(key).equalsIgnoreCase("true");
+    }
+
+    public boolean getBooleanProperty(Fields field) {
+        return getBooleanProperty(field.KEY);
+    }
+
+    public int[] getKeybinds(){
+        return keybind.clone();
     }
 
     // int[] keybind updater
     private int[] getKeybind() {
         // new String array from splitting property around ','
-        String[] temp = properties.getProperty(FIELD02).split(",");
+        String[] temp = properties.getProperty(Fields.FIELD02.KEY).split(",");
         // convert String array to int array
         int[] output = new int[temp.length];
         for (int i = 0; i < temp.length; i++)
@@ -106,41 +157,28 @@ public class SimpleProperties {
     // create missing properties and set to default - returns false if nothing changed
     private boolean updateProperties() {
         boolean changed = false;
-        // SCREENSHOT DIRECTORY
-        if (!properties.containsKey(FIELD01)) {
-            properties.setProperty(FIELD01, FIELD01_DEFAULT_VALUE);
-            changed = true;
-            System.err.println("Properties didn't contain " + FIELD01);
-            // initialize default screenshot directory if it doesn't exist
+
+        for(Fields field : Fields.values()) {
+            if (!properties.containsKey(field.KEY)) {
+                properties.setProperty(field.KEY, field.DEFAULT_VALUE);
+                changed = true;
+                System.err.println("Properties didn't contain " + field.KEY);
+            }
+        }
+        //check that screenshot dir exit and create if needed
             try {
-                if (Files.notExists(Paths.get(FIELD01_DEFAULT_VALUE))) {
-                    Files.createDirectories(Paths.get(FIELD01_DEFAULT_VALUE));
+                if (Files.notExists(Paths.get(properties.getProperty(Fields.FIELD01.KEY)))) {
+                    System.out.println("Creating screenshot directory");
+                    Files.createDirectories(Paths.get(properties.getProperty(Fields.FIELD01.KEY)));
                 }
             } catch (IOException e) {
                 System.err.println("couldn't create default screenshot dir");
             }
-        }
-        // KEYBIND SEQUENCE
-        if (!properties.containsKey(FIELD02) || properties.getProperty(FIELD02).equals("")) {
-            properties.setProperty(FIELD02, FIELD02_DEFAULT_VALUE);
-            changed = true;
-            System.err.println("Properties didn't contain " + FIELD02);
-        }
-        // initialize keybind[]
+        
+            // initialize keybind[]
         if (keybind == null)
             keybind = getKeybind();
-        // Crop on Screenshot
-        if (!properties.containsKey(FIELD03)) {
-            properties.setProperty(FIELD03, FIELD03_DEFAULT_VALUE);
-            changed = true;
-            System.err.println("Properties didn't contain " + FIELD03);
-        }
-        // Crop on Additional Keybind
-        if (!properties.containsKey(FIELD04)) {
-            properties.setProperty(FIELD04, FIELD04_DEFAULT_VALUE);
-            changed = true;
-            System.err.println("Properties didn't contain " + FIELD04);
-        }
+
         return changed;
     }
 

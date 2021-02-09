@@ -116,7 +116,7 @@ public class GetKeybind {
             public void widgetSelected(SelectionEvent e) {
                 System.out.println(keyChain.toString());
                 // update main app config
-                TrayApp.config.setProperty(SimpleProperties.FIELD02, keyChainToString());
+                Fields.FIELD02.setValue(keyChainToString());
                 // close shell
                 shell.close();
             }
@@ -218,11 +218,12 @@ public class GetKeybind {
 
     // on launch - get current keybind
     private void addOrigin() {
+        int[] keybind = Fields.getKeybinds();
         // 0 value means no keybind
-        if (TrayApp.config.keybind.length == 1 && TrayApp.config.keybind[0] == 0)
+        if (keybind.length == 1 && keybind[0] == 0)
             return;
         // add keybind from config
-        for (int key : TrayApp.config.keybind)
+        for (int key : keybind)
             addKey(key);
     }
 

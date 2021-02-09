@@ -44,8 +44,6 @@ public final class TrayApp {
 
 	private static final Clipboard SYSTEM_CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
 
-	static SimpleProperties config = new SimpleProperties();
-
 	private static GlobalKeyboardHook keyboardHook;
 
 	public static void main(String[] args) throws InterruptedException {
@@ -81,11 +79,11 @@ public final class TrayApp {
 		// *--Crop Settings Check Box--*
 		// create , add listener , and setState according to config
 		CheckboxMenuItem checkBoxCrop03 = new CheckboxMenuItem("Crop on PrintScreen");
-		checkBoxCrop03.setState(config.getBooleanProperty(SimpleProperties.FIELD03));
+		checkBoxCrop03.setState(Fields.FIELD03.getBoolean());
 		checkBoxCrop03.addItemListener(crop03Listener);
 
 		CheckboxMenuItem checkBoxCrop04 = new CheckboxMenuItem("Crop on Custom Keybind");
-		checkBoxCrop04.setState(config.getBooleanProperty(SimpleProperties.FIELD04));
+		checkBoxCrop04.setState(Fields.FIELD04.getBoolean());
 		checkBoxCrop04.addItemListener(crop04Listener);
 
 		// create a popup menu
@@ -165,14 +163,14 @@ public final class TrayApp {
 		// create new JFileChooser
 		JFileChooser chooser = new JFileChooser();
 		// opens on screenshot directory
-		chooser.setCurrentDirectory(new java.io.File(config.getProperty(SimpleProperties.FIELD01)));
+		chooser.setCurrentDirectory(new java.io.File(Fields.FIELD01.getString()));
 		chooser.setDialogTitle("Select Output Directory");
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		// disable the "All files" option.
 		chooser.setAcceptAllFileFilterUsed(false);
 		if (chooser.showOpenDialog(chooser) == JFileChooser.APPROVE_OPTION) { // approve button (open)
 			// set screenshot directory at Path+\
-			config.setProperty(SimpleProperties.FIELD01, chooser.getSelectedFile().toString() + File.separator);
+			Fields.FIELD01.setValue(chooser.getSelectedFile().toString() + File.separator);
 		} else // cancel button
 			System.out.println("No Selection ");
 	};
@@ -187,7 +185,7 @@ public final class TrayApp {
 	private static ActionListener clickListener = click -> {
 		try {
 			// opens screenshot directory
-			Desktop.getDesktop().open(new File(config.getProperty(SimpleProperties.FIELD01)));
+			Desktop.getDesktop().open(new File(Fields.FIELD01.getString()));
 		} catch (IOException e) {
 			System.err.println("IO Error when opening Screenshot Directory");
 		}
@@ -197,18 +195,18 @@ public final class TrayApp {
 	private static ItemListener crop03Listener = crop03 -> {
 		// state 2 = no && state 1 = yes
 		if (crop03.getStateChange() == 1)
-			config.setProperty(SimpleProperties.FIELD03, "true");
+			Fields.FIELD03.setValue("true");
 		else
-			config.setProperty(SimpleProperties.FIELD03, "false");
+			Fields.FIELD03.setValue("false");
 	};
 
-	// crop on PrintScreen listener
+	// crop on Custom Keybind listener
 	private static ItemListener crop04Listener = crop04 -> {
 		// state 2 = no && state 1 = yes
 		if (crop04.getStateChange() == 1)
-			config.setProperty(SimpleProperties.FIELD04, "true");
+			Fields.FIELD04.setValue("true");
 		else
-			config.setProperty(SimpleProperties.FIELD04, "false");
+			Fields.FIELD04.setValue("false");
 	};
 
 	// Clipboard Style Listener
@@ -218,7 +216,7 @@ public final class TrayApp {
 			Thread.sleep(50);
 			if (System.currentTimeMillis() - lastEvent > 1000) {
 				System.out.println("Clipboard Listener Activated [Keyboard's wasn't]");
-				Utils.clipboardTo(config.getProperty(SimpleProperties.FIELD01)); // TODO Switch to robotTo?
+				Utils.clipboardTo(Fields.FIELD01.getString()); // TODO Switch to robotTo?
 			}
 		} catch (InterruptedException b) {
 			System.err.println("Literally impossible - Thread sleep Error");
@@ -235,7 +233,7 @@ public final class TrayApp {
 			byte mode;
 			if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_SNAPSHOT)
 				mode = 1;
-			else if (keyboardHook.areKeysHeldDown(config.keybind))
+			else if (keyboardHook.areKeysHeldDown(Fields.getKeybinds()))
 				mode = 2;
 			else
 				mode = 0;
@@ -245,7 +243,7 @@ public final class TrayApp {
 					if (System.currentTimeMillis() - lastEvent > 1000) {
 						setLastEvent(System.currentTimeMillis());
 						System.out.println("Keyboard Listener Activated");
-						Utils.robotTo(config.getProperty(SimpleProperties.FIELD01), mode);
+						Utils.robotTo(Fields.FIELD01.getString(), mode);
 					}
 				} catch (Exception e) {
 					System.err.println("Exception at print to dir");
@@ -266,7 +264,7 @@ public final class TrayApp {
 			else
 				isCropping = true;
 			try {
-				Utils.robotTo(config.getProperty(SimpleProperties.FIELD01), mode);
+				Utils.robotTo(Fields.FIELD01.getString(), mode);
 			} catch (Exception a) {
 				System.err.println("Couldn't print before loading main method..");
 				a.printStackTrace();

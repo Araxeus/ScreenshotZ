@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.awt.datatransfer.DataFlavor;
@@ -40,8 +41,8 @@ public class Utils {
         //run crop if not cropping and [mode3 / mode1+config03 / mode2+config04]
         if (!TrayApp.isCropping()
                 && (mode == 3 
-                        || (mode == 1 && TrayApp.config.getBooleanProperty(SimpleProperties.FIELD03))
-                        || (mode == 2 && TrayApp.config.getBooleanProperty(SimpleProperties.FIELD04)) ) )
+                        || (mode == 1 && Fields.FIELD03.getBoolean() )
+                        || (mode == 2 && Fields.FIELD04.getBoolean() ) ) )
             CropImage.openWindow(outfile.getAbsolutePath());
     }
 
@@ -68,7 +69,7 @@ public class Utils {
         // Call garbage collector (temporary fix to memory leak from this method)
         Runtime.getRuntime().gc();
         //run crop if not cropping + config04
-        if (!TrayApp.isCropping() && TrayApp.config.getBooleanProperty(SimpleProperties.FIELD03))
+        if (!TrayApp.isCropping() && Fields.FIELD03.getBoolean() )
             CropImage.openWindow(outfile.getAbsolutePath());
     }
 
