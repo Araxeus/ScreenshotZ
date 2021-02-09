@@ -14,7 +14,5 @@ public class AppTest {
     @Test
     public void testApp() {
         assertTrue(true);
-        byte shot = 1;
-        System.out.println(shot==1);
     }
 }

@@ -1,2 +1,2 @@
-SCHTASKS /CREATE /TN Startup\ScreenshotZ /SC ONLOGON /DELAY 0001:00 /RL HIGHEST /TR %~dp0ScreenshotZ-v1.1.exe
+SCHTASKS /CREATE /TN Startup\ScreenshotZ /SC ONLOGON /DELAY 0001:00 /RL HIGHEST /TR %~dp0ScreenshotZ-v1.2.exe
 PAUSE

@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.awt.datatransfer.DataFlavor;
@@ -25,7 +26,7 @@ public class Utils {
     /*
      * print screenshot to 'directory'
      */
-    public static void robotTo(String directory, byte mode) throws IOException, AWTException {
+    public static void robotTo(String directory, int mode) throws IOException, AWTException {
         // create buffered image from new rectangle containing all screen
         BufferedImage img = new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
         // create file using getName (returns new image path)
@@ -37,11 +38,10 @@ public class Utils {
         img.flush();
         // Call garbage collector (temporary fix to memory leak from this method)
         Runtime.getRuntime().gc();
-        //run crop if not cropping and [mode3 / mode1+config03 / mode2+config04]
+        //run crop if not cropping and [mode1+config03](PrtScn mode+config) / [mode2+config04](Custom keybind mode+config)
         if (!TrayApp.isCropping()
-                && (mode == 3 
-                        || (mode == 1 && TrayApp.config.getBooleanProperty(SimpleProperties.FIELD03))
-                        || (mode == 2 && TrayApp.config.getBooleanProperty(SimpleProperties.FIELD04)) ) )
+                &&( (mode == 1 && Config.FIELD03.getBoolean())
+                ||  (mode == 2 && Config.FIELD04.getBoolean()) ) )
             CropImage.openWindow(outfile.getAbsolutePath());
     }
 
@@ -68,7 +68,7 @@ public class Utils {
         // Call garbage collector (temporary fix to memory leak from this method)
         Runtime.getRuntime().gc();
         //run crop if not cropping + config04
-        if (!TrayApp.isCropping() && TrayApp.config.getBooleanProperty(SimpleProperties.FIELD03))
+        if (!TrayApp.isCropping() && Config.FIELD03.getBoolean() )
             CropImage.openWindow(outfile.getAbsolutePath());
     }
 

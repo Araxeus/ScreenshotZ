@@ -1,2 +1,2 @@
-java -jar ScreenshotZ-v1-jar-with-dependencies.jar
+java -jar ScreenshotZ-v1.2.jar
 pause

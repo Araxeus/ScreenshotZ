@@ -57,19 +57,14 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		GlobalKeyAdapter exitListener = new GlobalKeyAdapter () {
 			@Override
 			public void keyPressed(GlobalKeyEvent event) {
-				if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_RETURN || event.getVirtualKeyCode() == GlobalKeyEvent.VK_ESCAPE) { //Enter / Escape
-					try {
+				//exit on Enter / Escape
+				if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_RETURN || event.getVirtualKeyCode() == GlobalKeyEvent.VK_ESCAPE)
 						dispose();
-					} catch (Exception e) {
-						System.err.println("Exception at print to dir");
-						e.printStackTrace();
-					}
-				}
 			}
 		}; //add listener to keyboard hook
 		keyboardHook.addKeyListener(exitListener);
 		setForeground(Color.RED);
-		im = new ImagePanel(imagePath);
+		im = new ImagePanel(imagePath);	
 		add(im);
 		setSize(im.getWidth(), im.getHeight());
 		setTitle("Crop Tool - [Press Enter / Escape To Quit]");
@@ -78,13 +73,20 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		addMouseMotionListener(this);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setVisible(true);
+		setFocusable(true);
+		//request focus when frame is built
+		SwingUtilities.invokeLater( () ->
+		requestFocusInWindow() 
+		);
+
+		//Window Closed Listener
 		addWindowListener(new WindowAdapter() {
 		@Override
 		public void windowClosed(WindowEvent e) {
 			keyboardHook.removeKeyListener(exitListener);
             im.flush();
             TrayApp.setIsCropping(false);
-			System.out.print("Closed Crop Frame");
+			System.out.println("Closed Crop Frame");
 			}
 		});
 	}
@@ -101,11 +103,19 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 
 		BufferedImage img = new Robot().createScreenCapture(new Rectangle((int)outPoint.getX() , (int)outPoint.getY(), width, height)).getSubimage(1, 1, width-1, height-1);
 
-		StringBuilder cropPath = new StringBuilder(imagePath)
-		.insert(imagePath.indexOf(".png"), "(Cropped)");
+		StringBuilder cropPath = new StringBuilder(imagePath);
+
+		//Save original onCrop Setting
+		if(Config.FIELD05.getBoolean())
+			cropPath.insert(imagePath.indexOf(".png"), "(Cropped)");
+		
 		File savePath = new File(cropPath.toString());
 		ImageIO.write(img, "png", savePath);
 		System.out.println("Cropped image saved successfully.");
+
+		//Quit onCrop Setting
+		if(Config.FIELD06.getBoolean())
+			dispose();
     }
 
 	@Override
@@ -167,8 +177,4 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		g.drawRect(x, y, width, height);
  
 	}
-
-    public void clearRect() {
-        
-    }
 }
