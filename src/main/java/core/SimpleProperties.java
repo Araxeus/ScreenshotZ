@@ -11,7 +11,7 @@ import java.util.Properties;
 
 @SuppressWarnings({ "java:S106", "java:S1659" })
 
-enum Fields 
+enum Config 
         { 
             FIELD01 ("Screenshot Dir", new File(SimpleProperties.DEFAULT_PATH).getParent() + File.separator + "Screenshots" + File.separator) , 
             FIELD02 ("Keybind", "0") ,
@@ -22,10 +22,10 @@ enum Fields
                          KEY;
             // enum constructor called separately for each 
             // constant 
-            private Fields (String key, String val) 
+            private Config (String key, String defaultValue) 
             { 
                 this.KEY = key;
-                this.DEFAULT_VALUE = val;
+                this.DEFAULT_VALUE = defaultValue;
             } 
         
             public void setValue (String newValue) 
@@ -100,14 +100,14 @@ public class SimpleProperties {
             properties.setProperty(key, value);
             store();
             // update keybind array if FIELD02 was updated
-            if (key.equals(Fields.FIELD02.KEY)) {
+            if (key.equals(Config.FIELD02.KEY)) {
                 keybind = getKeybind();
             }
         } else
             System.err.println("Trying to set property '" + key + "' to the same value (" + value + ")");
     }
 
-    public void setProperty(Fields field, String value) {
+    public void setProperty(Config field, String value) {
         setProperty(field.KEY , value);
     }
 
@@ -116,7 +116,7 @@ public class SimpleProperties {
         return properties.getProperty(key);
     }
 
-    public String getProperty(Fields field) {
+    public String getProperty(Config field) {
         return getProperty(field.KEY);
     }
 
@@ -124,7 +124,7 @@ public class SimpleProperties {
         return properties.getProperty(key).equalsIgnoreCase("true");
     }
 
-    public boolean getBooleanProperty(Fields field) {
+    public boolean getBooleanProperty(Config field) {
         return getBooleanProperty(field.KEY);
     }
 
@@ -135,7 +135,7 @@ public class SimpleProperties {
     // int[] keybind updater
     private int[] getKeybind() {
         // new String array from splitting property around ','
-        String[] temp = properties.getProperty(Fields.FIELD02.KEY).split(",");
+        String[] temp = properties.getProperty(Config.FIELD02.KEY).split(",");
         // convert String array to int array
         int[] output = new int[temp.length];
         for (int i = 0; i < temp.length; i++)
@@ -158,7 +158,7 @@ public class SimpleProperties {
     private boolean updateProperties() {
         boolean changed = false;
 
-        for(Fields field : Fields.values()) {
+        for(Config field : Config.values()) {
             if (!properties.containsKey(field.KEY)) {
                 properties.setProperty(field.KEY, field.DEFAULT_VALUE);
                 changed = true;
@@ -167,9 +167,9 @@ public class SimpleProperties {
         }
         //check that screenshot dir exit and create if needed
             try {
-                if (Files.notExists(Paths.get(properties.getProperty(Fields.FIELD01.KEY)))) {
+                if (Files.notExists(Paths.get(properties.getProperty(Config.FIELD01.KEY)))) {
                     System.out.println("Creating screenshot directory");
-                    Files.createDirectories(Paths.get(properties.getProperty(Fields.FIELD01.KEY)));
+                    Files.createDirectories(Paths.get(properties.getProperty(Config.FIELD01.KEY)));
                 }
             } catch (IOException e) {
                 System.err.println("couldn't create default screenshot dir");

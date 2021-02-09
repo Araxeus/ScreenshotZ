@@ -116,7 +116,7 @@ public class GetKeybind {
             public void widgetSelected(SelectionEvent e) {
                 System.out.println(keyChain.toString());
                 // update main app config
-                Fields.FIELD02.setValue(keyChainToString());
+                Config.FIELD02.setValue(keyChainToString());
                 // close shell
                 shell.close();
             }
@@ -218,7 +218,7 @@ public class GetKeybind {
 
     // on launch - get current keybind
     private void addOrigin() {
-        int[] keybind = Fields.getKeybinds();
+        int[] keybind = Config.getKeybinds();
         // 0 value means no keybind
         if (keybind.length == 1 && keybind[0] == 0)
             return;

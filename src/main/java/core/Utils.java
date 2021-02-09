@@ -41,8 +41,8 @@ public class Utils {
         //run crop if not cropping and [mode3 / mode1+config03 / mode2+config04]
         if (!TrayApp.isCropping()
                 && (mode == 3 
-                        || (mode == 1 && Fields.FIELD03.getBoolean() )
-                        || (mode == 2 && Fields.FIELD04.getBoolean() ) ) )
+                        || (mode == 1 && Config.FIELD03.getBoolean() )
+                        || (mode == 2 && Config.FIELD04.getBoolean() ) ) )
             CropImage.openWindow(outfile.getAbsolutePath());
     }
 
@@ -69,7 +69,7 @@ public class Utils {
         // Call garbage collector (temporary fix to memory leak from this method)
         Runtime.getRuntime().gc();
         //run crop if not cropping + config04
-        if (!TrayApp.isCropping() && Fields.FIELD03.getBoolean() )
+        if (!TrayApp.isCropping() && Config.FIELD03.getBoolean() )
             CropImage.openWindow(outfile.getAbsolutePath());
     }
 
