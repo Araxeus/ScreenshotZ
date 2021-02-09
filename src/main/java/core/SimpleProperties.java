@@ -9,14 +9,16 @@ import java.nio.file.Paths;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
-@SuppressWarnings({ "java:S106", "java:S1659" })
+@SuppressWarnings({"java:S1659", "java:S116", "java:S3066"})
 
 enum Config 
         { 
             FIELD01 ("Screenshot Dir", new File(SimpleProperties.DEFAULT_PATH).getParent() + File.separator + "Screenshots" + File.separator) , 
             FIELD02 ("Keybind", "0") ,
-            FIELD03 ("Crop on PrintScreen", "false") ,
-            FIELD04 ("Crop on Alternate Keybind", "true");
+            FIELD03 ("Crop on PrintScreen", false) ,
+            FIELD04 ("Crop on Alternate Keybind", true) ,
+            FIELD05 ("onCrop Save Original", false) ,
+            FIELD06 ("Exit UI onCrop", false) ;
         
             final String DEFAULT_VALUE ,   
                          KEY;
@@ -26,11 +28,22 @@ enum Config
             { 
                 this.KEY = key;
                 this.DEFAULT_VALUE = defaultValue;
+            }
+
+            private Config (String key, boolean defaultValue) 
+            { 
+                this.KEY = key;
+                this.DEFAULT_VALUE = String.valueOf(defaultValue);
             } 
         
             public void setValue (String newValue) 
             { 
                 SimpleProperties.getInstance().setProperty(this, newValue); 
+            }
+
+            public void setValue (boolean newValue) 
+            { 
+                SimpleProperties.getInstance().setProperty(this, String.valueOf(newValue)); 
             }
 
             public String getString () 
@@ -49,6 +62,7 @@ enum Config
 
         } 
 
+@SuppressWarnings("java:S106")
 public class SimpleProperties {
 
     public static final String DEFAULT_PATH = System.getProperty("user.home") + File.separator + ".ScreenshotZ" + File.separator + "config.xml";   

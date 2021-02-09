@@ -37,6 +37,7 @@ import lc.kra.system.keyboard.event.GlobalKeyEvent;
 public final class TrayApp {
 
 	private static boolean isCropping = false;
+
 	private static long lastEvent = 0; // used for timer calculations
 
 	@SuppressWarnings("unused")
@@ -86,11 +87,21 @@ public final class TrayApp {
 		checkBoxCrop04.setState(Config.FIELD04.getBoolean());
 		checkBoxCrop04.addItemListener(crop04Listener);
 
+		CheckboxMenuItem checkBoxCrop05 = new CheckboxMenuItem("Save Original onCrop");
+		checkBoxCrop05.setState(Config.FIELD05.getBoolean());
+		checkBoxCrop05.addItemListener(crop05Listener);
+
+		CheckboxMenuItem checkBoxCrop06 = new CheckboxMenuItem("Exit UI onCrop");
+		checkBoxCrop06.setState(Config.FIELD06.getBoolean());
+		checkBoxCrop06.addItemListener(crop06Listener);
+
 		
-		// create submenu
+		// create subMenu
 		PopupMenu subMenu = new PopupMenu("Crop Settings:");
 		subMenu.add(checkBoxCrop03);
 		subMenu.add(checkBoxCrop04);
+		subMenu.add(checkBoxCrop05);
+		subMenu.add(checkBoxCrop06);
 		// create main popup menu
 		PopupMenu popup = new PopupMenu();
 		// add menu items to popup menu
@@ -180,6 +191,7 @@ public final class TrayApp {
 
 	// Quit button listener
 	private static ActionListener quitListener = exit -> {
+		System.out.println("Exiting Program");
 		keyboardHook.shutdownHook();
 		System.exit(0);
 	};
@@ -194,23 +206,25 @@ public final class TrayApp {
 		}
 	};
 
+	/*
+	** checkBox Listeners: [state 2 == false]  [state 1 = true]
+	*/
+
 	// crop on PrintScreen listener
-	private static ItemListener crop03Listener = crop03 -> {
-		// state 2 = no && state 1 = yes
-		if (crop03.getStateChange() == 1)
-			Config.FIELD03.setValue("true");
-		else
-			Config.FIELD03.setValue("false");
-	};
+	private static ItemListener crop03Listener = crop03 -> 
+		Config.FIELD03.setValue(crop03.getStateChange() == 1);
 
 	// crop on Custom Keybind listener
-	private static ItemListener crop04Listener = crop04 -> {
-		// state 2 = no && state 1 = yes
-		if (crop04.getStateChange() == 1)
-			Config.FIELD04.setValue("true");
-		else
-			Config.FIELD04.setValue("false");
-	};
+	private static ItemListener crop04Listener = crop04 -> 
+		Config.FIELD04.setValue(crop04.getStateChange() == 1);
+	
+	//onCrop Save Original Listener
+	private static ItemListener crop05Listener = crop05 -> 
+		Config.FIELD05.setValue(crop05.getStateChange() == 1);
+
+	//Exit UI onCrop Listener
+	private static ItemListener crop06Listener = crop06 -> 
+		Config.FIELD06.setValue(crop06.getStateChange() == 1);
 
 	// Clipboard Style Listener
 	private static FlavorListener clipboardListener = listener -> {
@@ -229,11 +243,12 @@ public final class TrayApp {
 		}
 	};
 
+	//Keyboard Listener
 	private static GlobalKeyAdapter keyboardAdapter = new GlobalKeyAdapter() {
 		@Override
 		public void keyPressed(GlobalKeyEvent event) {
 			// get input type
-			byte mode;
+			int mode;
 			if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_SNAPSHOT)
 				mode = 1;
 			else if (keyboardHook.areKeysHeldDown(Config.getKeybinds()))
@@ -256,18 +271,14 @@ public final class TrayApp {
 		}
 	};
 
-	// capture screen if args[0]=="-capture" and quit or quit if already running
+	// IF (args[0] == "-capture")->[capture screen and quit] ELSE [Quit if app already running]
 	private static void checkIfRunning(String[] args) {
 		// check if trayApp was started with args
-		// TODO explain mode logic
 		if (args != null && args.length > 0 && args[0].equals("-capture")) {
-			byte mode = 0;
-			if (args.length > 1 && args[1].equals("-crop"))
-				mode = 3;
-			else
+				//no cropping
 				isCropping = true;
 			try {
-				Utils.robotTo(Config.FIELD01.getString(), mode);
+				Utils.robotTo(Config.FIELD01.getString(), 0);
 			} catch (Exception a) {
 				System.err.println("Couldn't print before loading main method..");
 				a.printStackTrace();
