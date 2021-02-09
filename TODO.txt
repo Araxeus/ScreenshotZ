@@ -1,12 +1,5 @@
-- make SimpleProperties.store() only on program exit?
 
-- fix @arg -crop [change getKeyboardHook() to create new hook if null]
-
-- focus on crop
-
-- add settings [Quit On Crop] , [On Crop - Save Original Too]
-
-- change crop to save on same filename? [need external feedback]
+- delete doc @arg -crop
 
 - switch JFileChooser for native windows chooser?
 
