@@ -1,5 +1,4 @@
 
-- delete doc @arg -crop
 
 - switch JFileChooser for native windows chooser?
 
