@@ -24,6 +24,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 
 import javax.swing.JFileChooser;
+import javax.swing.UIManager;
 
 import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
@@ -123,8 +124,11 @@ public final class TrayApp {
 		// add the tray image
 		try {
 			tray.add(trayIcon);
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (AWTException e) {
 			System.err.println("Error loading icon");
+		} catch (Exception e) {
+			System.err.println("Error loading System Looks and Feels");
 		}
 
 		// add Global Keyboard Listener

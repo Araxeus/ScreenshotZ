@@ -1,18 +1,4 @@
 
+[ALL DONE]
 
-- switch JFileChooser for native windows chooser?
-
-- 'Fix memory leak' (Reference Object?)
-
-
-* build
-
-compile installer using 'NSIS Quick Setup Script Generator' - # C:\Users\Araxeus\Desktop\DEV\NSIS\Quick Setup Script Generator.exe
-add onStartup rule bat
 make/add .REG file (Add to explorer context menu - screenshot now)
-
-
-- settings
-1. Screenshot Directory
-2. Key selection
-3. Choose cropToJpanel after screenshot
