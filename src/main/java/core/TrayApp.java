@@ -187,7 +187,7 @@ public final class TrayApp {
 		switch (NativeFileDialog.NFD_PickFolder(Config.FIELD01.getString() , path)) {
             case NativeFileDialog.NFD_OKAY:
                 System.out.println("Directory Chosen Successfully!");
-				Config.FIELD01.setValue(path.getStringUTF8(0));
+				Config.FIELD01.setValue(path.getStringUTF8(0)+File.separator);
                 System.out.println("New Path = "+Config.FIELD01.getString());
                 NativeFileDialog.nNFD_Free(path.get(0));
                 break;
