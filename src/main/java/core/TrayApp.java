@@ -79,8 +79,10 @@ public final class TrayApp {
 		// *--Choose Keybind Button--*
 		MenuItem keybindMenu = new MenuItem("Choose Additional Keybind");
 		// Create + Add listener
-		keybindMenu.addActionListener(keybindListener -> 
-		GetKeybind.openWindow() );
+		keybindMenu.addActionListener(keybindListener -> {
+		isCropping=true;
+		GetKeybind.openWindow();
+	});
 
 		// *--Crop Settings Check Box--*
 		// create , add listener , and setState according to config
@@ -126,7 +128,6 @@ public final class TrayApp {
 		// add the tray image
 		try {
 			tray.add(trayIcon);
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (AWTException e) {
 			System.err.println("Error loading icon");
 		} catch (Exception e) {

@@ -89,7 +89,7 @@ public class GetKeybind {
             shell.setImage(icon);
         else // this will execute only if jar was badly packaged
             shell.setImage(SWTResourceManager.getImage("Resources/BaseIcon.ico"));
-        shell.setBackground(SWTResourceManager.getColor(81, 86, 88));
+        shell.setBackground(SWTResourceManager.getColor(76, 74, 72));
         shell.setTouchEnabled(true);
         shell.setSize(450, 211);
         shell.setText("Choose Keybind");
@@ -103,13 +103,13 @@ public class GetKeybind {
         // KeyLabel
         keyLabel = new Label(shell, SWT.VERTICAL | SWT.CENTER);
         keyLabel.setForeground(SWTResourceManager.getColor(240, 255, 255));
-        keyLabel.setBackground(SWTResourceManager.getColor(81, 86, 88));
+        keyLabel.setBackground(SWTResourceManager.getColor(76, 74, 72));
         keyLabel.setFont(SWTResourceManager.getFont("Sitka Display", 26, SWT.BOLD | SWT.ITALIC));
         keyLabel.setBounds(10, 10, 424, 94);
         addOrigin();
 
         // Save Button
-        Button saveButton = new Button(shell, SWT.NONE);
+        Button saveButton = new Button(shell, SWT.PUSH);
         saveButton.addSelectionListener(new SelectionAdapter() {
             // save and close on click
             @Override
@@ -176,6 +176,8 @@ public class GetKeybind {
         shell.addDisposeListener(disposed -> {
             // remove keybind listener from imported keyboard_hook
             keyboardHook.removeKeyListener(keybindListen);
+            //enable cropping
+            TrayApp.setIsCropping(false);
             System.out.println("Exited Keybind UI (and closed 2nd listener)");
         });
     }
