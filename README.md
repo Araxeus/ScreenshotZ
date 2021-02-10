@@ -1,4 +1,5 @@
-###### Running Jar/Exe as Administrator perform better ######
+###### Running .jar as Administrator perform better ######
+###### To launch from .exe you *MUST* run as administrator ######
 
 
 #  :sparkles: ScreenshotZ App Features: :sparkles:
@@ -20,6 +21,7 @@
      
      - v1.1 added Option to launch Crop UI on Custom Keybind and/or PrtScn
      
+     
      - v1.2 added more Crop Options (Save Original , Exit UI onCrop)
 
 
@@ -34,18 +36,10 @@
 
      - App can directly capture to saved/default directory when launched with @arg[-capture]
      
-     Adding @arg[-crop] ontop of it will also launch the crop UI (-crop is bugged in v1.1)
+     for example in cmd: "java -jar ScreenshotZ-v1-jar-with-dependencies.jar -capture"
      
-     for example in cmd: "java -jar ScreenshotZ-v1-jar-with-dependencies.jar -capture -crop"
-     
-     (App will just take screenshot without launching main thread)
-     
-         
-###### Known Issues: ######
-
-###### - Crop tool will often not automatically gain focus ######
-
-###### - @arg [-crop] cant launch crop tool if program isn't running ######
+     (App will just take screenshot without launching main thread)       
+    
     
 .
 
@@ -57,29 +51,9 @@
 
 .
 
-# TODO
-
-- fix @arg -crop (change getKeyboardHook() to create new hook if null)
-
-- fix focus on crop
-
-- change crop to save on same filename? [need external feedback]
-
-- add settings [Quit On Crop] , [On Crop - Save Original Too]
-
-- ? Fix memory leak ?
-
-- Make/Add .REG file "ScreenshotZ" (Add to explorer context menu - launch with @arg -capture) [almost done]
-
-- Make installScript (use also contextMenu.REG and onStartup.bat)
-
-.
-
-.
-
 # Startup Rule Instructions: (Adds startup rule to windows task scheduler)
 
-*	First put bat in same dir as ScreenshotZ.exe (rule is for this exact name - can be changed in .bat)
+*	First put bat in same dir as ScreenshotZ-v1.2.exe (rule is for this exact name - can be changed in .bat)
 
 *	Then run the addStartupRule.bat as admin
 	
