@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Point;
 import java.awt.Robot;
+import java.awt.Window;
 import java.awt.AWTException;
 
 import java.awt.event.MouseEvent;
@@ -68,13 +69,15 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		}; //add listener to keyboard hook
 		keyboardHook.addKeyListener(exitListener);
 		//set paint color
-		setForeground(Color.RED);
+		//setForeground(Color.RED);
 		//create ImagePanel and use it
 		im = new ImagePanel(imagePath);	
 		add(im);
+		setUndecorated(true);
 		setSize(im.getWidth(), im.getHeight());
 		setTitle("Crop Tool - [Press Enter / Escape To Quit]");
         setIconImage(Utils.getImage("TrayIcon.png"));
+		setBackground(new Color(0, 255, 0, 0));
 		//add overridden listener
 		addMouseListener(this);
 		addMouseMotionListener(this);
@@ -83,9 +86,10 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
         setVisible(true);
 		setFocusable(true);
 		//request focus when frame is built
-		SwingUtilities.invokeLater( () ->
-		requestFocusInWindow() 
-		);
+		SwingUtilities.invokeLater( () -> {
+			requestFocusInWindow();
+			toFront();
+		});
 
 		//Window Closed Listener
 		addWindowListener(new WindowAdapter() {
@@ -162,8 +166,15 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		int height = Math.abs(y2 - y1);
 		int x = x1<x2 ? x1: x2 ,
 			y = y1<y2 ? y1 : y2 ;
-
+		g.setColor(new Color(211, 84, 0));
 		g.drawRect(x, y, width, height);
+		//COLORS: 
+		//Gold: [255,204,51] (very nice)
+		//Light orange [255,153,0] (very similar to gold)
+		//Light Gray - White [204,204,204] (niceuh)
+		//Pumpkin Orange [211, 84, 0] love orange :D
+		//Red - Orange [231, 76, 60] (Alizarin)
+		//Dim Emerald [39, 174, 96] (Nephritis)
  
 	}
 
