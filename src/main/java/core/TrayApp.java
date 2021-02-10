@@ -23,8 +23,6 @@ import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 
-import javax.swing.UIManager;
-
 import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
 import lc.kra.system.keyboard.event.GlobalKeyEvent;
