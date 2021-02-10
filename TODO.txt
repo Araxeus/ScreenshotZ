@@ -1,4 +1,4 @@
 
-[ALL DONE]
+Make @arg -crop work
 
 make/add .REG file (Add to explorer context menu - screenshot now)
