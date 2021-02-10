@@ -30,13 +30,16 @@ import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
 import lc.kra.system.keyboard.event.GlobalKeyEvent;
 
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.util.nfd.NativeFileDialog;
+import org.lwjgl.system.MemoryUtil;
+
 @SuppressWarnings("java:S106")
 // using global hook and Robot().createScreenCapture create entirely new
 // screenshot without clipboard
 // using clipboard listener
 
 public final class TrayApp {
-
 	private static boolean isCropping = false;
 
 	private static long lastEvent = 0; // used for timer calculations
@@ -178,29 +181,23 @@ public final class TrayApp {
 		}
 	}
 
-	private static boolean dirChooserOpen=false;
 	// Choose output directory button listener
 	private static ActionListener dirListener = directoryChooser -> {
-		//cant open dirChooser while already open
-		if(dirChooserOpen)
-			return;
-		dirChooserOpen=true;
-		// create new JFileChooser
-		JFileChooser chooser = new JFileChooser();
-		// opens on screenshot directory
-		chooser.setCurrentDirectory(new java.io.File(Config.FIELD01.getString()));
-		chooser.setDialogTitle("Select Output Directory");
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		// disable the "All files" option.
-		chooser.setAcceptAllFileFilterUsed(false);
-
-		if (chooser.showOpenDialog(chooser) == JFileChooser.APPROVE_OPTION) { // approve button (open)
-			// set screenshot directory at Path+\
-			Config.FIELD01.setValue(chooser.getSelectedFile().toString() + File.separator);
-		} else // cancel button
-			System.out.println("No Selection ");
-		
-		dirChooserOpen=false;
+		//use LWJGL NativeFileDialog
+		PointerBuffer path = MemoryUtil.memAllocPointer(1);
+		switch (NativeFileDialog.NFD_PickFolder(Config.FIELD01.getString() , path)) {
+            case NativeFileDialog.NFD_OKAY:
+                System.out.println("Directory Chosen Successfully!");
+				Config.FIELD01.setValue(path.getStringUTF8(0));
+                System.out.println("New Path = "+Config.FIELD01.getString());
+                NativeFileDialog.nNFD_Free(path.get(0));
+                break;
+            case NativeFileDialog.NFD_CANCEL:
+                System.out.println("User pressed cancel.");
+                break;
+            default: // NFD_ERROR
+                System.err.format("Error: %s%n", NativeFileDialog.NFD_GetError());
+		}
 	};
 
 	// Quit button listener
