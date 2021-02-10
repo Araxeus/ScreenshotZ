@@ -74,6 +74,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		im = new ImagePanel(imagePath);	
 		add(im);
 		setUndecorated(true);
+		setAlwaysOnTop(true);
 		setSize(im.getWidth(), im.getHeight());
 		setTitle("Crop Tool - [Press Enter / Escape To Quit]");
         setIconImage(Utils.getImage("TrayIcon.png"));
