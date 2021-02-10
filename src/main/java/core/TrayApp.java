@@ -47,6 +47,7 @@ public final class TrayApp {
 
 	private static GlobalKeyboardHook keyboardHook;
 
+
 	public static void main(String[] args) throws InterruptedException {
 		// run args / quit if trayApp isn't supported / App already running
 		checkIfRunning(args);
@@ -75,7 +76,8 @@ public final class TrayApp {
 		// *--Choose Keybind Button--*
 		MenuItem keybindMenu = new MenuItem("Choose Additional Keybind");
 		// Create + Add listener
-		keybindMenu.addActionListener(keybindListener -> GetKeybind.openWindow());
+		keybindMenu.addActionListener(keybindListener -> 
+		GetKeybind.openWindow() );
 
 		// *--Crop Settings Check Box--*
 		// create , add listener , and setState according to config
@@ -172,8 +174,13 @@ public final class TrayApp {
 		}
 	}
 
+	private static boolean dirChooserOpen=false;
 	// Choose output directory button listener
 	private static ActionListener dirListener = directoryChooser -> {
+		//cant open dirChooser while already open
+		if(dirChooserOpen)
+			return;
+		dirChooserOpen=true;
 		// create new JFileChooser
 		JFileChooser chooser = new JFileChooser();
 		// opens on screenshot directory
@@ -182,11 +189,14 @@ public final class TrayApp {
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		// disable the "All files" option.
 		chooser.setAcceptAllFileFilterUsed(false);
+
 		if (chooser.showOpenDialog(chooser) == JFileChooser.APPROVE_OPTION) { // approve button (open)
 			// set screenshot directory at Path+\
 			Config.FIELD01.setValue(chooser.getSelectedFile().toString() + File.separator);
 		} else // cancel button
 			System.out.println("No Selection ");
+		
+		dirChooserOpen=false;
 	};
 
 	// Quit button listener

@@ -32,14 +32,16 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 
     private boolean isDragged;
 
+	// Start point = (x1,y1) , End point = (x2,y2)
 	private int x1, y1, x2, y2;
-
+	//getting keyboard hook from TrayApp
 	private GlobalKeyboardHook keyboardHook;
-
+	//used to load image
     ImagePanel im;
     
 	private String imagePath;
 	
+	//private initializer
 	private CropImage(String imagePath){
 		this.keyboardHook=TrayApp.getKeyboardHook();
 		this.imagePath=imagePath;
@@ -47,7 +49,9 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 	}
 	
 	public static void openWindow(String imagePath) {
+		//used to limit instance
         TrayApp.setIsCropping(true);
+		//initialize window
 		CropImage window = new CropImage(imagePath);
 		window.open();
 	}
@@ -63,14 +67,18 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 			}
 		}; //add listener to keyboard hook
 		keyboardHook.addKeyListener(exitListener);
+		//set paint color
 		setForeground(Color.RED);
+		//create ImagePanel and use it
 		im = new ImagePanel(imagePath);	
 		add(im);
 		setSize(im.getWidth(), im.getHeight());
 		setTitle("Crop Tool - [Press Enter / Escape To Quit]");
         setIconImage(Utils.getImage("TrayIcon.png"));
+		//add overridden listener
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		//dispose this window on exit (not quit app)
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setVisible(true);
 		setFocusable(true);
@@ -83,41 +91,18 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		addWindowListener(new WindowAdapter() {
 		@Override
 		public void windowClosed(WindowEvent e) {
+			//remove key listener
 			keyboardHook.removeKeyListener(exitListener);
+			//flush image (cautionary)
             im.flush();
+			//enable cropping again
             TrayApp.setIsCropping(false);
 			System.out.println("Closed Crop Frame");
 			}
 		});
 	}
 
-	private void draggedScreen() throws IOException, AWTException {
-		int width = Math.abs(x2 - x1);
-		int height = Math.abs(y2 - y1);
-		int x = x1<x2 ? x1 : x2 ,
-			y = y1<y2 ? y1 : y2 ;
-
-        Point outPoint = new  Point(x,y);
-
-        SwingUtilities.convertPointToScreen(outPoint , this.getFocusOwner());
-
-		BufferedImage img = new Robot().createScreenCapture(new Rectangle((int)outPoint.getX() , (int)outPoint.getY(), width, height)).getSubimage(1, 1, width-1, height-1);
-
-		StringBuilder cropPath = new StringBuilder(imagePath);
-
-		//Save original onCrop Setting
-		if(Config.FIELD05.getBoolean())
-			cropPath.insert(imagePath.indexOf(".png"), "(Cropped)");
-		
-		File savePath = new File(cropPath.toString());
-		ImageIO.write(img, "png", savePath);
-		System.out.println("Cropped image saved successfully.");
-
-		//Quit onCrop Setting
-		if(Config.FIELD06.getBoolean())
-			dispose();
-    }
-
+	//overridden mouse listeners
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 	}
@@ -131,21 +116,22 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
+	public void mousePressed(MouseEvent click) {
+		//mouse pressed -> get Start point coordinates
 		repaint();
-		x1 = arg0.getX();
-		y1 = arg0.getY();
-        arg0.getXOnScreen();
+		x1 = click.getX();
+		y1 = click.getY();
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {		
+	public void mouseReleased(MouseEvent release) {	
+		//get End point coordinates and crop
 		if (isDragged) {
 			repaint();
-			x2 = arg0.getX();
-			y2 = arg0.getY();
+			x2 = release.getX();
+			y2 = release.getY();
 			try {
-				draggedScreen();
+				crop();
 				isDragged=false;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -155,6 +141,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
+		//get current end position for paint()
 		repaint();
 		isDragged = true;
 		x2 = arg0.getX();
@@ -167,8 +154,10 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 
 
 	public void paint(Graphics g) {
+		//prepare canvas
 		super.paint(g);
 
+		//little algorithm to calculate rectangle left most corner
 		int width = Math.abs(x2 - x1);
 		int height = Math.abs(y2 - y1);
 		int x = x1<x2 ? x1: x2 ,
@@ -177,4 +166,36 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		g.drawRect(x, y, width, height);
  
 	}
+
+	private void crop() throws IOException, AWTException {
+		//same algorithm (not sure how not to repeat this)
+		int width = Math.abs(x2 - x1);
+		int height = Math.abs(y2 - y1);
+		int x = x1<x2 ? x1 : x2 ,
+			y = y1<y2 ? y1 : y2 ;
+
+		//Convert new starting point to absolute coordinates
+        Point topLeftPoint = new  Point(x,y);
+        SwingUtilities.convertPointToScreen(topLeftPoint , this.getFocusOwner());
+
+		BufferedImage img = new Robot().createScreenCapture(new Rectangle( //create image from new rectangle
+		(int)topLeftPoint.getX() , (int)topLeftPoint.getY(), width, height)) //rectangle coordinates
+		.getSubimage(1, 1, width-1, height-1); //crop the red line out ;)
+
+		//crop path .can. be new path
+		StringBuilder cropPath = new StringBuilder(imagePath);
+
+		//Save original onCrop Setting
+		if(Config.FIELD05.getBoolean())
+			cropPath.insert(imagePath.indexOf(".png"), "(Cropped)");
+		
+		//save image
+		File savePath = new File(cropPath.toString());
+		ImageIO.write(img, "png", savePath);
+		System.out.println("Cropped image saved successfully.");
+
+		//Quit onCrop Setting
+		if(Config.FIELD06.getBoolean())
+			dispose();
+    }
 }

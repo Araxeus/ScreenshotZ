@@ -20,17 +20,10 @@ enum Config
             FIELD05 ("onCrop Save Original", false) ,
             FIELD06 ("Exit UI onCrop", false) ;
         
-            final String DEFAULT_VALUE ,   
-                         KEY;
-            // enum constructor called separately for each 
-            // constant 
-            private Config (String key, String defaultValue) 
-            { 
-                this.KEY = key;
-                this.DEFAULT_VALUE = defaultValue;
-            }
+            final String KEY ,   
+                         DEFAULT_VALUE;
 
-            private Config (String key, boolean defaultValue) 
+            private Config (String key, Object defaultValue) 
             { 
                 this.KEY = key;
                 this.DEFAULT_VALUE = String.valueOf(defaultValue);
@@ -68,8 +61,9 @@ public class SimpleProperties {
     public static final String DEFAULT_PATH = System.getProperty("user.home") + File.separator + ".ScreenshotZ" + File.separator + "config.xml";   
 
     private static SimpleProperties instance;
-    // config always has updated keybind array
 
+    // config always has updated keybind array
+    // (no need to calculate String->int[] on every keyboard input)
     private int[] keybind;
 
     private String propertiesFilePath;
@@ -135,7 +129,7 @@ public class SimpleProperties {
     }
 
     public boolean getBooleanProperty(String key) {
-        return properties.getProperty(key).equalsIgnoreCase("true");
+        return properties.getProperty(key).equals("true");
     }
 
     public boolean getBooleanProperty(Config field) {

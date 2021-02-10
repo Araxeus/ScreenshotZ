@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
-@SuppressWarnings("java:S106")
+@SuppressWarnings({"java:S106" , "java:S1479"})
 public class GetKeybind {
 
     private Shell shell;
@@ -192,29 +192,27 @@ public class GetKeybind {
         return img;
     } 
 
-    private void addKey(int vKC) { // vKC = Virtual Key Code
+    private boolean addKey(int vKC) { // vKC = Virtual Key Code
         // check that key isn't already in keyChain && keyChain isn't full
         if (keyChain.size() < 3 && !keyChain.contains(vKC)) {
             // get Virtual Key Code to String
             String keyCode = keyToString(vKC);
             // ignore some keys
             if (!keyCode.equals("??")) {
-                switch (keyChain.size()) {
-                    case 0:
-                        // replace label
-                        keyLabel.setText(keyCode);
-                        keyChain.add(vKC);
-                        break;
-                    case 1:
-                    case 2:
-                        // add to label
-                        keyLabel.setText(keyLabel.getText() + " + " + keyCode);
-                        keyChain.add(vKC);
-                        break;
-                }
+                if(keyChain.isEmpty()) 
+                    // replace label
+                    keyLabel.setText(keyCode);
+                else
+                    // add to label
+                    keyLabel.setText(keyLabel.getText() + " + " + keyCode);
+                
+                keyChain.add(vKC);
+                return true;
             }
         }
+        return false;
     }
+    
 
     // on launch - get current keybind
     private void addOrigin() {
