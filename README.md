@@ -32,6 +32,9 @@
 
 
     - To show some debugging: run openWithDebug.bat from same directory as jar OR start program from CMD
+    
+    
+    - To add/delete Startup rule run the corresponding bat as Administrator from the same directory as ScreenshotZ-v1.2.exe
 
 
      - App can directly capture to saved/default directory when launched with @arg[-capture]
