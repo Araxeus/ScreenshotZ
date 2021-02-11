@@ -21,12 +21,12 @@
 
 
      - Option to change default screenshot directory
+     
+     
+     - Option to add a Custom Keybind (Save a combination of 1-3 keys) [Does not replace PrtScn button]
 
 
      - When PrintScreen is pressed - it will always save to screenshot directory
-
-
-     - Option to add a Custom Keybind (Save a combination of 1-3 keys) [Does not replace PrtScn button]
      
      
      - v1.1 added Option to launch Crop UI on Custom Keybind and/or PrtScn
