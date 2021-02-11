@@ -31,6 +31,8 @@
      
      - v1.1 added Option to launch Crop UI on Custom Keybind and/or PrtScn
      
+     -> Cropped picture will be automatically be in your clipboard for easy sharing
+     
      
      - v1.2 added more Crop Options (Save Original , Exit UI onCrop)
 
@@ -46,34 +48,40 @@
     
     - To add/delete Startup rule run the corresponding bat as Administrator from the same directory as ScreenshotZ-v1.2.exeCom
 
+    ## You can use some Command Line Arguments to take screenshots/+crop them without running the whole program:
 
-     - App can directly capture to saved/default directory when launched with @arg[-capture]
+     - directly capture screenshot to saved/default directory when launched with %arg [-capture]
      
-     it will also launch crop UI if -crop is added ontop of it
+     - add %arg [-crop] to also launch crop UI
      
      for example in cmd: "java -jar ScreenshotZ-v1.2.jar -capture -crop"
      
-     (App will just take screenshot without launching main thread)       
+     (App will just take screenshot without launching main thread)
+     
+     following this procedure you can bind the core functionality of the program to pretty much anything
+     
+     for example: add to explorer.exe context menu the option to instantly crop [TODO will upload reg files for that]
+     
+     
     
     
 .
-
-- Inner App Functionality:
-
--> - -    Use Global Hook, Robot().createScreenCapture create entirely new screenshot without clipboard
-
--> - -    Or if keyboard event is not detected > use Clipboard Listener (listen to type change so have to reset clipboard at program start[if content type was image] and after each screenshot) and grab image from clipboard
 
 .
 
 ## Startup Rule Instructions: (Adds startup rule to windows task scheduler)
 
-*	First put bat in same dir as ScreenshotZ-v1.2.exe (rule is for this exact name - can be changed in .bat)
+*   Grab [addStartupRule.bat](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/addStartupRule.bat) And
+    [deleteStartupRule.bat](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/deleteStartupRule.bat)
+    from the links attached or Tools.zip from the release page
+
+*	Put the bat in same dir as ScreenshotZ-v1.2.exe (rule is for this exact name - can be changed in .bat)
 
 *	Then run the addStartupRule.bat as admin
 	
 *	to uninstall run deleteStartupRule.bat as admin and press Y
 
+*   (the exe needs to have admin right enabled in the option as shown above)
 .
 
 ## SCHTASKS Batch Syntax:
