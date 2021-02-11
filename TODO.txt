@@ -1,4 +1,4 @@
 
-Make @arg -crop work
+Add Option -> Save to folder with current date
 
 make/add .REG file (Add to explorer context menu - screenshot now)
