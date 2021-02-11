@@ -162,6 +162,7 @@ public final class TrayApp {
 
 	// Choose output directory button listener
 	private static ActionListener dirListener = directoryChooser -> {
+		setIsCropping(true);
 		//use LWJGL NativeFileDialog
 		PointerBuffer path = MemoryUtil.memAllocPointer(1);
 		switch (NativeFileDialog.NFD_PickFolder(Config.FIELD01.getString() , path)) {
@@ -177,6 +178,7 @@ public final class TrayApp {
             default: // NFD_ERROR
                 System.err.format("Error: %s%n", NativeFileDialog.NFD_GetError());
 		}
+		setIsCropping(false);
 	};
 
 	// Quit button listener
