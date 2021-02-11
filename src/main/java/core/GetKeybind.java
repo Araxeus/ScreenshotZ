@@ -89,7 +89,7 @@ public class GetKeybind {
             shell.setImage(icon);
         else // this will execute only if jar was badly packaged
             shell.setImage(SWTResourceManager.getImage("Resources/BaseIcon.ico"));
-        shell.setBackground(SWTResourceManager.getColor(76, 74, 72));
+        shell.setBackground(SWTResourceManager.getColor(54, 57, 63));
         shell.setTouchEnabled(true);
         shell.setSize(450, 220);
         shell.setText("Choose Keybind");
@@ -103,7 +103,7 @@ public class GetKeybind {
         // KeyLabel
         keyLabel = new Label(shell, SWT.VERTICAL | SWT.CENTER);
         keyLabel.setForeground(SWTResourceManager.getColor(254, 251, 239));
-        keyLabel.setBackground(SWTResourceManager.getColor(76, 74, 72));
+        keyLabel.setBackground(SWTResourceManager.getColor(54, 57, 63));
         keyLabel.setFont(SWTResourceManager.getFont("Sitka Display", 26, SWT.BOLD | SWT.ITALIC));
         keyLabel.setBounds(10, 10, 424, 94);
         addOrigin();
