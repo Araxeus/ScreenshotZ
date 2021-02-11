@@ -17,57 +17,57 @@
 
      .
      
-     - App launch directly to system tray
+   - App launch directly to system tray
 
 
-     - Option to change default screenshot directory
+   - Option to change default screenshot directory
      
      
-     - Option to add a Custom Keybind (Save a combination of 1-3 keys) [Does not replace PrtScn button]
+   - Option to add a Custom Keybind (Save a combination of 1-3 keys) [Does not replace PrtScn button]
 
 
-     - When PrintScreen is pressed - it will always save to screenshot directory
+   - When PrintScreen is pressed - it will always save to screenshot directory
      
      
-     - v1.1 added Option to launch Crop UI on Custom Keybind and/or PrtScn
+   - v1.1 added Option to launch Crop UI on Custom Keybind and/or PrtScn
      
-     -> Cropped picture will be automatically be in your clipboard for easy sharing
+     Cropped picture will be automatically be in your clipboard for easy sharing
      
      
-     - v1.2 added more Crop Options (Save Original , Exit UI onCrop)
+   - v1.2 added more Crop Options (Save Original , Exit UI onCrop)
 
 
-     - App save settings to MyUser/.ScreenshotZ/config.XML
+   - App save settings to MyUser/.ScreenshotZ/config.XML
 
 
-     - Default screenshot directory is MyUser/.ScreenshotZ/Screenshots (Default 2nd keybind is null)
+   - Default screenshot directory is MyUser/.ScreenshotZ/Screenshots (Default 2nd keybind is null)
 
 
-    - To show some debugging: run openWithDebug.bat from same directory as jar OR start program from CMD
+  - To show some debugging: run openWithDebug.bat from same directory as jar OR start program from CMD
     
     
-    - To add/delete Startup rule run the corresponding bat as Administrator from the same directory as ScreenshotZ-v1.2.exeCom
+  - To add/delete Startup rule run the corresponding bat as Administrator from the same directory as ScreenshotZ-v1.2.exeCom
 
-    ## You can use some Command Line Arguments to take screenshots/+crop them without running the whole program:
+ #### You can use some Command Line Arguments to take screenshots/+crop them without running the whole program:
 
-     - directly capture screenshot to saved/default directory when launched with %arg [-capture]
+   - %arg [-capture] -> directly capture screenshot to saved/default directory
      
-     - add %arg [-crop] to also launch crop UI
+   - add %arg [-crop] on top of it to also launch crop UI
      
-     for example in cmd: "java -jar ScreenshotZ-v1.2.jar -capture -crop"
+     for example in cmd: 
+     
+            java -jar ScreenshotZ-v1.2.jar -capture -crop
      
      (App will just take screenshot without launching main thread)
      
      following this procedure you can bind the core functionality of the program to pretty much anything
      
      for example: add to explorer.exe context menu the option to instantly crop [TODO will upload reg files for that]
-     
-     
+         
     
-    
-.
+***
 
-.
+
 
 ## Startup Rule Instructions: (Adds startup rule to windows task scheduler)
 
@@ -82,7 +82,8 @@
 *	to uninstall run deleteStartupRule.bat as admin and press Y
 
 *   (the exe needs to have admin right enabled in the option as shown above)
-.
+
+***
 
 ## SCHTASKS Batch Syntax:
 * HEAD:
