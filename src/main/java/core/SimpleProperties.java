@@ -30,7 +30,7 @@ enum Config
             } 
         
             public void setValue (String newValue) 
-            { 
+            {  
                 SimpleProperties.getInstance().setProperty(this, newValue); 
             }
 

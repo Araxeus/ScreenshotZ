@@ -11,10 +11,8 @@ import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.FlavorListener;
 
 import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.io.File;
@@ -22,6 +20,7 @@ import java.io.IOException;
 import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+
 
 import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
@@ -32,9 +31,8 @@ import org.lwjgl.util.nfd.NativeFileDialog;
 import org.lwjgl.system.MemoryUtil;
 
 @SuppressWarnings("java:S106")
-// using global hook and Robot().createScreenCapture create entirely new
-// screenshot without clipboard
-// using clipboard listener
+// using global hook and Robot().createScreenCapture
+
 
 public final class TrayApp {
 	private static boolean isCropping = false;
@@ -52,9 +50,7 @@ public final class TrayApp {
 	public static void main(String[] args) throws InterruptedException {
 		// run args / quit if trayApp isn't supported / App already running
 		checkIfRunning(args);
-		// reset clipboard if initial
-		if (Utils.isImage(getClipboard()))
-			setClipboard(new StringSelection(""));
+
 		// try to load icon
 		Image icon = Utils.getImage("TrayIcon.png");
 
@@ -134,9 +130,6 @@ public final class TrayApp {
 
 		// add Global Keyboard Listener
 		keyboardHook.addKeyListener(keyboardAdapter);
-
-		// add Clipboard Style Listener
-		SYSTEM_CLIPBOARD.addFlavorListener(clipboardListener);
 	}
 
 	/* -----------------------Helper Methods------------------------------ */
@@ -155,18 +148,6 @@ public final class TrayApp {
 
 	private static void setLastEvent(long newValue) {
 		lastEvent = newValue;
-	}
-
-	// return Transferable content from Clipboard
-	public static Transferable getClipboard() {
-		Transferable content = null;
-		try {
-			content = SYSTEM_CLIPBOARD.getContents(content);
-		} catch (Exception e) {
-			System.err.println("Error grabbing clipboard");
-			e.printStackTrace();
-		}
-		return content;
 	}
 
 	// set Local Clipboard content to this.arg
@@ -235,22 +216,6 @@ public final class TrayApp {
 	private static ItemListener crop06Listener = crop06 -> 
 		Config.FIELD06.setValue(crop06.getStateChange() == 1);
 
-	// Clipboard Style Listener
-	private static FlavorListener clipboardListener = listener -> {
-		try {
-			// Sleep so that Keyboard Listener gets first event
-			Thread.sleep(50);
-			if (System.currentTimeMillis() - lastEvent > 1000) {
-				System.out.println("Clipboard Listener Activated [Keyboard's wasn't]");
-				Utils.clipboardTo(Config.FIELD01.getString()); // TODO Switch to robotTo?
-			}
-		} catch (InterruptedException b) {
-			System.err.println("Literally impossible - Thread sleep Error");
-			Thread.currentThread().interrupt();
-		} catch (Exception s) {
-			System.err.println("Error during clipboardTo event");
-		}
-	};
 
 	//Keyboard Listener
 	private static GlobalKeyAdapter keyboardAdapter = new GlobalKeyAdapter() {

@@ -2,11 +2,6 @@ package core;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.Point;
-import java.awt.Robot;
-import java.awt.Window;
-import java.awt.AWTException;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -179,20 +174,15 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
  
 	}
 
-	private void crop() throws IOException, AWTException {
+	private void crop() throws IOException {
 		//same algorithm (not sure how not to repeat this)
 		int width = Math.abs(x2 - x1);
 		int height = Math.abs(y2 - y1);
 		int x = x1<x2 ? x1 : x2 ,
 			y = y1<y2 ? y1 : y2 ;
 
-		//Convert new starting point to absolute coordinates
-        Point topLeftPoint = new  Point(x,y);
-        SwingUtilities.convertPointToScreen(topLeftPoint , this.getFocusOwner());
-
-		BufferedImage img = new Robot().createScreenCapture(new Rectangle( //create image from new rectangle
-		(int)topLeftPoint.getX() , (int)topLeftPoint.getY(), width, height)) //rectangle coordinates
-		.getSubimage(1, 1, width-1, height-1); //crop the red line out ;)
+		//crop to rectangle
+		BufferedImage img = im.getImage().getSubimage(x, y, width, height);
 
 		//crop path .can. be new path
 		StringBuilder cropPath = new StringBuilder(imagePath);
@@ -204,6 +194,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		//save image
 		File savePath = new File(cropPath.toString());
 		ImageIO.write(img, "png", savePath);
+		TrayApp.setClipboard(new TransferableImage(img));
 		System.out.println("Cropped image saved successfully.");
 
 		//Quit onCrop Setting

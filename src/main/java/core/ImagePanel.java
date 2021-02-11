@@ -3,6 +3,11 @@ package core;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
@@ -12,13 +17,16 @@ import javax.swing.JPanel;
         private static final long serialVersionUID = 6969L;
 
         private Image img;
+		private BufferedImage bfImg;
+
 
 		  public ImagePanel(String path) {
-		    this(new ImageIcon(path).getImage());
-		  }
-
-		  public ImagePanel(Image img) {
-		    this.img = img;
+		    this.img = new ImageIcon(path).getImage();
+			try{
+				bfImg = ImageIO.read(new File(path));
+			}catch (IOException e) {
+				e.printStackTrace();
+			}
 		    Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
 		    setPreferredSize(size);
 		    setMinimumSize(size);
@@ -36,5 +44,9 @@ import javax.swing.JPanel;
           public void flush() {
               img.flush();
           }
+
+		  public BufferedImage getImage() {
+			  return bfImg;
+		  }
 
 		}

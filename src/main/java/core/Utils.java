@@ -1,7 +1,6 @@
 package core;
 
 import java.awt.AWTException;
-import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.awt.Rectangle;
 import java.awt.Robot;
@@ -12,8 +11,6 @@ import javax.imageio.ImageIO;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
 import java.awt.Toolkit;
 
 @SuppressWarnings("java:S106")
@@ -46,33 +43,6 @@ public class Utils {
     }
 
     /*
-     * print image from clipboard to 'directory'
-     */
-    public static void clipboardTo(String directory) throws Exception {
-        // grab clipboard
-        Transferable content = TrayApp.getClipboard();
-        // check thats its an image
-        if (!isImage(content))
-            return;
-		// reset clipboard content - so that listener can notice new screenshot
-		TrayApp.setClipboard(new StringSelection(""));
-        // create buffered image from content
-        BufferedImage img = (BufferedImage) content.getTransferData(DataFlavor.imageFlavor);
-        // create file using getName (returns new image path)
-        File outfile = new File(getName(directory));
-        // write image to file
-        ImageIO.write(img, "png", outfile);
-        System.out.println("image copied from clipboard to: " + outfile.getAbsolutePath());
-        // flush buffered image
-        img.flush();
-        // Call garbage collector (temporary fix to memory leak from this method)
-        Runtime.getRuntime().gc();
-        //run crop if not cropping + config04
-        if (!TrayApp.isCropping() && Config.FIELD03.getBoolean() )
-            CropImage.openWindow(outfile.getAbsolutePath());
-    }
-
-    /*
      * return new file path string using 'directory'
      */
     public static String getName(String directory) {
@@ -92,22 +62,6 @@ public class Utils {
             tmpDir = new File(name + " (" + num + ").png");
         }
         return tmpDir.getAbsolutePath(); // returns new path
-    }
-
-    /*
-     * check if transferable from clipboard is an image
-     */
-    public static boolean isImage(Transferable content) {
-        // check that content exist
-        if (content == null) {
-            System.err.println("nothing found in clipboard");
-            return false;
-        } // check that content is an image
-        if (!content.isDataFlavorSupported(DataFlavor.imageFlavor)) {
-            System.err.println("no image found in clipboard");
-            return false;
-        }
-        return true;
     }
 
     /*
