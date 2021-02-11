@@ -1,3 +1,7 @@
+### Download [exe](https://github.com/Araxeus/ScreenshotZ/releases/download/v1.2e/ScreenshotZ-v1.2.exe)/[jar](https://github.com/Araxeus/ScreenshotZ/releases/download/v1.2e/ScreenshotZ-v1.2.jar) from [ScreenshotZ-v1.2](https://github.com/Araxeus/ScreenshotZ/releases/tag/v1.2e) 
+
+> -> or clone git and compile using maven
+
 ### :x: To launch from _.exe_ you _MUST_ run it as administrator or you will get the following error message: :x:
 
 ![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/NoAdminRights.png?raw=true)
