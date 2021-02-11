@@ -1,5 +1,15 @@
-###### Running .jar as Administrator perform better ######
-###### To launch from .exe you *MUST* run as administrator ######
+
+### To launch from .exe you *MUST* run it as administrator or you will get the following error message:
+
+![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/NoAdminRights.png?raw=true)
+
+#### To do so [on Windows10] - go to the file settings - Compability tab - check run this program as administrator
+
+![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/RunAsAdmin.png?raw=true)
+
+#### Running .jar as Administrator perform better but isn't mandatory ####
+##### To do it you need to open CMD as administrator and go to the location of the jar and run it with java -jar
+###### for example:[ G: ---> dir HDD/Downloads/Opera ---> java -jar ScreenshotZ-v1.2.jar ]
 
 
 #  :sparkles: ScreenshotZ App Features: :sparkles:
@@ -11,12 +21,12 @@
 
 
      - Option to change default screenshot directory
+     
+     
+     - Option to add a Custom Keybind (Save a combination of 1-3 keys) [Does not replace PrtScn button]
 
 
      - When PrintScreen is pressed - it will always save to screenshot directory
-
-
-     - Option to add a Custom Keybind (Save a combination of 1-3 keys) [Does not replace PrtScn button]
      
      
      - v1.1 added Option to launch Crop UI on Custom Keybind and/or PrtScn
@@ -34,12 +44,14 @@
     - To show some debugging: run openWithDebug.bat from same directory as jar OR start program from CMD
     
     
-    - To add/delete Startup rule run the corresponding bat as Administrator from the same directory as ScreenshotZ-v1.2.exe
+    - To add/delete Startup rule run the corresponding bat as Administrator from the same directory as ScreenshotZ-v1.2.exeCom
 
 
      - App can directly capture to saved/default directory when launched with @arg[-capture]
      
-     for example in cmd: "java -jar ScreenshotZ-v1-jar-with-dependencies.jar -capture"
+     it will also launch crop UI if -crop is added ontop of it
+     
+     for example in cmd: "java -jar ScreenshotZ-v1.2.jar -capture -crop"
      
      (App will just take screenshot without launching main thread)       
     
@@ -54,7 +66,7 @@
 
 .
 
-# Startup Rule Instructions: (Adds startup rule to windows task scheduler)
+## Startup Rule Instructions: (Adds startup rule to windows task scheduler)
 
 *	First put bat in same dir as ScreenshotZ-v1.2.exe (rule is for this exact name - can be changed in .bat)
 
@@ -64,7 +76,7 @@
 
 .
 
-# SCHTASKS Batch Syntax:
+## SCHTASKS Batch Syntax:
 * HEAD:
 
 '/DELETE - {/TN ...}'
