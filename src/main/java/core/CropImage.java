@@ -91,12 +91,13 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		addWindowListener(new WindowAdapter() {
 		@Override
 		public void windowClosed(WindowEvent e) {
-			if(!TrayApp.isRunning()) { //used for @arg -crop
-				keyboardHook.shutdownHook();
-			}
-			else {
+			if(TrayApp.isRunning()) { //used for @arg -crop
 				//remove key listener
 				keyboardHook.removeKeyListener(exitListener);
+			}
+			else {
+				//shutdown hook before exit
+				keyboardHook.shutdownHook();
 			}
 			//flush image (cautionary)
             im.flush();
