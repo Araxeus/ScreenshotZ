@@ -91,7 +91,7 @@ public class GetKeybind {
             shell.setImage(SWTResourceManager.getImage("Resources/BaseIcon.ico"));
         shell.setBackground(SWTResourceManager.getColor(76, 74, 72));
         shell.setTouchEnabled(true);
-        shell.setSize(450, 211);
+        shell.setSize(450, 220);
         shell.setText("Choose Keybind");
         // Create rectangle from display
         Rectangle screenSize = display.getPrimaryMonitor().getBounds();
@@ -102,7 +102,7 @@ public class GetKeybind {
 
         // KeyLabel
         keyLabel = new Label(shell, SWT.VERTICAL | SWT.CENTER);
-        keyLabel.setForeground(SWTResourceManager.getColor(240, 255, 255));
+        keyLabel.setForeground(SWTResourceManager.getColor(254, 251, 239));
         keyLabel.setBackground(SWTResourceManager.getColor(76, 74, 72));
         keyLabel.setFont(SWTResourceManager.getFont("Sitka Display", 26, SWT.BOLD | SWT.ITALIC));
         keyLabel.setBounds(10, 10, 424, 94);
@@ -121,11 +121,8 @@ public class GetKeybind {
                 shell.close();
             }
         });
-        saveButton.setForeground(SWTResourceManager.getColor(SWT.COLOR_TITLE_FOREGROUND));
-        saveButton.setBackground(SWTResourceManager.getColor(112, 128, 144));
-        saveButton.setFont(SWTResourceManager.getFont("Microsoft YaHei", 18, SWT.NORMAL));
-        saveButton.setBounds(166, 110, 120, 50);
-        saveButton.setText("Save");
+        saveButton.setBounds(123, 110, 205, 60);
+        saveButton.setImage(getImageSWT("SaveButton.png"));
 
         // Clear Button
         Button clearButton = new Button(shell, SWT.FLAT);
@@ -136,10 +133,8 @@ public class GetKeybind {
                 keyLabel.setText("");
             }
         });
-        clearButton.setFont(SWTResourceManager.getFont("Microsoft YaHei", 11, SWT.NORMAL));
-        clearButton.setBounds(390, 147, 44, 25);
-        clearButton.setText("clear");
-        clearButton.setBackground(SWTResourceManager.getColor(128, 128, 128));
+        clearButton.setBounds(374, 153, 60, 28);
+        clearButton.setImage(getImageSWT("ClearButton.png"));
 
         // create keybind listener
         GlobalKeyAdapter keybindListen = new GlobalKeyAdapter() {
