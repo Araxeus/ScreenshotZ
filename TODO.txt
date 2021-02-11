@@ -1,4 +1,6 @@
 
 Add Option -> Save to folder with current date
 
+Add listeners to GetKeybind buttons for animation? [maybe]
+
 make/add .REG file (Add to explorer context menu - screenshot now)
