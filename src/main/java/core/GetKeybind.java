@@ -133,7 +133,7 @@ public class GetKeybind {
                 keyLabel.setText("");
             }
         });
-        clearButton.setBounds(374, 153, 60, 28);
+        clearButton.setBounds(371, 148, 60, 28);
         clearButton.setImage(getImageSWT("ClearButton.png"));
 
         // create keybind listener
