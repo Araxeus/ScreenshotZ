@@ -85,6 +85,21 @@
 
 ***
 
+## Java classes at src/main/java/core
+
+* [TrayApp] is the main driver class
+
+* [SimpleProperties] is a class that use enums for easy access to settings
+
+* [Utils] are methods that were part of the main class but got refactored out for readability
+
+* [GetKeybind] is the GUI that gets the custom keybind option
+
+* [CropImage] is the crop GUI that is created using [ImagePanel] and uses [TransferableImage] to send to clipboard
+
+***
+
+
 ## SCHTASKS Batch Syntax:
 * HEAD:
 
