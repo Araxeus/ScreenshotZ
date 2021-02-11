@@ -11,8 +11,9 @@
 ##### To do it you need to open CMD as administrator and go to the location of the jar and run it with java -jar
 ###### for example:[ G: ---> dir HDD/Downloads/Opera ---> java -jar ScreenshotZ-v1.2.jar ]
 
+***
 
-##  :sparkles: ScreenshotZ App Features: :sparkles:
+#  :sparkles: ScreenshotZ App Features: :sparkles:
 
 
      
