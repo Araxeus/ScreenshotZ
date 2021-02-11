@@ -1,5 +1,5 @@
 
-### To launch from .exe you *MUST* run it as administrator or you will get the following error message:
+### To launch from *.exe* you *MUST* run it as administrator or you will get the following error message:
 
 ![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/NoAdminRights.png?raw=true)
 
@@ -7,74 +7,99 @@
 
 ![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/RunAsAdmin.png?raw=true)
 
-#### Running .jar as Administrator perform better but isn't mandatory ####
+#### Running *.jar* as Administrator perform better but *isn't mandatory* ####
 ##### To do it you need to open CMD as administrator and go to the location of the jar and run it with java -jar
-###### for example:[ G: ---> dir HDD/Downloads/Opera ---> java -jar ScreenshotZ-v1.2.jar ]
+###### CMD input example:
+        G: ---> dir HDD/Downloads/Opera ---> java -jar ScreenshotZ-v1.2.jar
 
+***
 
 #  :sparkles: ScreenshotZ App Features: :sparkles:
 
 
-     .
      
-     - App launch directly to system tray
+   - App launch directly to system tray
 
 
-     - Option to change default screenshot directory
-     
-     
-     - Option to add a Custom Keybind (Save a combination of 1-3 keys) [Does not replace PrtScn button]
-
-
-     - When PrintScreen is pressed - it will always save to screenshot directory
+   - Option to change default screenshot directory
      
      
-     - v1.1 added Option to launch Crop UI on Custom Keybind and/or PrtScn
+   - Option to add a Custom Keybind (Save a combination of 1-3 keys) [Does not replace PrtScn button]
+
+
+   - When PrintScreen is pressed - it will always save to screenshot directory
      
      
-     - v1.2 added more Crop Options (Save Original , Exit UI onCrop)
+   - v1.1 added Option to launch Crop UI on Custom Keybind and/or PrtScn
+     
+     Cropped picture will be automatically be in your clipboard for easy sharing
+     
+     
+   - v1.2 added more Crop Options (Save Original , Exit UI onCrop)
 
 
-     - App save settings to MyUser/.ScreenshotZ/config.XML
+   - App save settings to MyUser/.ScreenshotZ/config.XML
 
 
-     - Default screenshot directory is MyUser/.ScreenshotZ/Screenshots (Default 2nd keybind is null)
+   - Default screenshot directory is MyUser/.ScreenshotZ/Screenshots (Default 2nd keybind is null)
 
 
-    - To show some debugging: run openWithDebug.bat from same directory as jar OR start program from CMD
+  - To show some debugging: run openWithDebug.bat from same directory as jar OR start program from CMD
     
     
-    - To add/delete Startup rule run the corresponding bat as Administrator from the same directory as ScreenshotZ-v1.2.exeCom
+  - To add/delete Startup rule run the corresponding bat as Administrator from the same directory as ScreenshotZ-v1.2.exeCom
 
+ #### You can use some Command Line Arguments to take screenshots/+crop them without running the whole program:
 
-     - App can directly capture to saved/default directory when launched with @arg[-capture]
+   - %arg [-capture] to directly capture screenshot to saved/default directory
      
-     it will also launch crop UI if -crop is added ontop of it
+   - add %arg [-crop] on top of it to also launch crop UI
      
-     for example in cmd: "java -jar ScreenshotZ-v1.2.jar -capture -crop"
+     for example in cmd: 
      
-     (App will just take screenshot without launching main thread)       
+            java -jar ScreenshotZ-v1.2.jar -capture -crop
+     
+     (App will just take screenshot without launching main thread)
+     
+     following this procedure you can bind the core functionality of the program to pretty much anything
+     
+     for example: add to explorer.exe context menu the option to instantly crop [TODO will upload reg files for that]
+         
     
-    
-.
+***
 
-- Inner App Functionality:
 
--> - -    Use Global Hook, Robot().createScreenCapture create entirely new screenshot without clipboard
-
--> - -    Or if keyboard event is not detected > use Clipboard Listener (listen to type change so have to reset clipboard at program start[if content type was image] and after each screenshot) and grab image from clipboard
-
-.
 
 ## Startup Rule Instructions: (Adds startup rule to windows task scheduler)
 
-*	First put bat in same dir as ScreenshotZ-v1.2.exe (rule is for this exact name - can be changed in .bat)
+*   Grab [addStartupRule.bat](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/addStartupRule.bat) And
+    [deleteStartupRule.bat](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/deleteStartupRule.bat)
+    from the links attached or Tools.zip from the release page
+
+*	Put the bat in same dir as ScreenshotZ-v1.2.exe (rule is for this exact name - can be changed in .bat)
 
 *	Then run the addStartupRule.bat as admin
 	
 *	to uninstall run deleteStartupRule.bat as admin and press Y
 
-.
+*   (the exe needs to have admin right enabled in the option as shown above)
+
+***
+
+## Java classes at src/main/java/core
+
+* [TrayApp] is the main driver class
+
+* [SimpleProperties] is a class that use enums for easy access to settings
+
+* [Utils] are methods that were part of the main class but got refactored out for readability
+
+* [GetKeybind] is the GUI that gets the custom keybind option
+
+* [CropImage] is the crop GUI that is created using [ImagePanel] and uses [TransferableImage] to send to clipboard
+
+***
+
 
 ## SCHTASKS Batch Syntax:
 * HEAD:
