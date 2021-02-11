@@ -1,8 +1,8 @@
-### :x:To launch from _.exe_ you _MUST_ run it as administrator or you will get the following error message:
+### :x: To launch from _.exe_ you _MUST_ run it as administrator or you will get the following error message: :x:
 
 ![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/NoAdminRights.png?raw=true)
 
-#### To do so [on Windows10]: go to the file settings - Compatibility tab - check run this program as administrator :white_check_mark:
+#### :white_check_mark: To do so [on Windows10]: go to the file settings - Compatibility tab - check run this program as administrator :white_check_mark:
 
 ![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/RunAsAdmin.png?raw=true)
 
