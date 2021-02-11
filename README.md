@@ -12,10 +12,9 @@
 ###### for example:[ G: ---> dir HDD/Downloads/Opera ---> java -jar ScreenshotZ-v1.2.jar ]
 
 
-#  :sparkles: ScreenshotZ App Features: :sparkles:
+##  :sparkles: ScreenshotZ App Features: :sparkles:
 
 
-     .
      
    - App launch directly to system tray
 
@@ -50,7 +49,7 @@
 
  #### You can use some Command Line Arguments to take screenshots/+crop them without running the whole program:
 
-   - %arg [-capture] -> directly capture screenshot to saved/default directory
+   - %arg [-capture] to directly capture screenshot to saved/default directory
      
    - add %arg [-crop] on top of it to also launch crop UI
      
