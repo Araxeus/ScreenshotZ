@@ -7,6 +7,9 @@ import java.awt.Robot;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import javax.imageio.ImageIO;
 
 import java.time.LocalDateTime;
@@ -27,6 +30,10 @@ public class Utils {
         // create buffered image from new rectangle containing all screen
         BufferedImage img = new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
         // create file using getName (returns new image path)
+        if(Files.notExists(Paths.get(directory))){
+            System.err.println("You really shouldn't delete your screenshot folder...");
+            Files.createDirectories(Paths.get(directory));
+        }
         File outfile = new File(getName(directory));
         // write image to file
         ImageIO.write(img, "png", outfile);
