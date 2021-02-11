@@ -18,7 +18,8 @@ public class AppTest {
         assertTrue(true);
     }
     
-    public void getNames(boolean showMore) {
+    @Test
+    public void printConfigFields(boolean showMore) {
         assertTrue(true);
         for (Config field : Config.values()) {
             System.out.println(field + " = " + field.KEY);
@@ -32,7 +33,7 @@ public class AppTest {
     }
 
     
-    public void fileChooser(){
+    public void lwjgl_nfd(){
         assertTrue(true);
         PointerBuffer out = MemoryUtil.memAllocPointer(1);
 		int result = NativeFileDialog.NFD_PickFolder(Config.FIELD01.getString() , out);
@@ -53,24 +54,6 @@ public class AppTest {
             default: // NFD_ERROR
                 System.err.format("Error: %s\n", NativeFileDialog.NFD_GetError());
         }
-    }
-
-    private void nativeFileDialog(){
-        PointerBuffer out = MemoryUtil.memAllocPointer(1);
-		switch (NativeFileDialog.NFD_PickFolder(Config.FIELD01.getString() , out)) {
-            case NativeFileDialog.NFD_OKAY:
-                System.out.println("Directory Chosen Successfully!");
-                System.out.println("New Path = "+out.getStringUTF8(0));
-                NativeFileDialog.nNFD_Free(out.get(0));
-                break;
-            case NativeFileDialog.NFD_CANCEL:
-                System.out.println("User pressed cancel.");
-                break;
-            default: // NFD_ERROR
-                System.err.format("Error: %s\n", NativeFileDialog.NFD_GetError());
-
-        }
-    }
-    
+    }   
 
 }
