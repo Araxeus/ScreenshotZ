@@ -1,12 +1,12 @@
-### To launch from _.exe_ you _MUST_ run it as administrator or you will get the following error message:
+### :x:To launch from _.exe_ you _MUST_ run it as administrator or you will get the following error message:
 
 ![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/NoAdminRights.png?raw=true)
 
-#### To do so [on Windows10] - go to the file settings - Compatibility tab - check run this program as administrator
+#### To do so [on Windows10]: go to the file settings - Compatibility tab - check run this program as administrator :white_check_mark:
 
 ![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/RunAsAdmin.png?raw=true)
 
-#### Running _.jar_ as Administrator perform better but _isn't mandatory_
+#### :full_moon: Running _.jar_ as Administrator perform better but _isn't mandatory_
 
 ##### To do it you need to open CMD as administrator and go to the location of the jar and run it with java -jar
 
@@ -18,27 +18,27 @@
 
 # :sparkles: ScreenshotZ App Features: :sparkles:
 
--   App launch directly to system tray
+:small_orange_diamond:   App launch directly to system tray
 
--   Option to change default screenshot directory
+:small_orange_diamond:   Option to change default screenshot directory
 
--   Option to add a Custom Keybind (Save a combination of 1-3 keys) [Does not replace PrtScn button]
+:small_orange_diamond:  Option to add a Custom Keybind (Save a combination of 1-3 keys) [Does not replace PrtScn button]
 
--   When PrintScreen is pressed - it will always save to screenshot directory
+:small_orange_diamond:   When PrintScreen is pressed - it will always save to screenshot directory
 
--   v1.1 added Option to launch Crop UI on Custom Keybind and/or PrtScn
+:small_orange_diamond:   v1.1 added Option to launch Crop UI on Custom Keybind and/or PrtScn
 
-    Cropped picture will be automatically be in your clipboard for easy sharing
+> Cropped picture will be automatically be in your clipboard for easy sharing
 
--   v1.2 added more Crop Options (Save Original , Exit UI onCrop)
+:small_orange_diamond:   v1.2 added more Crop Options (Save Original , Exit UI onCrop)
 
--   App save settings to MyUser/.ScreenshotZ/config.XML
+:small_orange_diamond:   App save settings to MyUser/.ScreenshotZ/config.XML
 
--   Default screenshot directory is MyUser/.ScreenshotZ/Screenshots (Default 2nd keybind is null)
+:small_orange_diamond:   Default screenshot directory is MyUser/.ScreenshotZ/Screenshots (Default 2nd keybind is null)
 
--   To show some debugging: run openWithDebug.bat from same directory as jar OR start program from CMD
+:small_orange_diamond:   To show some debugging: run openWithDebug.bat from same directory as jar OR start program from CMD
 
--   To add/delete Startup rule run the corresponding bat as Administrator from the same directory as ScreenshotZ-v1.2.exeCom
+:small_orange_diamond:   To add/delete Startup rule run the corresponding bat as Administrator from the same directory as ScreenshotZ-v1.2.exeCom
 
 #### You can use some Command Line Arguments to take screenshots/+crop them without running the whole program:
 
@@ -57,7 +57,7 @@
 
 ---
 
-## Startup Rule Instructions: (Adds startup rule to windows task scheduler)
+## Startup Rule Instructions: (Adds startup rule to windows task scheduler) 
 
 -   Grab [addStartupRule.bat](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/addStartupRule.bat) And
     [deleteStartupRule.bat](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/deleteStartupRule.bat)
