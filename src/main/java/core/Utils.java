@@ -44,7 +44,8 @@ public class Utils {
         Runtime.getRuntime().gc();
         //run crop if not cropping and [mode1+config03](PrtScn mode+config) / [mode2+config04](Custom keybind mode+config)
         if (!TrayApp.isCropping()
-                &&( (mode == 1 && Config.FIELD03.getBoolean())
+                &&( mode ==3 
+                ||  (mode == 1 && Config.FIELD03.getBoolean())
                 ||  (mode == 2 && Config.FIELD04.getBoolean()) ) )
             CropImage.openWindow(outfile.getAbsolutePath());
     }

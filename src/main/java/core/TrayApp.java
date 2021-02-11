@@ -49,87 +49,90 @@ public final class TrayApp {
 
 	public static void main(String[] args) throws InterruptedException {
 		// run args / quit if trayApp isn't supported / App already running
-		checkIfRunning(args);
+		if(checkIfRunning(args))
+			loadTrayApp();
+	}
 
-		// try to load icon
-		Image icon = Utils.getImage("TrayIcon.png");
+	public static void loadTrayApp(){
+				// try to load icon
+				Image icon = Utils.getImage("TrayIcon.png");
 
-		// get the SystemTray instance
-		SystemTray tray = SystemTray.getSystemTray();
-
-		// initialize global keyboard hook
-		keyboardHook = new GlobalKeyboardHook(true);
-
-		// *--Quit Button--*
-		MenuItem quit = new MenuItem("Quit");
-		// add listener
-		quit.addActionListener(quitListener);
-
-		// *--Choose Output Directory Button--*
-		MenuItem dir = new MenuItem("Select Output Directory");
-		// add listener
-		dir.addActionListener(dirListener);
-
-		// *--Choose Keybind Button--*
-		MenuItem keybindMenu = new MenuItem("Choose Additional Keybind");
-		// Create + Add listener
-		keybindMenu.addActionListener(keybindListener -> {
-		isCropping=true;
-		GetKeybind.openWindow();
-	});
-
-		// *--Crop Settings Check Box--*
-		// create , add listener , and setState according to config
-		CheckboxMenuItem checkBoxCrop03 = new CheckboxMenuItem("Crop on PrintScreen");
-		checkBoxCrop03.setState(Config.FIELD03.getBoolean());
-		checkBoxCrop03.addItemListener(crop03Listener);
-
-		CheckboxMenuItem checkBoxCrop04 = new CheckboxMenuItem("Crop on Custom Keybind");
-		checkBoxCrop04.setState(Config.FIELD04.getBoolean());
-		checkBoxCrop04.addItemListener(crop04Listener);
-
-		CheckboxMenuItem checkBoxCrop05 = new CheckboxMenuItem("Save Original onCrop");
-		checkBoxCrop05.setState(Config.FIELD05.getBoolean());
-		checkBoxCrop05.addItemListener(crop05Listener);
-
-		CheckboxMenuItem checkBoxCrop06 = new CheckboxMenuItem("Exit UI onCrop");
-		checkBoxCrop06.setState(Config.FIELD06.getBoolean());
-		checkBoxCrop06.addItemListener(crop06Listener);
-
+				// get the SystemTray instance
+				SystemTray tray = SystemTray.getSystemTray();
 		
-		// create subMenu
-		PopupMenu subMenu = new PopupMenu("Crop Settings:");
-		subMenu.add(checkBoxCrop03);
-		subMenu.add(checkBoxCrop04);
-		subMenu.add(checkBoxCrop05);
-		subMenu.add(checkBoxCrop06);
-		// create main popup menu
-		PopupMenu popup = new PopupMenu();
-		// add menu items to popup menu
-		popup.add(subMenu);
-		popup.addSeparator();
-		popup.add(dir);
-		popup.add(keybindMenu);	
-		popup.addSeparator();
-		popup.add(quit);
-
-		// construct a TrayIcon
-		TrayIcon trayIcon = new TrayIcon(icon, "ScreenshotZ", popup);
-		// set the TrayIcon properties
-		trayIcon.setImageAutoSize(true);
-		// add trayIcon listener
-		trayIcon.addActionListener(clickListener);
-		// add the tray image
-		try {
-			tray.add(trayIcon);
-		} catch (AWTException e) {
-			System.err.println("Error loading icon");
-		} catch (Exception e) {
-			System.err.println("Error loading System Looks and Feels");
-		}
-
-		// add Global Keyboard Listener
-		keyboardHook.addKeyListener(keyboardAdapter);
+				// initialize global keyboard hook
+				keyboardHook = new GlobalKeyboardHook(true);
+		
+				// *--Quit Button--*
+				MenuItem quit = new MenuItem("Quit");
+				// add listener
+				quit.addActionListener(quitListener);
+		
+				// *--Choose Output Directory Button--*
+				MenuItem dir = new MenuItem("Select Output Directory");
+				// add listener
+				dir.addActionListener(dirListener);
+		
+				// *--Choose Keybind Button--*
+				MenuItem keybindMenu = new MenuItem("Choose Additional Keybind");
+				// Create + Add listener
+				keybindMenu.addActionListener(keybindListener -> {
+				isCropping=true;
+				GetKeybind.openWindow();
+			});
+		
+				// *--Crop Settings Check Box--*
+				// create , add listener , and setState according to config
+				CheckboxMenuItem checkBoxCrop03 = new CheckboxMenuItem("Crop on PrintScreen");
+				checkBoxCrop03.setState(Config.FIELD03.getBoolean());
+				checkBoxCrop03.addItemListener(crop03Listener);
+		
+				CheckboxMenuItem checkBoxCrop04 = new CheckboxMenuItem("Crop on Custom Keybind");
+				checkBoxCrop04.setState(Config.FIELD04.getBoolean());
+				checkBoxCrop04.addItemListener(crop04Listener);
+		
+				CheckboxMenuItem checkBoxCrop05 = new CheckboxMenuItem("Save Original onCrop");
+				checkBoxCrop05.setState(Config.FIELD05.getBoolean());
+				checkBoxCrop05.addItemListener(crop05Listener);
+		
+				CheckboxMenuItem checkBoxCrop06 = new CheckboxMenuItem("Exit UI onCrop");
+				checkBoxCrop06.setState(Config.FIELD06.getBoolean());
+				checkBoxCrop06.addItemListener(crop06Listener);
+		
+				
+				// create subMenu
+				PopupMenu subMenu = new PopupMenu("Crop Settings:");
+				subMenu.add(checkBoxCrop03);
+				subMenu.add(checkBoxCrop04);
+				subMenu.add(checkBoxCrop05);
+				subMenu.add(checkBoxCrop06);
+				// create main popup menu
+				PopupMenu popup = new PopupMenu();
+				// add menu items to popup menu
+				popup.add(subMenu);
+				popup.addSeparator();
+				popup.add(dir);
+				popup.add(keybindMenu);	
+				popup.addSeparator();
+				popup.add(quit);
+		
+				// construct a TrayIcon
+				TrayIcon trayIcon = new TrayIcon(icon, "ScreenshotZ", popup);
+				// set the TrayIcon properties
+				trayIcon.setImageAutoSize(true);
+				// add trayIcon listener
+				trayIcon.addActionListener(clickListener);
+				// add the tray image
+				try {
+					tray.add(trayIcon);
+				} catch (AWTException e) {
+					System.err.println("Error loading icon");
+				} catch (Exception e) {
+					System.err.println("Error loading System Looks and Feels");
+				}
+		
+				// add Global Keyboard Listener
+				keyboardHook.addKeyListener(keyboardAdapter);
 	}
 
 	/* -----------------------Helper Methods------------------------------ */
@@ -143,7 +146,7 @@ public final class TrayApp {
 	}
 
 	public static GlobalKeyboardHook getKeyboardHook() {
-		return keyboardHook;
+		return keyboardHook!=null ? keyboardHook : new GlobalKeyboardHook(true);
 	}
 
 	private static void setLastEvent(long newValue) {
@@ -247,20 +250,33 @@ public final class TrayApp {
 		}
 	};
 
+	//used for closing crop UI after @arg -crop
+	public static boolean isRunning(){
+		return uniqueServerSocket != null;
+	}
+
 	// IF (args[0] == "-capture")->[capture screen and quit] ELSE [Quit if app already running]
-	private static void checkIfRunning(String[] args) {
+	private static boolean checkIfRunning(String[] args) {
 		// check if trayApp was started with args
 		if (args != null && args.length > 0 && args[0].equals("-capture")) {
-				//no cropping
+			int mode;
+			if(args.length > 1 && args[1].equals("-crop")) {
+				mode=3;}
+			else {
+				mode=0;
 				isCropping = true;
+			}
 			try {
-				Utils.robotTo(Config.FIELD01.getString(), 0);
+				Utils.robotTo(Config.FIELD01.getString(), mode);
 			} catch (Exception a) {
 				System.err.println("Couldn't print before loading main method..");
 				a.printStackTrace();
-			} finally {
-				System.exit(0);
 			}
+			if(mode==0)
+				System.exit(0);
+			else
+				return false;
+			
 		}
 
 		// check that tray is supported
@@ -284,6 +300,8 @@ public final class TrayApp {
 			e.printStackTrace();
 			System.exit(3);
 		}
+		//return true if passed all tests
+		return true;
 	}
 
 }
