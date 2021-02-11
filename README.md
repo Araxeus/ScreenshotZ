@@ -3,13 +3,13 @@
 
 ![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/NoAdminRights.png?raw=true)
 
-##### To do so [on Windows10] - go to the file settings - Compability tab - check run this program as administrator
+#### To do so [on Windows10] - go to the file settings - Compability tab - check run this program as administrator
 
 ![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/RunAsAdmin.png?raw=true)
 
 #### Running .jar as Administrator perform better but isn't mandatory ####
-### To do it you need to open CMD as administrator and go to the location of the jar and run it with java -jar
-## for example: C: ---- dir Users/Admin/Downloads ---- java -jar ScreenshotZ-v1.2.jar
+##### To do it you need to open CMD as administrator and go to the location of the jar and run it with java -jar
+###### for example:[ G: ---> dir HDD/Downloads/Opera ---> java -jar ScreenshotZ-v1.2.jar ]
 
 
 #  :sparkles: ScreenshotZ App Features: :sparkles:
