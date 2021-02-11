@@ -16,9 +16,9 @@ public class AppTest {
     @Test
     public void testApp(){
         assertTrue(true);
+        printConfigFields(false);
     }
     
-    @Test
     public void printConfigFields(boolean showMore) {
         assertTrue(true);
         for (Config field : Config.values()) {
