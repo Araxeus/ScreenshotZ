@@ -39,7 +39,6 @@ public final class TrayApp {
 
 	private static long lastEvent = 0; // used for timer calculations
 
-	@SuppressWarnings("unused")
 	private static ServerSocket uniqueServerSocket; // used to allow only one instance
 
 	private static final Clipboard SYSTEM_CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -47,7 +46,7 @@ public final class TrayApp {
 	private static GlobalKeyboardHook keyboardHook;
 
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args)  {
 		// run args / quit if trayApp isn't supported / App already running
 		if(checkIfRunning(args))
 			loadTrayApp();
