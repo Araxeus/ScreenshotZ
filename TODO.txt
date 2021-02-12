@@ -1,6 +1,3 @@
-- Integrate new keybind UI
-
-- Try new Tray UI
 
 - Add Option -> Save to folder with current date [maybe?]
 
