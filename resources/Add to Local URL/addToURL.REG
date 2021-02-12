@@ -1,0 +1,12 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\ScreenshotZ]
+@="URL:ScreenshotZ"
+"URL Protocol"=""
+
+[HKEY_CLASSES_ROOT\ScreenshotZ\shell]
+
+[HKEY_CLASSES_ROOT\ScreenshotZ\shell\open]
+
+[HKEY_CLASSES_ROOT\ScreenshotZ\shell\open\command]
+@="C:\Users\Araxeus\git\ScreenshotZ\target\ScreenshotZ-v1.2.exe" "%-capture" "%-crop"

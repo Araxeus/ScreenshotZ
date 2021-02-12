@@ -1,0 +1,9 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\ScreenshotZ]
+@="&ScreenshotZ"
+"Icon"="C:\\Users\\Araxeus\\git\\ScreenshotZ\\target\\ScreenshotZ-v1.2.exe"
+
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\\ScreenshotZ\command]
+@="C:\\Users\\Araxeus\\git\\ScreenshotZ\\target\\ScreenshotZ-v1.2.exe %-capture %-crop"
