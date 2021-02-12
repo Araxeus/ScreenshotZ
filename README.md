@@ -2,7 +2,7 @@
 
 > -> or clone git and compile using maven
 
-### :x: To launch from _.exe_ you _MUST_ run it as administrator or you will get the following error message: :x:
+#### :x: To launch from _.exe_ you _MUST_ run it as administrator or you will get the following error message: :x:
 
 ![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/NoAdminRights.png?raw=true)
 
