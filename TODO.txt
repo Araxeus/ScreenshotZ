@@ -1,6 +1,7 @@
+- Integrate new keybind UI
 
-Add Option -> Save to folder with current date
+- Try new Tray UI
 
-Add listeners to GetKeybind buttons for animation? [maybe]
+- Add Option -> Save to folder with current date [maybe?]
 
-make/add .REG file (Add to explorer context menu - screenshot now)
+- make/add .REG file (Add to explorer context menu - screenshot now)
