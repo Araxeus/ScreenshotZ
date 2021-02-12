@@ -1,31 +1,22 @@
 package core;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.wb.swt.SWTResourceManager;
+import java.awt.event.WindowEvent;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import javax.swing.*;
 
 import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
 import lc.kra.system.keyboard.event.GlobalKeyEvent;
 
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-
-@SuppressWarnings({"java:S106" , "java:S1479"})
+@SuppressWarnings({ "java:S106", "java:S1479" })
 public class GetKeybind {
 
-    private Shell shell;
-    private Display display;
-    private Label keyLabel;
+    private JLabel keyLabel;
+    private JFrame frame;
 
     private GlobalKeyboardHook keyboardHook;
 
@@ -41,8 +32,6 @@ public class GetKeybind {
         this.keyboardHook = TrayApp.getKeyboardHook();
         // initialize keyChain
         keyChain = new ArrayList<>();
-        // initialize display
-        display = Display.getDefault();
         // onStart - not capturing
         capturing = false;
     }
@@ -52,6 +41,8 @@ public class GetKeybind {
         try {
             // create new GetKeybind window
             GetKeybind window = new GetKeybind();
+            com.formdev.flatlaf.intellijthemes.FlatGruvboxDarkHardIJTheme.install();
+            JFrame.setDefaultLookAndFeelDecorated(true);
             // and then open that window
             window.open();
         } catch (Exception e) {
@@ -63,85 +54,66 @@ public class GetKeybind {
      * Open the window.
      */
     private void open() {
-        // populate shell
+        // Create content
         createContents();
-        // open shell and focus on it
-        shell.open();
-        shell.layout();
-       shell.forceActive();
+               //frame visible after construction
+        frame.setVisible(true);
+        frame.requestFocus();
 
-        while (!shell.isDisposed()) {
-            if (!display.readAndDispatch()) {
-                display.sleep();
-            }
-        }
+        
     }
 
     /**
      * Create contents of the window.
      */
     private void createContents() {
-        // Shell
-        shell = new Shell(SWT.CLOSE | SWT.TITLE);
-        // Get Icon
-        Image icon = getImageSWT("BaseIcon.ico");
-        if (icon != null)
-            shell.setImage(icon);
-        else // this will execute only if jar was badly packaged
-            shell.setImage(SWTResourceManager.getImage("Resources/BaseIcon.ico"));
-        shell.setBackground(SWTResourceManager.getColor(54, 57, 63));
-        shell.setTouchEnabled(true);
-        shell.setSize(450, 220);
-        shell.setText("Choose Keybind");
-        // Create rectangle from display
-        Rectangle screenSize = display.getPrimaryMonitor().getBounds();
-        // Set shell location to middle of the screen
-        shell.setLocation((screenSize.width - shell.getBounds().width) / 2,
-                (screenSize.height - shell.getBounds().height) / 2);
-        shell.setLayout(null);
-
-        // KeyLabel
-        keyLabel = new Label(shell, SWT.VERTICAL | SWT.CENTER);
-        keyLabel.setForeground(SWTResourceManager.getColor(254, 251, 239));
-        keyLabel.setBackground(SWTResourceManager.getColor(54, 57, 63));
-        keyLabel.setFont(SWTResourceManager.getFont("Sitka Display", 26, SWT.BOLD | SWT.ITALIC));
-        keyLabel.setBounds(10, 10, 424, 94);
+        // ---- Create Frame ----
+        frame = new JFrame("Choose Keybind");
+        frame.setIconImage(Utils.getImage("KeyBindIcon.png"));
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        //frame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE); //dispose
+        frame.setSize(450, 220);
+        frame.setLayout(null);
+        //set default appearance to middle of the screen
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        frame.setLocation((screenSize.width - frame.getBounds().width) / 2,
+            (screenSize.height - frame.getBounds().height) / 2);
+        // ---- KeyLabel ----
+        keyLabel = new JLabel("", SwingConstants.CENTER);
+        keyLabel.setFont(new Font("Sitka Display", Font.BOLD | Font.ITALIC, 40));
+        keyLabel.setBounds(10, 05, 430, 100);
+        frame.add(keyLabel);
         addOrigin();
 
-        // Save Button
-        Button saveButton = new Button(shell, SWT.PUSH);
-        saveButton.addSelectionListener(new SelectionAdapter() {
-            // save and close on click
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                System.out.println(keyChain.toString());
+        // ---- Save Button ----
+        JButton saveButton = new JButton("Save");
+        saveButton.setFont(new Font("Segoe UI", Font.PLAIN, 25));
+        saveButton.setBounds(123, 110, 205, 60);
+        saveButton.addActionListener(e -> {
+            System.out.println(keyChain.toString());
                 // update main app config
                 Config.FIELD02.setValue(keyChainToString());
-                // close shell
-                shell.close();
-            }
+                frame.dispose();
         });
-        saveButton.setBounds(123, 110, 205, 60);
-        saveButton.setImage(getImageSWT("SaveButton.png"));
+        frame.add(saveButton);
 
-        // Clear Button
-        Button clearButton = new Button(shell, SWT.FLAT);
-        clearButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                keyChain.clear();
-                keyLabel.setText("");
-            }
+        // ---- Clear Button ----
+        JButton clearButton = new JButton("Clear");
+        clearButton.setBounds(371, 148, 65, 28);
+        clearButton.addActionListener(e -> {
+            keyChain.clear();
+            keyLabel.setText("");
         });
-        clearButton.setBounds(371, 148, 60, 28);
-        clearButton.setImage(getImageSWT("ClearButton.png"));
+        frame.add(clearButton);
+
 
         // create keybind listener
         GlobalKeyAdapter keybindListen = new GlobalKeyAdapter() {
             @Override
             public void keyPressed(GlobalKeyEvent event) {
                 // sync threads to avoid 'Invalid Thread Access' error
-                display.asyncExec(() -> {
+                SwingUtilities.invokeLater(() -> {
                     // if not capturing -> this is the first key pressed
                     if (!capturing) {
                         // set mode to capturing
@@ -155,7 +127,7 @@ public class GetKeybind {
 
             @Override
             public void keyReleased(GlobalKeyEvent event) {
-                display.asyncExec(() -> {
+                SwingUtilities.invokeLater(() -> {
                     // if the released key is the first key that was pressed (added to keychain)
                     if (!keyChain.isEmpty() && event.getVirtualKeyCode() == keyChain.get(0))
                         // not capturing anymore
@@ -166,28 +138,23 @@ public class GetKeybind {
         };
         // add Listener to imported keyboard_hook
         keyboardHook.addKeyListener(keybindListen);
-
         // On exit (dispose listener )
-        shell.addDisposeListener(disposed -> {
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent event){
             // remove keybind listener from imported keyboard_hook
             keyboardHook.removeKeyListener(keybindListen);
             //enable cropping
             TrayApp.setIsCropping(false);
             System.out.println("Exited Keybind UI (and closed 2nd listener)");
+            }
         });
     }
 
-    // Load Image from resources inputStream SWT STYLE
-   public Image getImageSWT(String name) {
-        Image img = null;
-        try (InputStream inputStream = TrayApp.class.getClassLoader().getResourceAsStream(name)) {
-            img = new Image(display, inputStream);
-        } catch (IOException e) {
-            System.err.println("Error loading icon");
-            e.getMessage();
-        }
-        return img;
-    } 
+    private void setText(String text){
+        //takes care of word wrap
+        keyLabel.setText("<html><p>"+text+"</p></html>");
+    }
 
     private boolean addKey(int vKC) { // vKC = Virtual Key Code
         // check that key isn't already in keyChain && keyChain isn't full
@@ -196,12 +163,18 @@ public class GetKeybind {
             String keyCode = keyToString(vKC);
             // ignore some keys
             if (!keyCode.equals("??")) {
-                if(keyChain.isEmpty()) 
-                    // replace label
-                    keyLabel.setText(keyCode);
-                else
-                    // add to label
-                    keyLabel.setText(keyLabel.getText() + " + " + keyCode);
+                switch(keyChain.size()) {
+                    case 0:
+                        // replace label
+                        keyLabel.setText(keyCode);
+                        break;
+                    case 1:
+                        // add to label
+                        keyLabel.setText(keyLabel.getText() + " + " + keyCode);
+                        break;
+                    case 2:
+                    setText(keyLabel.getText() + " + " + keyCode);
+                    }
                 
                 keyChain.add(vKC);
                 return true;
@@ -310,8 +283,8 @@ public class GetKeybind {
 			case 88: return  "X";
 			case 89: return  "Y";
 			case 90: return  "Z";
-			case 91: return  "Windows Key";
-			case 92: return  "Right window key";
+			case 91: return  "<Windows Key";
+			case 92: return  ">window key";
 			case 93: return  "Windows Menu";
 			case 95: return  "Sleep";
 			case 96: return  "Numpad 0";
@@ -326,7 +299,7 @@ public class GetKeybind {
 			case 105: return  "Numpad 9";
 			case 106: return  "Multiply";
 			case 107: return  "Add";
-			case 108: return  "Numpad period (firefox)";
+			case 108: return  "Numpad period";
 			case 109: return  "Subtract";
 			case 110: return  "Decimal point";
 			case 111: return  "Divide";
@@ -374,8 +347,8 @@ public class GetKeybind {
 			case 168: return  "Refresh";
 			case 170: return "*";
 			case 172: return  "Home key";
-			case 174: return  "Decrease volume level";
-			case 175: return  "Increase volume level";
+			case 174: return  "VolumeDown";
+			case 175: return  "VolumeUp";
 			case 176: return  "Next";
 			case 177: return  "Previous";
 			case 178: return  "Stop";

@@ -16,7 +16,13 @@ public class AppTest {
     @Test
     public void testApp(){
         assertTrue(true);
-        printConfigFields(false);
+        //printConfigFields(false);
+        
+        openWindow();
+    }
+
+    public void openWindow(){
+        
     }
     
     public void printConfigFields(boolean showMore) {

@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>core</groupId>
     <artifactId>ScreenshotZ</artifactId>
@@ -9,41 +8,67 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lwjgl.version>3.2.3</lwjgl.version>
-	    <lwjgl.natives>natives-windows</lwjgl.natives>
+        <lwjgl.natives>natives-windows</lwjgl.natives>
     </properties>
 
-<dependencyManagement>
-	<dependencies>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>lwjgl-bom</artifactId>
-			<version>${lwjgl.version}</version>
-			<scope>import</scope>
-			<type>pom</type>
-		</dependency>
-	</dependencies>
-</dependencyManagement>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.lwjgl</groupId>
+                <artifactId>lwjgl-bom</artifactId>
+                <version>${lwjgl.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <repositories>
-	    <repository>
+        <repository>
             <id>maven-eclipse-repo</id>
             <url>http://maven-eclipse.github.io/maven</url>
-	    </repository>
+        </repository>
     </repositories>
 
     <dependencies>
- 
-	<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl</artifactId></dependency>
-	<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-nfd</artifactId></dependency>
-	<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl</artifactId><classifier>${lwjgl.natives}</classifier></dependency>
-	<dependency><groupId>org.lwjgl</groupId><artifactId>lwjgl-nfd</artifactId><classifier>${lwjgl.natives}</classifier></dependency>
 
-    <dependency>
-		<groupId>org.eclipse.swt</groupId>
-		<artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
-		<version>4.6.1</version>
-	</dependency>
-    
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-nfd</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl</artifactId>
+            <classifier>${lwjgl.natives}</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-nfd</artifactId>
+            <classifier>${lwjgl.natives}</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.swt</groupId>
+            <artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
+            <version>4.6.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>1.0-rc3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf-intellij-themes</artifactId>
+            <version>1.0-rc3</version>
+        </dependency>
+
         <dependency>
             <groupId>lc.kra.system</groupId>
             <artifactId>system-hook</artifactId>
@@ -87,7 +112,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                 <version>3.2.0</version>
+                <version>3.2.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -101,28 +126,28 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.3.0</version>
-                    <configuration>
-                        <descriptorRefs>
-                            <descriptorRef>jar-with-dependencies</descriptorRef>
-                        </descriptorRefs>
-                        <archive>
-                            <manifest>
-                                <addClasspath>true</addClasspath>
-                                <mainClass>core.TrayApp</mainClass>
-                            </manifest>
-                        </archive>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                            <phase>package</phase> <!-- bind to the packaging phase -->
-                            <goals>
-                                <goal>single</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                        </plugin>
-            
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>core.TrayApp</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!--
                 You can run jacoco in the default profile with:
                 mvn jacoco:prepare-agent test jacoco:report
