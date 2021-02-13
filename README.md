@@ -6,7 +6,7 @@
 
 ![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/NoAdminRights.png?raw=true)
 
-#### :white_check_mark: To do so [on Windows10]: go to the file settings - Compatibility tab - check run this program as administrator :white_check_mark:
+#### :white_check_mark: To do so [on Windows10]: go to the file settings - Compatibility tab - Run this program as administrator :white_check_mark:
 
 ![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/RunAsAdmin.png?raw=true)
 
