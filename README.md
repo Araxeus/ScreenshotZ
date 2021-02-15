@@ -6,7 +6,7 @@
 
 ![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/NoAdminRights.png?raw=true)
 
-#### :white_check_mark: To do so [on Windows10]: go to the file settings - Compatibility tab - check run this program as administrator :white_check_mark:
+#### :white_check_mark: To do so [on Windows10]: go to the file settings - Compatibility tab - Run this program as administrator :white_check_mark:
 
 ![alt text](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/RunAsAdmin.png?raw=true)
 
@@ -61,6 +61,20 @@
 
 ---
 
+## Java classes at src/main/java/core
+
+-   [TrayApp] is the main driver class
+
+-   [SimpleProperties] is a class that use enums for easy access to settings
+
+-   [Utils] are methods that were part of the main class but got refactored out for readability
+
+-   [GetKeybind] is the GUI that gets the custom keybind option
+
+-   [CropImage] is the crop GUI that is created using [ImagePanel] and uses [TransferableImage] to send to clipboard
+
+---
+
 ## Startup Rule Instructions: (Adds startup rule to windows task scheduler) 
 
 -   Grab [addStartupRule.bat](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/addStartupRule.bat) And
@@ -73,20 +87,6 @@
 -   to uninstall run deleteStartupRule.bat as admin and press Y
 
 -   (the exe needs to have admin right enabled in the option as shown above)
-
----
-
-## Java classes at src/main/java/core
-
--   [TrayApp] is the main driver class
-
--   [SimpleProperties] is a class that use enums for easy access to settings
-
--   [Utils] are methods that were part of the main class but got refactored out for readability
-
--   [GetKeybind] is the GUI that gets the custom keybind option
-
--   [CropImage] is the crop GUI that is created using [ImagePanel] and uses [TransferableImage] to send to clipboard
 
 ---
 
