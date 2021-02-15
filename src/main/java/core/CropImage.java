@@ -15,7 +15,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-
+import javax.swing.UIManager;
 
 import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
@@ -46,9 +46,17 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 	public static void openWindow(String imagePath) {
 		//used to limit instance
         TrayApp.setIsCropping(true);
-		//initialize window
-		CropImage window = new CropImage(imagePath);
-		window.open();
+		//reset look&feel to get proper fullscreen
+		try{
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			} catch (Exception e) {
+				System.err.println("Error setting default look and feel\n"+e.getMessage());
+			}
+		SwingUtilities.invokeLater(() -> {
+			//initialize window
+			CropImage window = new CropImage(imagePath);
+			window.open();	
+		});
 	}
 
 	private void open() {

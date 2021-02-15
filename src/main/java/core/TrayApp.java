@@ -104,7 +104,7 @@ public final class TrayApp {
 				Config.FIELD06.setValue(crop06.getStateChange() == ItemEvent.SELECTED));
 
 				//Force Fullscreen
-				CheckboxMenuItem checkBoxCrop08 = new CheckboxMenuItem("Force FullScreen");
+				CheckboxMenuItem checkBoxCrop08 = new CheckboxMenuItem("Force FullScreen[last resort]");
 				checkBoxCrop08.setState(Config.FIELD08.getBoolean());
 				checkBoxCrop08.addItemListener(crop08 ->
 				Config.FIELD08.setValue(crop08.getStateChange() == ItemEvent.SELECTED));
