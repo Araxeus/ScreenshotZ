@@ -12,7 +12,6 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-.travis.yml
 
 #
 # IntelliJ
@@ -20,7 +19,6 @@ buildNumber.properties
 *.iml
 .idea/*
 !.idea/runConfigurations/
-*.editorconfig
 
 #
 # Visual Studio Code
