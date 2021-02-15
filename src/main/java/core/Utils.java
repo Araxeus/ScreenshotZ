@@ -29,11 +29,18 @@ public class Utils {
     public static void robotTo(String directory, int mode) throws IOException, AWTException {
         // create buffered image from new rectangle containing all screen
         BufferedImage img = new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-        // create file using getName (returns new image path)
-        if(Files.notExists(Paths.get(directory))){
-            System.err.println("You really shouldn't delete your screenshot folder...");
-            Files.createDirectories(Paths.get(directory));
+        //check if newFolder setting is on
+        if(Config.FIELD09.getBoolean()) {
+            LocalDateTime now = LocalDateTime.now();
+            //new day starts at 5am ;)
+            if(now.getHour()<5)
+                now.minusDays(1);
+            directory+=now.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))+File.separator;
         }
+        // create file using getName (returns new image path)
+        if(Files.notExists(Paths.get(directory)))
+            Files.createDirectories(Paths.get(directory));
+
         File outfile = new File(getName(directory));
         // write image to file
         ImageIO.write(img, "png", outfile);
@@ -44,7 +51,7 @@ public class Utils {
         Runtime.getRuntime().gc();
         //run crop if not cropping and [mode1+config03](PrtScn mode+config) / [mode2+config04](Custom keybind mode+config)
         if (!TrayApp.isCropping()
-                &&( mode ==3 
+                &&( mode ==3
                 ||  (mode == 1 && Config.FIELD03.getBoolean())
                 ||  (mode == 2 && Config.FIELD04.getBoolean()) ) )
             CropImage.openWindow(outfile.getAbsolutePath());
@@ -82,8 +89,8 @@ public class Utils {
             while (img.getWidth(null) == -1)
                 Thread.sleep(50);
         } catch (Exception e) {
-            System.err.println("Error Loading TrayIcon");
-            e.getMessage();
+            System.err.println("Error Loading TrayIcon \n"
+                + e.getMessage());
             System.exit(1);
         }
         return img;

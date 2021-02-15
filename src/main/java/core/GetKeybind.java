@@ -2,6 +2,8 @@ package core;
 
 import java.util.ArrayList;
 import java.awt.event.WindowEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -17,6 +19,7 @@ public class GetKeybind {
 
     private JLabel keyLabel;
     private JFrame frame;
+    private int skinCounter;
 
     private GlobalKeyboardHook keyboardHook;
 
@@ -28,12 +31,15 @@ public class GetKeybind {
 
     // PRIVATE constructor
     private GetKeybind() {
+        System.out.println("new keybind object");
         // get keyboard hook
         this.keyboardHook = TrayApp.getKeyboardHook();
         // initialize keyChain
         keyChain = new ArrayList<>();
         // onStart - not capturing
         capturing = false;
+        //get skin
+        skinCounter = Config.FIELD07.getInt();
     }
 
     // PUBLIC window initializer
@@ -41,8 +47,8 @@ public class GetKeybind {
         try {
             // create new GetKeybind window
             GetKeybind window = new GetKeybind();
-            com.formdev.flatlaf.intellijthemes.FlatGruvboxDarkHardIJTheme.install();
             JFrame.setDefaultLookAndFeelDecorated(true);
+            window.nextSkin(false);
             // and then open that window
             window.open();
         } catch (Exception e) {
@@ -56,11 +62,11 @@ public class GetKeybind {
     private void open() {
         // Create content
         createContents();
-               //frame visible after construction
+        //frame visible after construction
         frame.setVisible(true);
         frame.requestFocus();
 
-        
+
     }
 
     /**
@@ -75,6 +81,12 @@ public class GetKeybind {
         //frame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE); //dispose
         frame.setSize(450, 220);
         frame.setLayout(null);
+        frame.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+               nextSkin(true);
+            }
+         });
         //set default appearance to middle of the screen
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setLocation((screenSize.width - frame.getBounds().width) / 2,
@@ -146,6 +158,8 @@ public class GetKeybind {
             keyboardHook.removeKeyListener(keybindListen);
             //enable cropping
             TrayApp.setIsCropping(false);
+            //save skin
+            Config.FIELD07.setValue(skinCounter);
             System.out.println("Exited Keybind UI (and closed 2nd listener)");
             }
         });
@@ -175,14 +189,14 @@ public class GetKeybind {
                     case 2:
                     setText(keyLabel.getText() + " + " + keyCode);
                     }
-                
+
                 keyChain.add(vKC);
                 return true;
             }
         }
         return false;
     }
-    
+
 
     // on launch - get current keybind
     private void addOrigin() {
@@ -209,6 +223,32 @@ public class GetKeybind {
                 output.append(',');
         }
         return output.toString();
+    }
+
+    private void nextSkin(boolean next) {
+        if(next)
+            skinCounter++;
+        if(skinCounter > 8) 
+            skinCounter = 1;
+        switch (skinCounter) {
+            case 1:
+            com.formdev.flatlaf.intellijthemes.FlatGruvboxDarkHardIJTheme.install(); break;
+            case 2:
+            com.formdev.flatlaf.intellijthemes.FlatHiberbeeDarkIJTheme.install(); break;
+            case 3:
+            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialDarkerContrastIJTheme.install(); break;
+            case 4:
+            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMonokaiProContrastIJTheme.install(); break;
+            case 5:
+            com.formdev.flatlaf.intellijthemes.FlatMaterialDesignDarkIJTheme.install(); break;
+            case 6:
+            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialOceanicContrastIJTheme.install(); break;
+            case 7:
+            com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme.install(); break;
+            case 8:
+            com.formdev.flatlaf.intellijthemes.FlatCyanLightIJTheme.install(); break;
+        }
+        if(frame != null)SwingUtilities.updateComponentTreeUI(frame); 
     }
 
     // Convert Virtual Key Code into String
@@ -256,7 +296,7 @@ public class GetKeybind {
 			case 56: return "8";
 			case 57: return "9";
 			case 58: return ":";
-			case 60: return "<";	
+			case 60: return "<";
 			case 65: return  "A";
 			case 66: return  "B";
 			case 67: return  "C";
@@ -379,5 +419,5 @@ public class GetKeybind {
 			case 251: return  "Unlock trackpad";
 			default: return "??";
 		}
-	}	
+	}
 }

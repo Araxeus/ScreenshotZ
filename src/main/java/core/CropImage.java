@@ -1,7 +1,6 @@
 package core;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -34,16 +33,16 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 	private GlobalKeyboardHook keyboardHook;
 	//used to load image
     ImagePanel im;
-    
+
 	private String imagePath;
-	
+
 	//private initializer
 	private CropImage(String imagePath){
 		this.keyboardHook=TrayApp.getKeyboardHook();
 		this.imagePath=imagePath;
         isDragged = false;
 	}
-	
+
 	public static void openWindow(String imagePath) {
 		//used to limit instance
         TrayApp.setIsCropping(true);
@@ -63,22 +62,27 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 			}
 		}; //add listener to keyboard hook
 		keyboardHook.addKeyListener(exitListener);
-		//set paint color
-		//setForeground(Color.RED);
 		//create ImagePanel and use it
-		im = new ImagePanel(imagePath);	
+		im = new ImagePanel(imagePath);
 		add(im);
 		setUndecorated(true);
 		setAlwaysOnTop(true);
 		setSize(im.getWidth(), im.getHeight());
+		setResizable(false);
 		setTitle("Crop Tool - [Press Enter / Escape To Quit]");
         setIconImage(Utils.getImage("TrayIcon.png"));
 		setBackground(new Color(0, 255, 0, 0));
+		setExtendedState(Frame.MAXIMIZED_BOTH);
 		//add overridden listener
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		//dispose this window on exit (not quit app)
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		if(Config.FIELD08.getBoolean())
+			GraphicsEnvironment
+				.getLocalGraphicsEnvironment()
+					.getDefaultScreenDevice()
+						.setFullScreenWindow(this);
         setVisible(true);
 		setFocusable(true);
 		//request focus when frame is built
@@ -130,7 +134,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent release) {	
+	public void mouseReleased(MouseEvent release) {
 		//get End point coordinates and crop
 		if (isDragged) {
 			repaint();
@@ -164,31 +168,33 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		super.paint(g);
 
 		//little algorithm to calculate rectangle left most corner
-		int width = Math.abs(x2 - x1);
-		int height = Math.abs(y2 - y1);
-		int x = x1<x2 ? x1: x2 ,
-			y = y1<y2 ? y1 : y2 ;
+		int width = Math.abs(x2 - x1),
+		    height = Math.abs(y2 - y1),
+            x = Math.min(x1, x2),
+			y = Math.min(y1, y2);
 		g.setColor(new Color(211, 84, 0));
 		g.drawRect(x, y, width, height);
-		//COLORS: 
-		//Gold: [255,204,51] (very nice)
-		//Light orange [255,153,0] (very similar to gold)
-		//Light Gray - White [204,204,204] (niceuh)
-		//Pumpkin Orange [211, 84, 0] love orange :D
+		//COLORS:
+		//Gold: [255,204,51]
+		//Light orange [255,153,0]
+		//Light Gray - White [204,204,204]
+		//Pumpkin Orange [211, 84, 0]
 		//Red - Orange [231, 76, 60] (Alizarin)
 		//Dim Emerald [39, 174, 96] (Nephritis)
- 
 	}
 
 	private void crop() throws IOException {
-		//same algorithm (not sure how not to repeat this)
-		int width = Math.abs(x2 - x1);
-		int height = Math.abs(y2 - y1);
-		int x = x1<x2 ? x1 : x2 ,
-			y = y1<y2 ? y1 : y2 ;
+		//same algorithm
+        int width = Math.abs(x2 - x1),
+            height = Math.abs(y2 - y1);
+		//the conversion to point is in case the window isn't fullscreen
+		Point outPoint = new  Point
+            (Math.min(x1, x2) , Math.min(y1, y2));
+		SwingUtilities.convertPointToScreen(outPoint , this.getFocusOwner());
 
 		//crop to rectangle
-		BufferedImage img = im.getImage().getSubimage(x, y, width, height);
+		BufferedImage img = im.getImage()
+            .getSubimage(outPoint.x, outPoint.y, width, height);
 
 		//crop path .can. be new path
 		StringBuilder cropPath = new StringBuilder(imagePath);
@@ -196,7 +202,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		//Save original onCrop Setting
 		if(Config.FIELD05.getBoolean())
 			cropPath.insert(imagePath.indexOf(".png"), "(Cropped)");
-		
+
 		//save image
 		File savePath = new File(cropPath.toString());
 		ImageIO.write(img, "png", savePath);

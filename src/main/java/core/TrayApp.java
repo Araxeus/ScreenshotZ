@@ -14,7 +14,7 @@ import java.awt.datatransfer.Clipboard;
 
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.BindException;
@@ -23,6 +23,7 @@ import java.net.ServerSocket;
 
 
 import lc.kra.system.keyboard.GlobalKeyboardHook;
+
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
 import lc.kra.system.keyboard.event.GlobalKeyEvent;
 
@@ -58,20 +59,20 @@ public final class TrayApp {
 
 				// get the SystemTray instance
 				SystemTray tray = SystemTray.getSystemTray();
-		
+
 				// initialize global keyboard hook
 				keyboardHook = new GlobalKeyboardHook(true);
-		
+
 				// *--Quit Button--*
 				MenuItem quit = new MenuItem("Quit");
 				// add listener
 				quit.addActionListener(quitListener);
-		
+
 				// *--Choose Output Directory Button--*
 				MenuItem dir = new MenuItem("Select Output Directory");
 				// add listener
 				dir.addActionListener(dirListener);
-		
+
 				// *--Choose Keybind Button--*
 				MenuItem keybindMenu = new MenuItem("Choose Additional Keybind");
 				// Create + Add listener
@@ -79,28 +80,44 @@ public final class TrayApp {
 				isCropping=true;
 				GetKeybind.openWindow();
 			});
-		
+
 				// *--Crop Settings Check Box--*
 				// create , add listener , and setState according to config
 				CheckboxMenuItem checkBoxCrop03 = new CheckboxMenuItem("Crop on PrintScreen");
 				checkBoxCrop03.setState(Config.FIELD03.getBoolean());
-				checkBoxCrop03.addItemListener(crop03Listener);
-		
+				checkBoxCrop03.addItemListener(crop03 ->
+				Config.FIELD03.setValue(crop03.getStateChange() == ItemEvent.SELECTED));
+
 				CheckboxMenuItem checkBoxCrop04 = new CheckboxMenuItem("Crop on Custom Keybind");
 				checkBoxCrop04.setState(Config.FIELD04.getBoolean());
-				checkBoxCrop04.addItemListener(crop04Listener);
-		
+				checkBoxCrop04.addItemListener(crop04 ->
+				Config.FIELD04.setValue(crop04.getStateChange() == ItemEvent.SELECTED));
+
 				CheckboxMenuItem checkBoxCrop05 = new CheckboxMenuItem("Save Original onCrop");
 				checkBoxCrop05.setState(Config.FIELD05.getBoolean());
-				checkBoxCrop05.addItemListener(crop05Listener);
-		
+				checkBoxCrop05.addItemListener(crop05 ->
+				Config.FIELD05.setValue(crop05.getStateChange() == ItemEvent.SELECTED));
+
 				CheckboxMenuItem checkBoxCrop06 = new CheckboxMenuItem("Exit UI onCrop");
 				checkBoxCrop06.setState(Config.FIELD06.getBoolean());
-				checkBoxCrop06.addItemListener(crop06Listener);
-		
-				
+				checkBoxCrop06.addItemListener(crop06 ->
+				Config.FIELD06.setValue(crop06.getStateChange() == ItemEvent.SELECTED));
+
+				//Force Fullscreen
+				CheckboxMenuItem checkBoxCrop08 = new CheckboxMenuItem("Force FullScreen");
+				checkBoxCrop08.setState(Config.FIELD08.getBoolean());
+				checkBoxCrop08.addItemListener(crop08 ->
+				Config.FIELD08.setValue(crop08.getStateChange() == ItemEvent.SELECTED));
+
+				CheckboxMenuItem newFolder = new CheckboxMenuItem("Create new folder each day");
+				newFolder.setState(Config.FIELD09.getBoolean());
+				newFolder.addItemListener(action ->
+				Config.FIELD09.setValue(action.getStateChange() == ItemEvent.SELECTED));
+
+
 				// create subMenu
 				PopupMenu subMenu = new PopupMenu("Crop Settings:");
+				subMenu.add(checkBoxCrop08);
 				subMenu.add(checkBoxCrop03);
 				subMenu.add(checkBoxCrop04);
 				subMenu.add(checkBoxCrop05);
@@ -110,11 +127,13 @@ public final class TrayApp {
 				// add menu items to popup menu
 				popup.add(subMenu);
 				popup.addSeparator();
+				popup.add(newFolder);
+				popup.addSeparator();
 				popup.add(dir);
-				popup.add(keybindMenu);	
+				popup.add(keybindMenu);
 				popup.addSeparator();
 				popup.add(quit);
-		
+
 				// construct a TrayIcon
 				TrayIcon trayIcon = new TrayIcon(icon, "ScreenshotZ", popup);
 				// set the TrayIcon properties
@@ -129,7 +148,7 @@ public final class TrayApp {
 				} catch (Exception e) {
 					System.err.println("Error loading System Looks and Feels");
 				}
-		
+
 				// add Global Keyboard Listener
 				keyboardHook.addKeyListener(keyboardAdapter);
 	}
@@ -162,27 +181,6 @@ public final class TrayApp {
 		}
 	}
 
-	// Choose output directory button listener
-	private static ActionListener dirListener = directoryChooser -> {
-		setIsCropping(true);
-		//use LWJGL NativeFileDialog
-		PointerBuffer path = MemoryUtil.memAllocPointer(1);
-		switch (NativeFileDialog.NFD_PickFolder(Config.FIELD01.getString() , path)) {
-            case NativeFileDialog.NFD_OKAY:
-                System.out.println("Directory Chosen Successfully!");
-				Config.FIELD01.setValue(path.getStringUTF8(0)+File.separator);
-                System.out.println("New Path = "+Config.FIELD01.getString());
-                NativeFileDialog.nNFD_Free(path.get(0));
-                break;
-            case NativeFileDialog.NFD_CANCEL:
-                System.out.println("User pressed cancel.");
-                break;
-            default: // NFD_ERROR
-                System.err.format("Error: %s%n", NativeFileDialog.NFD_GetError());
-		}
-		setIsCropping(false);
-	};
-
 	// Quit button listener
 	private static ActionListener quitListener = exit -> {
 		System.out.println("Exiting Program");
@@ -199,27 +197,6 @@ public final class TrayApp {
 			System.err.println("IO Error when opening Screenshot Directory");
 		}
 	};
-
-	/*
-	** checkBox Listeners: [state 2 == false]  [state 1 = true]
-	*/
-
-	// crop on PrintScreen listener
-	private static ItemListener crop03Listener = crop03 -> 
-		Config.FIELD03.setValue(crop03.getStateChange() == 1);
-
-	// crop on Custom Keybind listener
-	private static ItemListener crop04Listener = crop04 -> 
-		Config.FIELD04.setValue(crop04.getStateChange() == 1);
-	
-	//onCrop Save Original Listener
-	private static ItemListener crop05Listener = crop05 -> 
-		Config.FIELD05.setValue(crop05.getStateChange() == 1);
-
-	//Exit UI onCrop Listener
-	private static ItemListener crop06Listener = crop06 -> 
-		Config.FIELD06.setValue(crop06.getStateChange() == 1);
-
 
 	//Keyboard Listener
 	private static GlobalKeyAdapter keyboardAdapter = new GlobalKeyAdapter() {
@@ -249,6 +226,29 @@ public final class TrayApp {
 		}
 	};
 
+		// Choose output directory button listener
+		private static ActionListener dirListener = directoryChooser -> {
+			//use LWJGL NativeFileDialog
+			PointerBuffer path = MemoryUtil.memAllocPointer(1);
+			keyboardHook.removeKeyListener(keyboardAdapter);
+			keyboardHook.shutdownHook();
+			switch (NativeFileDialog.NFD_PickFolder(Config.FIELD01.getString() , path)) {
+				case NativeFileDialog.NFD_OKAY:
+					System.out.println("Directory Chosen Successfully!");
+					Config.FIELD01.setValue(path.getStringUTF8(0)+File.separator);
+					System.out.println("New Path = "+Config.FIELD01.getString());
+					NativeFileDialog.nNFD_Free(path.get(0));
+					break;
+				case NativeFileDialog.NFD_CANCEL:
+					System.out.println("User pressed cancel.");
+					break;
+				default: // NFD_ERROR
+					System.err.format("Error: %s%n", NativeFileDialog.NFD_GetError());
+			}
+			keyboardHook = new GlobalKeyboardHook(true);
+			keyboardHook.addKeyListener(keyboardAdapter);
+		};
+
 	//used for closing crop UI after @arg -crop
 	public static boolean isRunning(){
 		return uniqueServerSocket != null;
@@ -275,7 +275,7 @@ public final class TrayApp {
 				System.exit(0);
 			else
 				return false;
-			
+
 		}
 
 		// check that tray is supported

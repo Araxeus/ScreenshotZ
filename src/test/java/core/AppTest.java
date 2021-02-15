@@ -18,12 +18,17 @@ public class AppTest {
         assertTrue(true);
         //printConfigFields(false);
         
-        openWindow();
+        System.out.println(allStar("12345"));
     }
 
-    public void openWindow(){
-        
-    }
+    public String allStar(String str) {
+        if(str.length() > 1)
+          return str.charAt(0) + "*" + allStar(str.substring(1, str.length()));
+        else if(str.length() == 1)
+          return String.valueOf(str.charAt(0));
+        else
+          return "Error";
+      }
     
     public void printConfigFields(boolean showMore) {
         assertTrue(true);

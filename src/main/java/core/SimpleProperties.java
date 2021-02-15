@@ -18,7 +18,10 @@ enum Config
             FIELD03 ("Crop on PrintScreen", false) ,
             FIELD04 ("Crop on Alternate Keybind", true) ,
             FIELD05 ("onCrop Save Original", false) ,
-            FIELD06 ("Exit UI onCrop", false) ;
+            FIELD06 ("Exit UI onCrop", true) ,
+            FIELD07 ("Skin used", "1"), 
+            FIELD08 ("Force Fullscreen", false),
+            FIELD09 ("AutoFolder", false);
         
             final String KEY ,   
                          DEFAULT_VALUE;
@@ -39,6 +42,10 @@ enum Config
                 SimpleProperties.getInstance().setProperty(this, String.valueOf(newValue)); 
             }
 
+            public void setValue (int newValue) {
+                SimpleProperties.getInstance().setProperty(this, String.valueOf(newValue));
+            }
+
             public String getString () 
             { 
                 return SimpleProperties.getInstance().getProperty(this); 
@@ -46,6 +53,10 @@ enum Config
 
             public boolean getBoolean () {
                 return SimpleProperties.getInstance().getBooleanProperty(this);
+            }
+
+            public int getInt() {
+                return SimpleProperties.getInstance().getIntProperty(this);
             }
 
             public static int[] getKeybinds () {
@@ -134,6 +145,14 @@ public class SimpleProperties {
 
     public boolean getBooleanProperty(Config field) {
         return getBooleanProperty(field.KEY);
+    }
+
+    public int getIntProperty(String key) {
+        return Integer.valueOf(properties.getProperty(key));
+    }
+
+    public int getIntProperty(Config field) {
+        return getIntProperty(field.KEY);
     }
 
     public int[] getKeybinds(){
