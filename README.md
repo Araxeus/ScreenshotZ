@@ -1,4 +1,6 @@
-### Download [exe](https://github.com/Araxeus/ScreenshotZ/releases/download/v1.3/ScreenshotZ-v1.3.exe)/[jar](https://github.com/Araxeus/ScreenshotZ/releases/download/v1.3/ScreenshotZ-v1.3.jar) from [ScreenshotZ-v1.3](https://github.com/Araxeus/ScreenshotZ/releases/tag/v1.3) 
+#### Screenshotz is a quick and simple to use screenshot grabber+manager with integrated crop feature 
+#### > [more features down below]
+### Download: - [exe](https://github.com/Araxeus/ScreenshotZ/releases/download/v1.3/ScreenshotZ-v1.3.exe) / [jar](https://github.com/Araxeus/ScreenshotZ/releases/download/v1.3/ScreenshotZ-v1.3.jar) from [ScreenshotZ-v1.3](https://github.com/Araxeus/ScreenshotZ/releases/tag/v1.3) 
 
 > -> or clone git and compile using maven
 
