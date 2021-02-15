@@ -1,4 +1,4 @@
-### Download [exe](https://github.com/Araxeus/ScreenshotZ/releases/download/v1.2e/ScreenshotZ-v1.2.exe)/[jar](https://github.com/Araxeus/ScreenshotZ/releases/download/v1.2e/ScreenshotZ-v1.2.jar) from [ScreenshotZ-v1.2](https://github.com/Araxeus/ScreenshotZ/releases/tag/v1.2e) 
+### Download [exe](https://github.com/Araxeus/ScreenshotZ/releases/download/v1.3/ScreenshotZ-v1.3.exe)/[jar](https://github.com/Araxeus/ScreenshotZ/releases/download/v1.3/ScreenshotZ-v1.3.jar) from [ScreenshotZ-v1.3](https://github.com/Araxeus/ScreenshotZ/releases/tag/v1.3) 
 
 > -> or clone git and compile using maven
 
@@ -16,7 +16,7 @@
 
 ###### CMD input example:
 
-        G: ---> dir HDD/Downloads/Opera ---> java -jar ScreenshotZ-v1.2.jar
+        G: ---> dir HDD/Downloads/Opera ---> java -jar ScreenshotZ-v1.3.jar
 
 ---
 
@@ -42,7 +42,7 @@
 
 :small_orange_diamond:   To show some debugging: run openWithDebug.bat from same directory as jar OR start program from CMD
 
-:small_orange_diamond:   To add/delete Startup rule run the corresponding bat as Administrator from the same directory as ScreenshotZ-v1.2.exeCom
+:small_orange_diamond:   To add/delete Startup rule run the corresponding bat as Administrator from the same directory as ScreenshotZ-v1.3.exe
 
 #### You can use some Command Line Arguments to take screenshots/+crop them without running the whole program:
 
@@ -51,7 +51,7 @@
 
     for example in cmd:
 
-           java -jar ScreenshotZ-v1.2.jar -capture -crop
+           java -jar ScreenshotZ-v1.3.jar -capture -crop
 
     (App will just take screenshot without launching main thread)
 
@@ -81,7 +81,7 @@
     [deleteStartupRule.bat](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/deleteStartupRule.bat)
     from the links attached or Tools.zip from the release page
 
--   Put the bat in same dir as ScreenshotZ-v1.2.exe (rule is for this exact name - can be changed in .bat)
+-   Put the bat in same dir as ScreenshotZ-v1.3.exe (rule is for this exact name - can be changed in .bat)
 
 -   Then run the addStartupRule.bat as admin
 -   to uninstall run deleteStartupRule.bat as admin and press Y
