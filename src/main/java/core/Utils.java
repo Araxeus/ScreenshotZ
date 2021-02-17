@@ -28,13 +28,14 @@ public class Utils {
      */
     public static void robotTo(String directory, int mode) throws IOException, AWTException {
         // create buffered image from new rectangle containing all screen
-        BufferedImage img = new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
+        BufferedImage img = new Robot().createScreenCapture(
+            new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
         //check if newFolder setting is on
         if(Config.FIELD09.getBoolean()) {
             LocalDateTime now = LocalDateTime.now();
             //new day starts at 5am ;)
             if(now.getHour()<5)
-                now.minusDays(1);
+                now=now.minusDays(1);
             directory+=now.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))+File.separator;
         }
         // create file using getName (returns new image path)
