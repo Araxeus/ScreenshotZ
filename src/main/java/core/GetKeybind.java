@@ -65,8 +65,6 @@ public class GetKeybind {
         //frame visible after construction
         frame.setVisible(true);
         frame.requestFocus();
-
-
     }
 
     /**
@@ -186,7 +184,7 @@ public class GetKeybind {
                         // add to label
                         keyLabel.setText(keyLabel.getText() + " + " + keyCode);
                         break;
-                    case 2:
+                    default:
                     setText(keyLabel.getText() + " + " + keyCode);
                     }
 
@@ -232,21 +230,23 @@ public class GetKeybind {
             skinCounter = 1;
         switch (skinCounter) {
             case 1:
-            com.formdev.flatlaf.intellijthemes.FlatGruvboxDarkHardIJTheme.install(); break;
+                com.formdev.flatlaf.intellijthemes.FlatGruvboxDarkHardIJTheme.install(); break;
             case 2:
-            com.formdev.flatlaf.intellijthemes.FlatHiberbeeDarkIJTheme.install(); break;
+                com.formdev.flatlaf.intellijthemes.FlatHiberbeeDarkIJTheme.install(); break;
             case 3:
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialDarkerContrastIJTheme.install(); break;
+                com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialDarkerContrastIJTheme.install(); break;
             case 4:
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMonokaiProContrastIJTheme.install(); break;
+                com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMonokaiProContrastIJTheme.install(); break;
             case 5:
-            com.formdev.flatlaf.intellijthemes.FlatMaterialDesignDarkIJTheme.install(); break;
+                com.formdev.flatlaf.intellijthemes.FlatMaterialDesignDarkIJTheme.install(); break;
             case 6:
-            com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialOceanicContrastIJTheme.install(); break;
+                com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialOceanicContrastIJTheme.install(); break;
             case 7:
-            com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme.install(); break;
+                com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme.install(); break;
             case 8:
-            com.formdev.flatlaf.intellijthemes.FlatCyanLightIJTheme.install(); break;
+                com.formdev.flatlaf.intellijthemes.FlatCyanLightIJTheme.install(); break;
+            default: 
+                System.err.println("Impossible Skin Settings");
         }
         if(frame != null)SwingUtilities.updateComponentTreeUI(frame); 
     }

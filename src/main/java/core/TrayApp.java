@@ -20,7 +20,8 @@ import java.io.IOException;
 import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import lc.kra.system.keyboard.GlobalKeyboardHook;
 
@@ -190,9 +191,16 @@ public final class TrayApp {
 
 	// Left click / interact with trayIcon listener
 	private static ActionListener clickListener = click -> {
+		String dir = Config.FIELD01.getString();
+		//if new folder option is selected + folder exist
+		if (Config.FIELD09.getBoolean()) {
+			String newDir = Utils.addDateToDir(dir);
+			if (Files.exists(Paths.get(newDir)))
+				dir=newDir;
+		}
 		try {
 			// opens screenshot directory
-			Desktop.getDesktop().open(new File(Config.FIELD01.getString()));
+			Desktop.getDesktop().open(new File(dir));
 		} catch (IOException e) {
 			System.err.println("IO Error when opening Screenshot Directory");
 		}

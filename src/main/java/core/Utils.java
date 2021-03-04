@@ -32,11 +32,7 @@ public class Utils {
             new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
         //check if newFolder setting is on
         if(Config.FIELD09.getBoolean()) {
-            LocalDateTime now = LocalDateTime.now();
-            //new day starts at 5am ;)
-            if(now.getHour()<5)
-                now=now.minusDays(1);
-            directory+=now.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))+File.separator;
+            directory = addDateToDir(directory);
         }
         // create file using getName (returns new image path)
         if(Files.notExists(Paths.get(directory)))
@@ -56,6 +52,14 @@ public class Utils {
                 ||  (mode == 1 && Config.FIELD03.getBoolean())
                 ||  (mode == 2 && Config.FIELD04.getBoolean()) ) )
             CropImage.openWindow(outfile.getAbsolutePath());
+    }
+
+    public static String addDateToDir(String dir) {
+        LocalDateTime now = LocalDateTime.now();
+        //new day starts at 5am ;)
+        if(now.getHour()<5)
+            now=now.minusDays(1);
+        return dir+now.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))+File.separator;
     }
 
     /*
