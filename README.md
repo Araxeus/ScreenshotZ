@@ -1,6 +1,7 @@
 #### Screenshotz is a quick and simple to use screenshot grabber+manager with integrated crop feature 
-#### > [more features down below]
-### Download: - [exe](https://github.com/Araxeus/ScreenshotZ/releases/download/v1.3/ScreenshotZ-v1.3.exe) / [jar](https://github.com/Araxeus/ScreenshotZ/releases/download/v1.3/ScreenshotZ-v1.3.jar) from [ScreenshotZ-v1.3](https://github.com/Araxeus/ScreenshotZ/releases/tag/v1.3) 
+####  [more features down below]
+### Download: - [`[exe]`](https://github.com/Araxeus/ScreenshotZ/releases/download/v1.3/ScreenshotZ-v1.3.exe) / [`[jar]`](https://github.com/Araxeus/ScreenshotZ/releases/download/v1.3/ScreenshotZ-v1.3.jar) from [`[ScreenshotZ-v1.3 Release Page]`](https://github.com/Araxeus/ScreenshotZ/releases/tag/v1.3) 
+or from [`[MediaFire Folder]`](https://app.mediafire.com/jl4bs2jieb8c2)
 
 > -> or clone git and compile using maven
 
@@ -65,22 +66,22 @@
 
 ## Java classes at src/main/java/core
 
--   [TrayApp] is the main driver class
+-   `[TrayApp]` is the main driver class
 
--   [SimpleProperties] is a class that use enums for easy access to settings
+-   `[SimpleProperties]` is a class that use enums for easy access to settings
 
--   [Utils] are methods that were part of the main class but got refactored out for readability
+-   `[Utils]` are methods that were part of the main class but got refactored out for readability
 
--   [GetKeybind] is the GUI that gets the custom keybind option
+-   `[GetKeybind]` is the GUI that gets the custom keybind option
 
--   [CropImage] is the crop GUI that is created using [ImagePanel] and uses [TransferableImage] to send to clipboard
+-   `[CropImage]` is the crop GUI that is created using [ImagePanel] and uses [TransferableImage] to send to clipboard
 
 ---
 
 ## Startup Rule Instructions: (Adds startup rule to windows task scheduler) 
 
--   Grab [addStartupRule.bat](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/addStartupRule.bat) And
-    [deleteStartupRule.bat](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/deleteStartupRule.bat)
+-   Grab [`[addStartupRule.bat]`](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/addStartupRule.bat) And
+    [`[deleteStartupRule.bat]`](https://github.com/Araxeus/ScreenshotZ/blob/master/resources/deleteStartupRule.bat)
     from the links attached or Tools.zip from the release page
 
 -   Put the bat in same dir as ScreenshotZ-v1.3.exe (rule is for this exact name - can be changed in .bat)
