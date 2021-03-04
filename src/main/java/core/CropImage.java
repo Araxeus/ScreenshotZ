@@ -21,7 +21,8 @@ import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
 import lc.kra.system.keyboard.event.GlobalKeyEvent;
 
-@SuppressWarnings({"java:S1161","java:S110", "java:S1186" , "java:S106" , "java:S1948" , "java:S1659"})
+@SuppressWarnings ({"java:S1161","java:S110", "java:S1186" , "java:S106" , "java:S1948" , "java:S1659"})
+
 public class CropImage extends JFrame implements MouseListener, MouseMotionListener {
 	private static final long serialVersionUID = 6969L;
 
@@ -37,21 +38,22 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 	private String imagePath;
 
 	//private initializer
-	private CropImage(String imagePath){
+	private CropImage (String imagePath) {
 		this.keyboardHook=TrayApp.getKeyboardHook();
 		this.imagePath=imagePath;
         isDragged = false;
 	}
 
-	public static void openWindow(String imagePath) {
+	public static void openWindow (String imagePath) {
 		//used to limit instance
         TrayApp.setIsCropping(true);
 		//reset look&feel to get proper fullscreen
 		try{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			} catch (Exception e) {
-				System.err.println("Error setting default look and feel\n"+e.getMessage());
-			}
+		} catch (Exception e) {
+			System.err.println("Error setting default look and feel\n"+e.getMessage());
+		}
+		
 		SwingUtilities.invokeLater(() -> {
 			//initialize window
 			CropImage window = new CropImage(imagePath);
@@ -59,11 +61,11 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		});
 	}
 
-	private void open() {
+	private void open () {
 		// create Keyboard Listener
 		GlobalKeyAdapter exitListener = new GlobalKeyAdapter () {
 			@Override
-			public void keyPressed(GlobalKeyEvent event) {
+			public void keyPressed (GlobalKeyEvent event) {
 				//exit on Enter / Escape
 				if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_RETURN || event.getVirtualKeyCode() == GlobalKeyEvent.VK_ESCAPE)
 						dispose();
@@ -86,6 +88,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		addMouseMotionListener(this);
 		//dispose this window on exit (not quit app)
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		//force full screen setting
 		if(Config.FIELD08.getBoolean())
 			GraphicsEnvironment
 				.getLocalGraphicsEnvironment()
@@ -102,8 +105,8 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		//Window Closed Listener
 		addWindowListener(new WindowAdapter() {
 		@Override
-		public void windowClosed(WindowEvent e) {
-			if(TrayApp.isRunning()) { //used for @arg -crop
+		public void windowClosed (WindowEvent e) {
+			if (TrayApp.isRunning()) { //used for @arg -crop
 				//remove key listener
 				keyboardHook.removeKeyListener(exitListener);
 			}
@@ -122,19 +125,19 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 
 	//overridden mouse listeners
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
+	public void mouseClicked (MouseEvent arg0) {
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
+	public void mouseEntered (MouseEvent arg0) {
 	}
 
 	@Override
-	public void mouseExited(MouseEvent arg0) {
+	public void mouseExited (MouseEvent arg0) {
 	}
 
 	@Override
-	public void mousePressed(MouseEvent click) {
+	public void mousePressed (MouseEvent click) {
 		//mouse pressed -> get Start point coordinates
 		repaint();
 		x1 = click.getX();
@@ -142,7 +145,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent release) {
+	public void mouseReleased (MouseEvent release) {
 		//get End point coordinates and crop
 		if (isDragged) {
 			repaint();
@@ -158,7 +161,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 	}
 
 	@Override
-	public void mouseDragged(MouseEvent arg0) {
+	public void mouseDragged (MouseEvent arg0) {
 		//get current end position for paint()
 		repaint();
 		isDragged = true;
@@ -167,15 +170,15 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent arg0) {
+	public void mouseMoved (MouseEvent arg0) {
 	}
 
-
-	public void paint(Graphics g) {
+	@Override
+	public void paint (Graphics g) {
 		//prepare canvas
 		super.paint(g);
 
-		//little algorithm to calculate rectangle left most corner
+		//calculates rectangle left most corner
 		int width = Math.abs(x2 - x1),
 		    height = Math.abs(y2 - y1),
             x = Math.min(x1, x2),
@@ -191,8 +194,8 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		//Dim Emerald [39, 174, 96] (Nephritis)
 	}
 
-	private void crop() throws IOException {
-		//same algorithm
+	private void crop () throws IOException {
+		//same calculations
         int width = Math.abs(x2 - x1),
             height = Math.abs(y2 - y1);
 		//the conversion to point is in case the window isn't fullscreen
@@ -208,7 +211,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		StringBuilder cropPath = new StringBuilder(imagePath);
 
 		//Save original onCrop Setting
-		if(Config.FIELD05.getBoolean())
+		if (Config.FIELD05.getBoolean())
 			cropPath.insert(imagePath.indexOf(".png"), "(Cropped)");
 
 		//save image
@@ -218,7 +221,7 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		System.out.println("Cropped image saved successfully.");
 
 		//Quit onCrop Setting
-		if(Config.FIELD06.getBoolean())
+		if (Config.FIELD06.getBoolean())
 			dispose();
     }
 }

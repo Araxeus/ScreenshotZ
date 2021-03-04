@@ -10,29 +10,26 @@ public class TransferableImage implements Transferable{
 
 private BufferedImage image;
 
-  public TransferableImage(BufferedImage image)
-  {
+  public TransferableImage (BufferedImage image) {
     this.image = image;
   }
 
+  @Override
   // Returns supported flavors
-  public DataFlavor[] getTransferDataFlavors()
-  {
+  public DataFlavor[] getTransferDataFlavors () {
     return new DataFlavor[] { DataFlavor.imageFlavor };
   }
 
+  @Override
   // Returns true if flavor is supported
-  public boolean isDataFlavorSupported(DataFlavor flavor)
-  {
+  public boolean isDataFlavorSupported (DataFlavor flavor) {
     return DataFlavor.imageFlavor.equals(flavor);
   }
 
+  @Override
   // Returns image
-  public Object getTransferData(DataFlavor flavor)
-      throws UnsupportedFlavorException, IOException
-  {
-    if (!DataFlavor.imageFlavor.equals(flavor))
-    {
+  public Object getTransferData (DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+    if (!DataFlavor.imageFlavor.equals(flavor)) {
       throw new UnsupportedFlavorException(flavor);
     }
     return image;

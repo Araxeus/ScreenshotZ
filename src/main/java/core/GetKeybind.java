@@ -14,7 +14,8 @@ import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyAdapter;
 import lc.kra.system.keyboard.event.GlobalKeyEvent;
 
-@SuppressWarnings({ "java:S106", "java:S1479" })
+@SuppressWarnings ({ "java:S106", "java:S1479" })
+
 public class GetKeybind {
 
     private JLabel keyLabel;
@@ -30,7 +31,7 @@ public class GetKeybind {
     private boolean capturing;
 
     // PRIVATE constructor
-    private GetKeybind() {
+    private GetKeybind () {
         System.out.println("new keybind object");
         // get keyboard hook
         this.keyboardHook = TrayApp.getKeyboardHook();
@@ -43,7 +44,7 @@ public class GetKeybind {
     }
 
     // PUBLIC window initializer
-    public static void openWindow() {
+    public static void openWindow () {
         try {
             // create new GetKeybind window
             GetKeybind window = new GetKeybind();
@@ -59,7 +60,7 @@ public class GetKeybind {
     /**
      * Open the window.
      */
-    private void open() {
+    private void open () {
         // Create content
         createContents();
         //frame visible after construction
@@ -70,7 +71,7 @@ public class GetKeybind {
     /**
      * Create contents of the window.
      */
-    private void createContents() {
+    private void createContents () {
         // ---- Create Frame ----
         frame = new JFrame("Choose Keybind");
         frame.setIconImage(Utils.getImage("KeyBindIcon.png"));
@@ -121,7 +122,7 @@ public class GetKeybind {
         // create keybind listener
         GlobalKeyAdapter keybindListen = new GlobalKeyAdapter() {
             @Override
-            public void keyPressed(GlobalKeyEvent event) {
+            public void keyPressed (GlobalKeyEvent event) {
                 // sync threads to avoid 'Invalid Thread Access' error
                 SwingUtilities.invokeLater(() -> {
                     // if not capturing -> this is the first key pressed
@@ -136,7 +137,7 @@ public class GetKeybind {
             }
 
             @Override
-            public void keyReleased(GlobalKeyEvent event) {
+            public void keyReleased (GlobalKeyEvent event) {
                 SwingUtilities.invokeLater(() -> {
                     // if the released key is the first key that was pressed (added to keychain)
                     if (!keyChain.isEmpty() && event.getVirtualKeyCode() == keyChain.get(0))
@@ -151,7 +152,7 @@ public class GetKeybind {
         // On exit (dispose listener )
         frame.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosed(WindowEvent event){
+            public void windowClosed (WindowEvent event){
             // remove keybind listener from imported keyboard_hook
             keyboardHook.removeKeyListener(keybindListen);
             //enable cropping
@@ -163,19 +164,19 @@ public class GetKeybind {
         });
     }
 
-    private void setText(String text){
+    private void setText (String text){
         //takes care of word wrap
         keyLabel.setText("<html><p>"+text+"</p></html>");
     }
 
-    private boolean addKey(int vKC) { // vKC = Virtual Key Code
+    private boolean addKey (int vKC) { // vKC = Virtual Key Code
         // check that key isn't already in keyChain && keyChain isn't full
         if (keyChain.size() < 3 && !keyChain.contains(vKC)) {
             // get Virtual Key Code to String
             String keyCode = keyToString(vKC);
             // ignore some keys
             if (!keyCode.equals("??")) {
-                switch(keyChain.size()) {
+                switch (keyChain.size()) {
                     case 0:
                         // replace label
                         keyLabel.setText(keyCode);
@@ -197,7 +198,7 @@ public class GetKeybind {
 
 
     // on launch - get current keybind
-    private void addOrigin() {
+    private void addOrigin () {
         int[] keybind = Config.getKeybinds();
         // 0 value means no keybind
         if (keybind.length == 1 && keybind[0] == 0)
@@ -208,7 +209,7 @@ public class GetKeybind {
     }
 
     // Code keyChain[] to String for config
-    private String keyChainToString() {
+    private String keyChainToString () {
         // empty keychain = value 0
         if (keyChain.isEmpty())
             return "0";
@@ -223,10 +224,10 @@ public class GetKeybind {
         return output.toString();
     }
 
-    private void nextSkin(boolean next) {
-        if(next)
+    private void nextSkin (boolean next) {
+        if (next)
             skinCounter++;
-        if(skinCounter > 8) 
+        if (skinCounter > 8) 
             skinCounter = 1;
         switch (skinCounter) {
             case 1:
@@ -248,12 +249,13 @@ public class GetKeybind {
             default: 
                 System.err.println("Impossible Skin Settings");
         }
-        if(frame != null)SwingUtilities.updateComponentTreeUI(frame); 
+        if (frame != null)
+            SwingUtilities.updateComponentTreeUI(frame); 
     }
 
     // Convert Virtual Key Code into String
-    private static String keyToString(int vKC) { // vKC = Virtual Key Code
-		switch(vKC) {
+    private static String keyToString (int vKC) { // vKC = Virtual Key Code
+		switch (vKC) {
 			case 3: return  "Break";
 			case 8: return  "Backspace/delete";
 			case 9: return  "Tab";

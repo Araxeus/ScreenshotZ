@@ -16,26 +16,26 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.awt.Toolkit;
 
-@SuppressWarnings("java:S106")
+@SuppressWarnings ("java:S106")
 
 public class Utils {
     // hide constructor
-    private Utils() {
+    private Utils () {
     }
 
     /*
      * print screenshot to 'directory'
      */
-    public static void robotTo(String directory, int mode) throws IOException, AWTException {
+    public static void robotTo (String directory, int mode) throws IOException, AWTException {
         // create buffered image from new rectangle containing all screen
         BufferedImage img = new Robot().createScreenCapture(
             new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
         //check if newFolder setting is on
-        if(Config.FIELD09.getBoolean()) {
+        if (Config.FIELD09.getBoolean()) {
             directory = addDateToDir(directory);
         }
         // create file using getName (returns new image path)
-        if(Files.notExists(Paths.get(directory)))
+        if (Files.notExists(Paths.get(directory)))
             Files.createDirectories(Paths.get(directory));
 
         File outfile = new File(getName(directory));
@@ -47,17 +47,18 @@ public class Utils {
         // Call garbage collector (temporary fix to memory leak from this method)
         Runtime.getRuntime().gc();
         //run crop if not cropping and [mode1+config03](PrtScn mode+config) / [mode2+config04](Custom keybind mode+config)
-        if (!TrayApp.isCropping()
-                &&( mode ==3
+        if (!TrayApp.isCropping() && (  
+                mode ==3
                 ||  (mode == 1 && Config.FIELD03.getBoolean())
-                ||  (mode == 2 && Config.FIELD04.getBoolean()) ) )
+                ||  (mode == 2 && Config.FIELD04.getBoolean()) 
+                                     ))
             CropImage.openWindow(outfile.getAbsolutePath());
     }
 
-    public static String addDateToDir(String dir) {
+    public static String addDateToDir (String dir) {
         LocalDateTime now = LocalDateTime.now();
         //new day starts at 5am ;)
-        if(now.getHour()<5)
+        if (now.getHour()<5)
             now=now.minusDays(1);
         return dir+now.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))+File.separator;
     }
@@ -65,7 +66,7 @@ public class Utils {
     /*
      * return new file path string using 'directory'
      */
-    public static String getName(String directory) {
+    public static String getName (String directory) {
         // create date format
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm.ss");
         // get current date
@@ -76,18 +77,15 @@ public class Utils {
         String name = directory + dtf.format(now);
         File tmpDir = new File(name + ".png");
         // create (num) suffix in case file already exist
-        byte num = 0;
-        while (tmpDir.exists()) {
-            num++;
-            tmpDir = new File(name + " (" + num + ").png");
-        }
+        for (int i = 0; tmpDir.exists(); i++) 
+            tmpDir = new File(name + "("+i+").png");      
         return tmpDir.getAbsolutePath(); // returns new path
     }
 
     /*
      * load BufferedImage from resources inputStream
      */
-    public static BufferedImage getImage(String name) {
+    public static BufferedImage getImage (String name) {
         BufferedImage img = null;
         try (InputStream inputStream = TrayApp.class.getClassLoader().getResourceAsStream(name)) {
             img = ImageIO.read(inputStream);

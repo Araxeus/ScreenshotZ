@@ -12,19 +12,18 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 
-	@SuppressWarnings("java:S1948")
+	@SuppressWarnings ("java:S1948")
 	class ImagePanel extends JPanel {
         private static final long serialVersionUID = 6969L;
 
         private Image img;
 		private BufferedImage bfImg;
 
-
-		  public ImagePanel(String path) {
+		  public ImagePanel (String path) {
 		    this.img = new ImageIcon(path).getImage();
-			try{
+			try {
 				bfImg = ImageIO.read(new File(path));
-			}catch (IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		    Dimension size = new Dimension(img.getWidth(null), img.getHeight(null));
@@ -37,16 +36,15 @@ import javax.swing.JPanel;
 		  }
 
           @Override
-		  public void paintComponent(Graphics g) {
+		  public void paintComponent (Graphics g) {
 		    g.drawImage(img, 0, 0, null);
 		  }
 
-          public void flush() {
+          public void flush () {
               img.flush();
           }
 
-		  public BufferedImage getImage() {
+		  public BufferedImage getImage () {
 			  return bfImg;
 		  }
-
-		}
+	}

@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
-@SuppressWarnings({"java:S1659", "java:S116", "java:S3066"})
+@SuppressWarnings ({"java:S1659", "java:S116", "java:S3066"})
 
 enum Config 
         { 
@@ -55,7 +55,7 @@ enum Config
                 return SimpleProperties.getInstance().getBooleanProperty(this);
             }
 
-            public int getInt() {
+            public int getInt () {
                 return SimpleProperties.getInstance().getIntProperty(this);
             }
 
@@ -66,10 +66,11 @@ enum Config
 
         } 
 
-@SuppressWarnings("java:S106")
+@SuppressWarnings ("java:S106")
 public class SimpleProperties {
 
-    public static final String DEFAULT_PATH = System.getProperty("user.home") + File.separator + ".ScreenshotZ" + File.separator + "config.xml";   
+    public static final String DEFAULT_PATH = 
+    System.getProperty("user.home") + File.separator + ".ScreenshotZ" + File.separator + "config.xml";   
 
     private static SimpleProperties instance;
 
@@ -82,8 +83,8 @@ public class SimpleProperties {
     private Properties properties;
 
     // PUBLIC singleton instance getter
-    public static SimpleProperties getInstance() {
-        if(instance == null) {
+    public static SimpleProperties getInstance () {
+        if (instance == null) {
             instance = new SimpleProperties(DEFAULT_PATH);
             System.out.println("created new properties instance");
         }
@@ -91,7 +92,7 @@ public class SimpleProperties {
     }
 
     // PRIVATE CONSTRUCTOR create config
-    private SimpleProperties(String path) {
+    private SimpleProperties (String path) {
         propertiesFilePath = path;
         properties = new Properties();
         // checkPath create/check propertiesFilePath - return false if failed
@@ -113,7 +114,7 @@ public class SimpleProperties {
     }
 
     // PUBLIC set property
-    public void setProperty(String key, String value) {
+    public void setProperty (String key, String value) {
         // check that new value is different from old value
         if (!properties.getProperty(key).equals(value)) {
             properties.setProperty(key, value);
@@ -126,41 +127,41 @@ public class SimpleProperties {
             System.err.println("Trying to set property '" + key + "' to the same value (" + value + ")");
     }
 
-    public void setProperty(Config field, String value) {
+    public void setProperty (Config field, String value) {
         setProperty(field.KEY , value);
     }
 
     // PUBLIC get property
-    public String getProperty(String key) {
+    public String getProperty (String key) {
         return properties.getProperty(key);
     }
 
-    public String getProperty(Config field) {
+    public String getProperty (Config field) {
         return getProperty(field.KEY);
     }
 
-    public boolean getBooleanProperty(String key) {
+    public boolean getBooleanProperty (String key) {
         return properties.getProperty(key).equals("true");
     }
 
-    public boolean getBooleanProperty(Config field) {
+    public boolean getBooleanProperty (Config field) {
         return getBooleanProperty(field.KEY);
     }
 
-    public int getIntProperty(String key) {
+    public int getIntProperty (String key) {
         return Integer.valueOf(properties.getProperty(key));
     }
 
-    public int getIntProperty(Config field) {
+    public int getIntProperty (Config field) {
         return getIntProperty(field.KEY);
     }
 
-    public int[] getKeybinds(){
+    public int[] getKeybinds (){
         return keybind.clone();
     }
 
     // int[] keybind updater
-    private int[] getKeybind() {
+    private int[] getKeybind () {
         // new String array from splitting property around ','
         String[] temp = properties.getProperty(Config.FIELD02.KEY).split(",");
         // convert String array to int array
@@ -171,7 +172,7 @@ public class SimpleProperties {
     }
 
     // store data to config file
-    private void store() {
+    private void store () {
         try (FileOutputStream outStream = new FileOutputStream(propertiesFilePath)) {
             properties.storeToXML(outStream, "ScreenshotZ Program parameters");
             System.out.println("Stored properties :" + properties.toString());
@@ -182,7 +183,7 @@ public class SimpleProperties {
     }
 
     // create missing properties and set to default - returns false if nothing changed
-    private boolean updateProperties() {
+    private boolean updateProperties () {
         boolean changed = false;
 
         for(Config field : Config.values()) {
@@ -210,7 +211,7 @@ public class SimpleProperties {
     }
 
     // check path to config.xml
-    private boolean checkPath() {
+    private boolean checkPath () {
         File config = new File(propertiesFilePath);
         try {
             if (Files.notExists(config.toPath())) {

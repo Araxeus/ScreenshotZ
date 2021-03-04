@@ -32,9 +32,7 @@ import org.lwjgl.PointerBuffer;
 import org.lwjgl.util.nfd.NativeFileDialog;
 import org.lwjgl.system.MemoryUtil;
 
-@SuppressWarnings("java:S106")
-// using global hook and Robot().createScreenCapture
-
+@SuppressWarnings ("java:S106")
 
 public final class TrayApp {
 	private static boolean isCropping = false;
@@ -48,13 +46,13 @@ public final class TrayApp {
 	private static GlobalKeyboardHook keyboardHook;
 
 
-	public static void main(String[] args)  {
+	public static void main (String[] args) {
 		// run args / quit if trayApp isn't supported / App already running
-		if(checkIfRunning(args))
+		if (checkIfRunning(args))
 			loadTrayApp();
 	}
 
-	public static void loadTrayApp(){
+	public static void loadTrayApp () {
 				// try to load icon
 				Image icon = Utils.getImage("TrayIcon.png");
 
@@ -156,24 +154,24 @@ public final class TrayApp {
 
 	/* -----------------------Helper Methods------------------------------ */
 
-	public static void setIsCropping(boolean getStatus) {
+	public static void setIsCropping (boolean getStatus) {
 		isCropping = getStatus;
 	}
 
-	public static boolean isCropping() {
+	public static boolean isCropping () {
 		return isCropping;
 	}
 
-	public static GlobalKeyboardHook getKeyboardHook() {
+	public static GlobalKeyboardHook getKeyboardHook () {
 		return keyboardHook!=null ? keyboardHook : new GlobalKeyboardHook(true);
 	}
 
-	private static void setLastEvent(long newValue) {
+	private static void setLastEvent (long newValue) {
 		lastEvent = newValue;
 	}
 
 	// set Local Clipboard content to this.arg
-	public static void setClipboard(Transferable content) {
+	public static void setClipboard (Transferable content) {
 		try {
 			SYSTEM_CLIPBOARD.setContents(content, null);
 		} catch (Exception e) {
@@ -209,7 +207,7 @@ public final class TrayApp {
 	//Keyboard Listener
 	private static GlobalKeyAdapter keyboardAdapter = new GlobalKeyAdapter() {
 		@Override
-		public void keyPressed(GlobalKeyEvent event) {
+		public void keyPressed (GlobalKeyEvent event) {
 			// get input type
 			int mode;
 			if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_SNAPSHOT)
@@ -263,29 +261,24 @@ public final class TrayApp {
 	}
 
 	// IF (args[0] == "-capture")->[capture screen and quit] ELSE [Quit if app already running]
-	private static boolean checkIfRunning(String[] args) {
+	private static boolean checkIfRunning (String[] args) {
 		// check if trayApp was started with args
 		if (args != null && args.length > 0 && args[0].equals("-capture")) {
-			int mode;
-			if(args.length > 1 && args[1].equals("-crop")) {
+			int mode = 0;
+			if (args.length > 1 && args[1].equals("-crop")) {
 				mode=3;}
-			else {
-				mode=0;
-				isCropping = true;
-			}
+			
 			try {
 				Utils.robotTo(Config.FIELD01.getString(), mode);
 			} catch (Exception a) {
 				System.err.println("Couldn't print before loading main method..");
 				a.printStackTrace();
 			}
-			if(mode==0)
+			if (mode==0)
 				System.exit(0);
 			else
 				return false;
-
 		}
-
 		// check that tray is supported
 		if (!SystemTray.isSupported()) {
 			System.err.println("System Tray isn't supported");
