@@ -47,6 +47,8 @@ or from [`[MediaFire Folder]`](https://app.mediafire.com/jl4bs2jieb8c2)
 
 :small_orange_diamond:   To add/delete Startup rule run the corresponding bat as Administrator from the same directory as ScreenshotZ-v1.3.exe
 
+:small_orange_diamond:  ProTip: you can press right click to cancel crop (Unnecessary if Exit UI onCrop option is disabled)
+
 #### You can use some Command Line Arguments to take screenshots/+crop them without running the whole program:
 
 -   %arg [-capture] to directly capture screenshot to saved/default directory
