@@ -8,12 +8,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Stream;
 import java.awt.Toolkit;
 
 @SuppressWarnings ("java:S106")
@@ -97,6 +99,21 @@ public class Utils {
             System.exit(1);
         }
         return img;
+    }
+
+    /*
+    * Check if directory is empty
+    */
+    public static boolean isDirEmpty(Path path) throws IOException {
+        if (Files.isDirectory(path)) {
+            try (Stream<Path> entries = Files.list(path)) {
+                return !entries.findFirst().isPresent();
+            }
+        } else {
+            System.err.println("Error - Path is not directory: "+System.lineSeparator()+path.toString());
+        }
+            
+        return false;
     }
 
 }

@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -66,8 +67,23 @@ public class CropImage extends JFrame implements MouseListener, MouseMotionListe
 		GlobalKeyAdapter exitListener = new GlobalKeyAdapter () {
 			@Override
 			public void keyPressed (GlobalKeyEvent event) {
-				//exit on Enter / Escape
-				if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_RETURN || event.getVirtualKeyCode() == GlobalKeyEvent.VK_ESCAPE)
+				//delete and exist on 'Escape'
+				if(event.getVirtualKeyCode() == GlobalKeyEvent.VK_ESCAPE) {
+					Path path = Paths.get(imagePath);
+					try {
+						Files.deleteIfExists(path);
+						System.out.println("Escape key pressed - deleted screenshot");
+						if(Utils.isDirEmpty(path.getParent())) {
+							Files.deleteIfExists(path.getParent());
+							System.out.println("screenshot was the only file in the directory - deleted the directory");
+						}
+					} catch (Exception e){
+						e.printStackTrace();
+					}
+					dispose();
+				}
+				//or just exit on 'Enter'
+				else if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_RETURN)
 						dispose();
 			}
 		}; //add listener to keyboard hook
