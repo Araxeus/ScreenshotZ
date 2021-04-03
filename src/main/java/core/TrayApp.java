@@ -209,13 +209,11 @@ public final class TrayApp {
 		@Override
 		public void keyPressed (GlobalKeyEvent event) {
 			// get input type
-			int mode;
+			int mode = 0;
 			if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_SNAPSHOT)
 				mode = 1;
-			else if (keyboardHook.areKeysHeldDown(Config.getKeybinds()))
+			else if (Config.getKeybinds().length != 0 && keyboardHook.areKeysHeldDown(Config.getKeybinds()))
 				mode = 2;
-			else
-				mode = 0;
 			// [mode =1 -> printScreen] , [mode =2 -> keybind] , [mode =3 -> alwaysCrop]
 			if (mode == 1 || mode == 2) {
 				try {
